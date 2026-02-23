@@ -182,7 +182,7 @@
       line-height: 1.6;
     }
     
-    /* Témoignages améliorés */
+    /* Témoignages améliorés - version CARROUSEL */
     .temoignage-card {
       background: white;
       padding: 1.8rem;
@@ -191,6 +191,8 @@
       height: 100%;
       transition: all 0.3s;
       box-shadow: 0 8px 20px var(--ombre-legere);
+      text-align: center;
+      margin: 10px;
     }
     .temoignage-card:hover {
       border-color: var(--or-eclatant);
@@ -207,6 +209,46 @@
       font-size: 1rem;
       margin-bottom: 0.2rem;
       color: var(--rouge-profond);
+    }
+    
+    /* Contrôles du carrousel pour témoignages */
+    .carousel-control-prev,
+    .carousel-control-next {
+      width: 40px;
+      height: 40px;
+      background: var(--or-eclatant);
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.8;
+    }
+    .carousel-control-prev {
+      left: -20px;
+    }
+    .carousel-control-next {
+      right: -20px;
+    }
+    .carousel-control-prev:hover,
+    .carousel-control-next:hover {
+      opacity: 1;
+      background: var(--rouge-profond);
+    }
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      filter: brightness(0) invert(1);
+    }
+    .carousel-indicators {
+      bottom: -40px;
+    }
+    .carousel-indicators button {
+      background-color: var(--or-eclatant) !important;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin: 0 5px;
+    }
+    .carousel-indicators button.active {
+      background-color: var(--rouge-profond) !important;
     }
     
     /* Sections avec proportions équilibrées */
@@ -285,7 +327,7 @@
       opacity: 0.9;
     }
     
-    /* Services avec descriptions */
+    /* Services avec descriptions - 2 PAR LIGNE SUR TOUS LES ÉCRANS */
     .service-card {
       background: white;
       border-radius: 24px;
@@ -294,6 +336,8 @@
       border: 1px solid rgba(212,175,55,0.1);
       transition: all 0.3s ease;
       height: 100%;
+      display: flex;
+      flex-direction: column;
     }
     .service-card:hover {
       transform: translateY(-8px);
@@ -302,12 +346,15 @@
     }
     .service-img {
       width: 100%;
-      height: 180px;
+      height: 200px;
       object-fit: cover;
       border-bottom: 3px solid var(--or-eclatant);
     }
     .service-content {
       padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     .service-content h4 {
       color: var(--rouge-profond);
@@ -325,6 +372,7 @@
       list-style: none;
       padding: 0;
       margin: 0;
+      margin-top: auto;
     }
     .service-features li {
       font-size: 0.85rem;
@@ -336,6 +384,47 @@
       width: 20px;
       font-size: 0.8rem;
       margin-right: 0.5rem;
+    }
+    
+    /* 2 colonnes sur tous les écrans */
+    .service-col {
+      flex: 0 0 auto;
+      width: 50%;
+    }
+    
+    /* Ajustements pour mobile */
+    @media (max-width: 768px) {
+      .service-img {
+        height: 140px; /* Images plus petites sur mobile */
+      }
+      
+      .service-content {
+        padding: 1rem;
+      }
+      
+      .service-content h4 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .service-content p {
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Limite le texte à 2 lignes */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      
+      .service-features li {
+        font-size: 0.7rem;
+        margin-bottom: 0.2rem;
+      }
+      
+      .service-features i {
+        font-size: 0.7rem;
+        width: 16px;
+      }
     }
     
     /* CTA compact */
@@ -403,6 +492,21 @@
     }
     .row {
       --bs-gutter-x: 1.5rem;
+    }
+    
+    /* Ajustement pour mobile du carrousel */
+    @media (max-width: 768px) {
+      .carousel-control-prev,
+      .carousel-control-next {
+        width: 30px;
+        height: 30px;
+      }
+      .carousel-control-prev {
+        left: -5px;
+      }
+      .carousel-control-next {
+        right: -5px;
+      }
     }
   </style>
 </head>
@@ -484,7 +588,7 @@
     </div>
   </section>
 
-    <!-- Section Nos services avec descriptions détaillées -->
+  <!-- Section Nos services avec descriptions détaillées - HORIZONTAL PAR 2 SUR TOUS ÉCRANS -->
   <section>
     <div class="container">
       <div class="text-center">
@@ -492,66 +596,73 @@
         <p class="section-subtitle">Des prestations complètes pour tous vos événements</p>
       </div>
       <div class="row g-4">
-        <div class="col-md-6">
+        <!-- Service 1 -->
+        <div class="service-col">
           <div class="service-card">
             <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=2070&auto=format&fit=crop" alt="Décoration" class="service-img">
             <div class="service-content">
               <h4>Décoration d'événements</h4>
               <p>Nous créons des ambiances uniques qui reflètent votre personnalité et le thème de votre événement.</p>
               <ul class="service-features">
-                <li><i class="fas fa-check"></i> Décoration de salles et chapiteaux</li>
-                <li><i class="fas fa-check"></i> Agencement d'espaces extérieurs</li>
-                <li><i class="fas fa-check"></i> Création de coins lounge et photobooth</li>
-                <li><i class="fas fa-check"></i> Éclairage d'ambiance personnalisé</li>
-                <li><i class="fas fa-check"></i> Fleurs fraîches et compositions florales</li>
+                <li><i class="fas fa-check"></i> Décoration de salles</li>
+                <li><i class="fas fa-check"></i> Agencement d'espaces</li>
+                <li><i class="fas fa-check"></i> Coins lounge & photobooth</li>
+                <li><i class="fas fa-check"></i> Éclairage personnalisé</li>
+                <li><i class="fas fa-check"></i> Compositions florales</li>
               </ul>
             </div>
           </div>
         </div>
-        <div class="col-md-6">
+        
+        <!-- Service 2 -->
+        <div class="service-col">
           <div class="service-card">
             <img src="https://images.unsplash.com/photo-1607344645866-009c320b63e0?q=80&w=2070&auto=format&fit=crop" alt="Accessoires" class="service-img">
             <div class="service-content">
               <h4>Location d'accessoires</h4>
               <p>Plus de 500 accessoires de qualité pour personnaliser chaque détail de votre célébration.</p>
               <ul class="service-features">
-                <li><i class="fas fa-check"></i> Vaisselle et arts de la table prestige</li>
-                <li><i class="fas fa-check"></i> Centres de table et chemins de table</li>
-                <li><i class="fas fa-check"></i> Paréos, coussins et textiles brodés</li>
-                <li><i class="fas fa-check"></i> Éclairages et lanternes décoratives</li>
-                <li><i class="fas fa-check"></i> Mobilier design et traditionnel</li>
+                <li><i class="fas fa-check"></i> Vaisselle prestige</li>
+                <li><i class="fas fa-check"></i> Centres de table</li>
+                <li><i class="fas fa-check"></i> Textiles brodés</li>
+                <li><i class="fas fa-check"></i> Éclairages décoratifs</li>
+                <li><i class="fas fa-check"></i> Mobilier design</li>
               </ul>
             </div>
           </div>
         </div>
-        <div class="col-md-6">
+        
+        <!-- Service 3 -->
+        <div class="service-col">
           <div class="service-card">
             <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2069&auto=format&fit=crop" alt="Événementiel" class="service-img">
             <div class="service-content">
               <h4>Organisation d'événements</h4>
-              <p>Nous prenons en charge l'organisation complète de votre événement pour une tranquillité d'esprit totale.</p>
+              <p>Nous prenons en charge l'organisation complète de votre événement.</p>
               <ul class="service-features">
-                <li><i class="fas fa-check"></i> Coordination avec les prestataires</li>
-                <li><i class="fas fa-check"></i> Gestion du planning et du timing</li>
-                <li><i class="fas fa-check"></i> Accueil et orientation des invités</li>
-                <li><i class="fas fa-check"></i> Animations et divertissements</li>
+                <li><i class="fas fa-check"></i> Coordination prestataires</li>
+                <li><i class="fas fa-check"></i> Gestion du planning</li>
+                <li><i class="fas fa-check"></i> Accueil des invités</li>
+                <li><i class="fas fa-check"></i> Animations</li>
                 <li><i class="fas fa-check"></i> Gestion des imprévus</li>
               </ul>
             </div>
           </div>
         </div>
-        <div class="col-md-6">
+        
+        <!-- Service 4 -->
+        <div class="service-col">
           <div class="service-card">
             <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=2070&auto=format&fit=crop" alt="Conseil" class="service-img">
             <div class="service-content">
               <h4>Conseil & Accompagnement</h4>
-              <p>Un accompagnement personnalisé de A à Z pour concrétiser votre vision et créer l'événement parfait.</p>
+              <p>Un accompagnement personnalisé pour concrétiser votre vision.</p>
               <ul class="service-features">
-                <li><i class="fas fa-check"></i> Consultation et analyse des besoins</li>
-                <li><i class="fas fa-check"></i> Proposition de thèmes et mood boards</li>
-                <li><i class="fas fa-check"></i> Sélection des couleurs et matières</li>
-                <li><i class="fas fa-check"></i> Choix des prestataires partenaires</li>
-                <li><i class="fas fa-check"></i> Suivi personnalisé jusqu'au jour J</li>
+                <li><i class="fas fa-check"></i> Analyse des besoins</li>
+                <li><i class="fas fa-check"></i> Mood boards</li>
+                <li><i class="fas fa-check"></i> Choix des couleurs</li>
+                <li><i class="fas fa-check"></i> Prestataires partenaires</li>
+                <li><i class="fas fa-check"></i> Suivi personnalisé</li>
               </ul>
             </div>
           </div>
@@ -573,7 +684,7 @@
             <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop" alt="Mariage traditionnel" class="gallery-img">
             <div class="gallery-overlay">
               <h4>Mariage traditionnel</h4>
-              <p>Décoration somptueuse pour Fatou & Amadou - 150 invités, thème rouge et or, paréos brodés main, centre de table fleuris</p>
+              <p>Décoration somptueuse pour Fatou & Amadou - 150 invités, thème rouge et or, paréos brodés main</p>
             </div>
           </div>
         </div>
@@ -582,7 +693,7 @@
             <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop" alt="Baptême" class="gallery-img">
             <div class="gallery-overlay">
               <h4>Baptême élégant</h4>
-              <p>Cérémonie intime pour 80 personnes - Décoration blanche et dorée, coussin de baptême personnalisé, dragées artisanales</p>
+              <p>Cérémonie intime pour 80 personnes - Décoration blanche et dorée, coussin de baptême personnalisé</p>
             </div>
           </div>
         </div>
@@ -591,7 +702,7 @@
             <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2070&auto=format&fit=crop" alt="Réception" class="gallery-img">
             <div class="gallery-overlay">
               <h4>Réception privée</h4>
-              <p>Anniversaire surprise - 50 invités, éclairage tamisé, vaisselle prestige, coins lounge et photobooth personnalisé</p>
+              <p>Anniversaire surprise - 50 invités, éclairage tamisé, vaisselle prestige, coins lounge</p>
             </div>
           </div>
         </div>
@@ -632,50 +743,85 @@
     </div>
   </section>
 
-  
-
-  <!-- Témoignages avec images -->
+  <!-- Témoignages en CARROUSEL -->
   <section class="bg-white">
     <div class="container">
       <div class="text-center">
         <h2 class="section-title">Ils nous ont fait confiance</h2>
         <p class="section-subtitle">Des moments inoubliables</p>
       </div>
-      <div class="row g-3">
-        <div class="col-md-4">
-          <div class="temoignage-card">
-            <img src="https://images.unsplash.com/photo-1583939003579-730e1918ee0a?q=80&w=1974&auto=format&fit=crop" alt="Mariage" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--or-eclatant); margin-bottom: 1rem;">
-            <p>"Un professionnalisme exceptionnel. NJEEYGU a transformé notre mariage en un conte de fées. Chaque détail était parfait, de la décoration de la salle aux accessoires photo."</p>
-            <div>
-              <h5 class="mb-0">Fatou & Amadou</h5>
-              <small class="text-muted">Mariage 2024</small>
+      
+      <div id="testimonialsCarousel" class="carousel slide" data-bs-ride="carousel">
+        <!-- Indicateurs -->
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Témoignage 1"></button>
+          <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="1" aria-label="Témoignage 2"></button>
+          <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="2" aria-label="Témoignage 3"></button>
+        </div>
+        
+        <!-- Slides -->
+        <div class="carousel-inner">
+          <!-- Slide 1 - Fatou & Amadou -->
+          <div class="carousel-item active">
+            <div class="row justify-content-center">
+              <div class="col-md-8 col-lg-6">
+                <div class="temoignage-card">
+                  <img src="https://images.unsplash.com/photo-1583939003579-730e1918ee0a?q=80&w=1974&auto=format&fit=crop" alt="Mariage" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--or-eclatant); margin-bottom: 1rem;">
+                  <p>"Un professionnalisme exceptionnel. NJEEYGU a transformé notre mariage en un conte de fées. Chaque détail était parfait."</p>
+                  <div>
+                    <h5 class="mb-0">Fatou & Amadou</h5>
+                    <small class="text-muted">Mariage 2024</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Slide 2 - Marieme Diallo -->
+          <div class="carousel-item">
+            <div class="row justify-content-center">
+              <div class="col-md-8 col-lg-6">
+                <div class="temoignage-card">
+                  <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1976&auto=format&fit=crop" alt="Baptême" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--or-eclatant); margin-bottom: 1rem;">
+                  <p>"La décoration était magnifique, les accessoires d'un goût exquis. Merci pour ce baptême inoubliable."</p>
+                  <div>
+                    <h5 class="mb-0">Marieme Diallo</h5>
+                    <small class="text-muted">Baptême 2024</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Slide 3 - Groupe BSO -->
+          <div class="carousel-item">
+            <div class="row justify-content-center">
+              <div class="col-md-8 col-lg-6">
+                <div class="temoignage-card">
+                  <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop" alt="Événement pro" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--or-eclatant); margin-bottom: 1rem;">
+                  <p>"Une équipe créative et professionnelle. Notre séminaire a eu un impact formidable grâce à leur savoir-faire."</p>
+                  <div>
+                    <h5 class="mb-0">Groupe BSO</h5>
+                    <small class="text-muted">Événement pro</small>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="temoignage-card">
-            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1976&auto=format&fit=crop" alt="Baptême" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--or-eclatant); margin-bottom: 1rem;">
-            <p>"La décoration était magnifique, les accessoires d'un goût exquis. Merci pour ce baptême inoubliable. Tous nos invités ont été émerveillés par la beauté des lieux."</p>
-            <div>
-              <h5 class="mb-0">Marieme Diallo</h5>
-              <small class="text-muted">Baptême 2024</small>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="temoignage-card">
-            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop" alt="Événement pro" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--or-eclatant); margin-bottom: 1rem;">
-            <p>"Une équipe créative et professionnelle. Notre séminaire a eu un impact formidable grâce à leur savoir-faire et leur écoute. Je recommande vivement !"</p>
-            <div>
-              <h5 class="mb-0">Groupe BSO</h5>
-              <small class="text-muted">Événement pro</small>
-            </div>
-          </div>
-        </div>
+        
+        <!-- Contrôles -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Précédent</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Suivant</span>
+        </button>
       </div>
     </div>
   </section>
-
 
   <!-- CTA compact -->
   <section class="cta-section">

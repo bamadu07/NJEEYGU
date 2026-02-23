@@ -156,15 +156,15 @@
       margin-bottom: 1.5rem;
     }
     
-    /* Section histoire améliorée */
+    /* Section histoire améliorée - TEXTE RÉDUIT */
     .histoire-section {
       padding: 70px 0;
     }
     .histoire-texte {
-      font-size: 1.1rem;
-      line-height: 1.9;
+      font-size: 0.95rem; /* Réduit de 1.1rem à 0.95rem */
+      line-height: 1.7; /* Ajusté pour meilleure lisibilité */
       column-count: 2;
-      column-gap: 40px;
+      column-gap: 30px; /* Réduit pour meilleur équilibre */
       text-align: justify;
       color: #444;
     }
@@ -175,9 +175,9 @@
     }
     .signature {
       font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
+      font-size: 1.3rem; /* Légèrement réduit */
       color: var(--rouge-profond);
-      margin-top: 2rem;
+      margin-top: 1.5rem;
     }
     
     /* Stats améliorées */
@@ -244,7 +244,10 @@
       margin-bottom: 0;
     }
     
-    /* Équipe améliorée */
+    /* Équipe en CARROUSEL */
+    .team-slide {
+      padding: 10px;
+    }
     .team-card {
       background: white;
       border-radius: 30px;
@@ -254,6 +257,7 @@
       border: 1px solid rgba(212,175,55,0.1);
       box-shadow: 0 15px 30px var(--ombre-legere);
       height: 100%;
+      margin: 0 10px;
     }
     .team-card:hover {
       transform: translateY(-10px);
@@ -309,6 +313,46 @@
       background: var(--or-eclatant);
       color: var(--rouge-profond);
       transform: translateY(-3px);
+    }
+    
+    /* Contrôles du carrousel */
+    .carousel-control-prev,
+    .carousel-control-next {
+      width: 40px;
+      height: 40px;
+      background: var(--or-eclatant);
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.8;
+    }
+    .carousel-control-prev {
+      left: -20px;
+    }
+    .carousel-control-next {
+      right: -20px;
+    }
+    .carousel-control-prev:hover,
+    .carousel-control-next:hover {
+      opacity: 1;
+      background: var(--rouge-profond);
+    }
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      filter: brightness(0) invert(1);
+    }
+    .carousel-indicators {
+      bottom: -40px;
+    }
+    .carousel-indicators button {
+      background-color: var(--or-eclatant) !important;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin: 0 5px;
+    }
+    .carousel-indicators button.active {
+      background-color: var(--rouge-profond) !important;
     }
     
     /* Timeline histoire */
@@ -425,6 +469,21 @@
     .container {
       max-width: 1140px;
     }
+    
+    /* Ajustement pour mobile du carrousel */
+    @media (max-width: 768px) {
+      .carousel-control-prev,
+      .carousel-control-next {
+        width: 30px;
+        height: 30px;
+      }
+      .carousel-control-prev {
+        left: -5px;
+      }
+      .carousel-control-next {
+        right: -5px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -471,7 +530,7 @@
     </div>
   </div>
 
-  <!-- Section Histoire améliorée avec image -->
+  <!-- Section Histoire améliorée avec image - TEXTE RÉDUIT -->
   <section class="histoire-section">
     <div class="container">
       <div class="row align-items-center g-5">
@@ -614,50 +673,94 @@
     </div>
   </section>
 
-  <!-- Équipe améliorée -->
+  <!-- Équipe en CARROUSEL -->
   <section>
     <div class="container">
       <div class="text-center">
         <h2 class="section-title">Notre équipe</h2>
         <p class="section-subtitle">Des passionnés à votre écoute</p>
       </div>
-      <div class="row g-4">
-        <div class="col-lg-4">
-          <div class="team-card">
-            <img src="https://images.unsplash.com/photo-1494790108777-286ad345bea5?q=80&w=1974&auto=format&fit=crop" alt="Mariama Ndiaye">
-            <h3>Mariama Ndiaye</h3>
-            <div class="role">Fondatrice & Directrice</div>
-            <p>Passionnée par l'art et la décoration depuis toujours, elle donne vie à vos rêves avec une créativité sans limite et un sens aigu du détail.</p>
-            <div class="team-social">
-              <a href="#"><i class="fab fa-linkedin-in"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
+      
+      <div id="teamCarousel" class="carousel slide" data-bs-ride="carousel">
+        <!-- Indicateurs -->
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#teamCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#teamCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#teamCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        
+        <!-- Slides -->
+        <div class="carousel-inner">
+          <!-- Slide 1 - Mariama -->
+          <div class="carousel-item active">
+            <div class="row justify-content-center">
+              <div class="col-md-8 col-lg-6">
+                <div class="team-slide">
+                  <div class="team-card">
+                    <img src="images/log1.png" alt="Mariama Ndiaye">
+                    <h3>Mariama Ndiaye</h3>
+                    <div class="role">Fondatrice & Directrice</div>
+                    <p>Passionnée par l'art et la décoration depuis toujours, elle donne vie à vos rêves avec une créativité sans limite et un sens aigu du détail.</p>
+                    <div class="team-social">
+                      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                      <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Slide 2 - Omar -->
+          <div class="carousel-item">
+            <div class="row justify-content-center">
+              <div class="col-md-8 col-lg-6">
+                <div class="team-slide">
+                  <div class="team-card">
+                    <img src="images/log1.png" alt="Omar Faye">
+                    <h3>Omar Faye</h3>
+                    <div class="role">Coordinateur événementiel</div>
+                    <p>Le chef d'orchestre qui assure le bon déroulement de chaque projet. Sa rigueur et son organisation sont la clé de la réussite de vos événements.</p>
+                    <div class="team-social">
+                      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                      <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Slide 3 - Aïssatou -->
+          <div class="carousel-item">
+            <div class="row justify-content-center">
+              <div class="col-md-8 col-lg-6">
+                <div class="team-slide">
+                        <div class="team-card">
+                            <img src="images/log1.png" alt="Aïssatou Diop">
+                    <h3>Aïssatou Diop</h3>
+                    <div class="role">Designer d'espace</div>
+                    <p>Elle crée des ambiances uniques et harmonieuses. Son œil expert et sa sensibilité artistique transforment vos lieux en véritables écrins.</p>
+                    <div class="team-social">
+                      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                      <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-4">
-          <div class="team-card">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop" alt="Omar Faye">
-            <h3>Omar Faye</h3>
-            <div class="role">Coordinateur événementiel</div>
-            <p>Le chef d'orchestre qui assure le bon déroulement de chaque projet. Sa rigueur et son organisation sont la clé de la réussite de vos événements.</p>
-            <div class="team-social">
-              <a href="#"><i class="fab fa-linkedin-in"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="team-card">
-            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961&auto=format&fit=crop" alt="Aïssatou Diop">
-            <h3>Aïssatou Diop</h3>
-            <div class="role">Designer d'espace</div>
-            <p>Elle crée des ambiances uniques et harmonieuses. Son œil expert et sa sensibilité artistique transforment vos lieux en véritables écrins.</p>
-            <div class="team-social">
-              <a href="#"><i class="fab fa-linkedin-in"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-          </div>
-        </div>
+        
+        <!-- Contrôles -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#teamCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Précédent</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#teamCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Suivant</span>
+        </button>
       </div>
     </div>
   </section>
