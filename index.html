@@ -33,36 +33,20 @@
       letter-spacing: -0.02em;
     }
     
-    /* Logo compact et élégant */
+    /* Logo avec image réelle */
     .logo-njeeygu {
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .logo-medallion {
+    .logo-image {
       width: 42px;
       height: 42px;
-      background: var(--rouge-profond);
       border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      object-fit: cover;
       border: 2px solid var(--or-eclatant);
       box-shadow: 0 3px 10px rgba(139,0,0,0.2);
-    }
-    .logo-house {
-      font-size: 22px;
-      color: var(--or-eclatant);
-      position: relative;
-    }
-    .logo-house .ngj-center {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-45%, -55%);
-      font-size: 8px;
-      font-weight: 800;
-      color: var(--blanc-casse);
+      background: white;
     }
     .logo-text {
       font-weight: 700;
@@ -428,12 +412,11 @@
     <div class="container">
       <a class="navbar-brand" href="index.html">
         <div class="logo-njeeygu">
-          <div class="logo-medallion">
-            <div class="logo-house">
-              <i class="fas fa-home"></i>
-              <span class="ngj-center">NGJ</span>
-            </div>
-          </div>
+          <!-- Logo image réelle -->
+          <img src="images/log1.png" 
+               alt="NJEEYGU Logo" 
+               class="logo-image"
+               onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
           <div class="logo-text">
             NJEEYGU
             <span class="le-grand-jour">LE GRAND JOUR</span>
@@ -709,13 +692,12 @@
       <div class="row">
         <div class="col-lg-4 mb-2">
           <div class="logo-njeeygu mb-1">
-            <div class="logo-medallion" style="width: 35px; height: 35px;">
-              <div class="logo-house" style="font-size: 18px;">
-                <i class="fas fa-home"></i>
-                <span class="ngj-center" style="font-size: 7px;">NGJ</span>
-              </div>
-            </div>
-            <span style="color: var(--or-eclatant); font-weight: 600;">NJEEYGU</span>
+            <!-- Petit logo dans footer -->
+            <img src="images/log1.png" 
+                 alt="NJEEYGU Logo" 
+                 style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--or-eclatant);"
+                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
+            <span style="color: var(--or-eclatant); font-weight: 600; margin-left: 8px;">NJEEYGU</span>
           </div>
           <p class="small opacity-75">Saint-Louis · événementiel</p>
         </div>

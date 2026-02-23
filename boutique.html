@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NJEEYGU · Boutique - Accessoires & Décorations</title>
+  <title>NJEEYGU · Boutique - Accessoires & Décorations de luxe</title>
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome 6 -->
@@ -33,36 +33,20 @@
       letter-spacing: -0.02em;
     }
     
-    /* Logo compact et élégant */
+    /* Logo avec image réelle */
     .logo-njeeygu {
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .logo-medallion {
+    .logo-image {
       width: 42px;
       height: 42px;
-      background: var(--rouge-profond);
       border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      object-fit: cover;
       border: 2px solid var(--or-eclatant);
       box-shadow: 0 3px 10px rgba(139,0,0,0.2);
-    }
-    .logo-house {
-      font-size: 22px;
-      color: var(--or-eclatant);
-      position: relative;
-    }
-    .logo-house .ngj-center {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-45%, -55%);
-      font-size: 8px;
-      font-weight: 800;
-      color: var(--blanc-casse);
+      background: white;
     }
     .logo-text {
       font-weight: 700;
@@ -137,9 +121,9 @@
       box-shadow: 0 5px 15px rgba(212,175,55,0.3);
     }
     
-    /* Header Boutique compact */
+    /* Header Boutique amélioré avec description */
     .boutique-header {
-      background: linear-gradient(115deg, rgba(139,0,0,0.95), rgba(139,0,0,0.85)), 
+      background: linear-gradient(115deg, rgba(139,0,0,0.95), rgba(0,107,84,0.9)), 
                   url('https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=2070&auto=format&fit=crop');
       background-size: cover;
       background-position: center;
@@ -153,6 +137,7 @@
       font-weight: 800;
       color: var(--or-eclatant);
       margin-bottom: 0.8rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
     .boutique-header p {
       font-size: 1.1rem;
@@ -171,7 +156,72 @@
       margin-bottom: 1.2rem;
     }
     
+    /* Bannière de présentation améliorée */
+    .presentation-banner {
+      background: linear-gradient(135deg, #f8f1e0, #fff);
+      padding: 40px 0;
+      border-bottom: 2px solid var(--or-eclatant);
+      border-top: 2px solid var(--or-eclatant);
+    }
+    .presentation-content {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+    .presentation-text {
+      flex: 1;
+    }
+    .presentation-text h2 {
+      color: var(--rouge-profond);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .presentation-text p {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 0.5rem;
+    }
+    .presentation-highlight {
+      color: var(--vert-emeraude);
+      font-weight: 600;
+    }
+    .presentation-stats {
+      display: flex;
+      gap: 30px;
+      margin-top: 20px;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--rouge-profond);
+      font-family: 'Playfair Display', serif;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: var(--or-eclatant);
+      font-weight: 600;
+    }
+    .presentation-image {
+      flex: 1;
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 3px solid var(--or-eclatant);
+    }
+    .presentation-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
     /* Filtres améliorés */
+    .filtres-container {
+      padding: 30px 0 10px;
+    }
     .filtre-categorie {
       display: inline-block;
       padding: 8px 22px;
@@ -439,32 +489,38 @@
       font-style: italic;
     }
     
-    /* Pagination améliorée */
-    .pagination .page-link {
-      color: var(--rouge-profond);
-      border: 1px solid var(--or-eclatant);
-      margin: 0 4px;
-      border-radius: 12px;
-      padding: 8px 15px;
-      transition: all 0.3s;
-      background: white;
+    /* Newsletter */
+    .newsletter-section {
+      background: var(--vert-emeraude);
+      padding: 40px 0;
+      color: white;
+      text-align: center;
     }
-    .pagination .page-link:hover {
-      background: var(--or-eclatant);
-      border-color: var(--or-eclatant);
-      color: var(--rouge-profond);
-      transform: translateY(-2px);
+    .newsletter-form {
+      max-width: 500px;
+      margin: 20px auto 0;
+      display: flex;
+      gap: 10px;
     }
-    .pagination .active .page-link {
+    .newsletter-form input {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 30px;
+      font-size: 0.9rem;
+    }
+    .newsletter-form button {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 30px;
       background: var(--or-eclatant);
-      border-color: var(--or-eclatant);
       color: var(--rouge-profond);
       font-weight: 600;
+      transition: 0.3s;
     }
-    
-    /* Sections */
-    section {
-      padding: 50px 0;
+    .newsletter-form button:hover {
+      background: var(--rouge-profond);
+      color: var(--or-eclatant);
     }
     
     /* Footer compact */
@@ -473,7 +529,7 @@
       color: var(--blanc-casse);
       padding: 50px 0 20px;
       border-top: 2px solid var(--or-eclatant);
-      margin-top: 60px;
+      margin-top: 0;
     }
     .footer-title {
       color: var(--or-eclatant);
@@ -516,6 +572,77 @@
     .container {
       max-width: 1140px;
     }
+    
+    /* Responsive pour mobile : 2 produits par ligne */
+    @media (max-width: 768px) {
+      .presentation-content {
+        flex-direction: column;
+      }
+      .newsletter-form {
+        flex-direction: column;
+        padding: 0 20px;
+      }
+      
+      /* 2 colonnes sur mobile */
+      .row > .col-lg-3.col-md-6 {
+        flex: 0 0 auto;
+        width: 50%;
+      }
+      
+      /* Ajustement des cards pour mobile */
+      .product-img {
+        height: 160px;
+      }
+      
+      .product-content {
+        padding: 1rem 0.8rem 0.8rem;
+      }
+      
+      .product-title {
+        font-size: 0.9rem;
+      }
+      
+      .product-desc {
+        font-size: 0.7rem;
+        margin-bottom: 0.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      
+      .product-price {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .btn-rouge {
+        padding: 5px 10px;
+        font-size: 0.7rem;
+      }
+      
+      .product-badge {
+        font-size: 0.6rem;
+        padding: 3px 8px;
+        top: 8px;
+        right: 8px;
+      }
+    }
+    
+    /* Très petits écrans */
+    @media (max-width: 480px) {
+      .product-img {
+        height: 140px;
+      }
+      
+      .product-title {
+        font-size: 0.8rem;
+      }
+      
+      .product-price {
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -524,12 +651,11 @@
     <div class="container">
       <a class="navbar-brand" href="index.html">
         <div class="logo-njeeygu">
-          <div class="logo-medallion">
-            <div class="logo-house">
-              <i class="fas fa-home"></i>
-              <span class="ngj-center">NGJ</span>
-            </div>
-          </div>
+          <!-- Logo image réelle -->
+          <img src="images/log1.png" 
+               alt="NJEEYGU Logo" 
+               class="logo-image"
+               onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
           <div class="logo-text">
             NJEEYGU
             <span class="le-grand-jour">LE GRAND JOUR</span>
@@ -554,30 +680,66 @@
     </div>
   </nav>
 
-  <!-- Header Boutique compact -->
+  <!-- Header Boutique amélioré -->
   <div class="boutique-header">
     <div class="container">
-      <span class="hero-badge"><i class="fas fa-crown me-2"></i>COLLECTION 2025</span>
+      <span class="hero-badge"><i class="fas fa-crown me-2"></i>COLLECTION PRESTIGE 2025</span>
       <h1 class="display-3 fw-bold">Notre Boutique</h1>
-      <p class="fs-5">Découvrez notre sélection d'accessoires et décorations pour vos événements</p>
+      <p class="fs-5">Découvrez notre sélection d'accessoires et décorations d'exception pour vos événements</p>
     </div>
   </div>
 
-  <!-- Filtres améliorés -->
-  <section class="pb-0">
+  <!-- Nouvelle section de présentation améliorée -->
+  <div class="presentation-banner">
     <div class="container">
-      <div class="text-center">
-        <span class="filtre-categorie active" data-category="all">Tous (24)</span>
-        <span class="filtre-categorie" data-category="table">Art de la table (5)</span>
-        <span class="filtre-categorie" data-category="lumiere">Lumières (4)</span>
-        <span class="filtre-categorie" data-category="mariage">Mariage (6)</span>
-        <span class="filtre-categorie" data-category="ballon">Ballons (3)</span>
-        <span class="filtre-categorie" data-category="deco">Décoration (6)</span>
+      <div class="presentation-content">
+        <div class="presentation-text">
+          <h2>L'art de la réception</h2>
+          <p>Bienvenue dans notre boutique dédiée à l'élégance et au raffinement. Chaque pièce que nous sélectionnons est choisie avec soin pour apporter une touche d'exception à vos célébrations.</p>
+          <p><span class="presentation-highlight">✨ Des collections exclusives</span> - Nos accessoires et décorations sont soigneusement sélectionnés pour leur qualité et leur esthétique unique.</p>
+          <p><span class="presentation-highlight">🎯 Pour tous vos événements</span> - Mariages, baptêmes, anniversaires, réceptions professionnelles... Nous avons ce qu'il vous faut.</p>
+          <p><span class="presentation-highlight">💫 Personnalisation possible</span> - Contactez-nous pour des créations sur mesure adaptées à votre thème et vos couleurs.</p>
+          
+          <div class="presentation-stats">
+            <div class="stat-item">
+              <div class="stat-number">500+</div>
+              <div class="stat-label">Événements</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">200+</div>
+              <div class="stat-label">Produits</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">10 ans</div>
+              <div class="stat-label">d'expertise</div>
+            </div>
+          </div>
+        </div>
+        <div class="presentation-image">
+          <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop" alt="Décoration de table élégante">
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- Grille produits améliorée -->
+  <!-- Filtres par catégorie -->
+  <div class="filtres-container">
+    <div class="container">
+      <div class="text-center">
+        <div class="d-flex flex-wrap justify-content-center">
+          <span class="filtre-categorie active" data-category="all">Tous les produits</span>
+          <span class="filtre-categorie" data-category="table">Art de la table</span>
+          <span class="filtre-categorie" data-category="lumiere">Lumières</span>
+          <span class="filtre-categorie" data-category="mariage">Mariage</span>
+          <span class="filtre-categorie" data-category="ballon">Ballons</span>
+          <span class="filtre-categorie" data-category="deco">Décoration</span>
+        </div>
+        <p class="mt-3 small text-muted">Cliquez sur une catégorie pour filtrer les produits</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grille produits améliorée (24 produits avec descriptions détaillées) -->
   <section>
     <div class="container" id="productGrid">
       <!-- Ligne 1 -->
@@ -590,7 +752,7 @@
             <div class="product-content">
               <div class="product-category">Art de la table</div>
               <h3 class="product-title">Centre de table Royal</h3>
-              <p class="product-desc">Collection Prestige - Composition florale dorée avec cristaux</p>
+              <p class="product-desc">Collection Prestige - Composition florale dorée avec cristaux. Hauteur 45cm. Idéal pour tables de réception.</p>
               <div class="product-price">45 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
             </div>
@@ -604,7 +766,7 @@
             <div class="product-content">
               <div class="product-category">Lumières</div>
               <h3 class="product-title">Guirlande Dorée</h3>
-              <p class="product-desc">5 mètres de guirlande lumineuse LED, idéale pour ambiance chaleureuse</p>
+              <p class="product-desc">5 mètres de guirlande lumineuse LED, 100 ampoules chaudes. Idéale pour ambiance chaleureuse. Télécommande incluse.</p>
               <div class="product-price">25 000 FCFA <span class="old-price">32 000</span></div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
             </div>
@@ -617,7 +779,7 @@
             <div class="product-content">
               <div class="product-category">Mariage</div>
               <h3 class="product-title">Coffret Mariage</h3>
-              <p class="product-desc">Lot de 10 boîtes cadeaux pour dragées, finition satinée</p>
+              <p class="product-desc">Lot de 10 boîtes cadeaux pour dragées, finition satinée avec rubans dorés. Personnalisables sur demande.</p>
               <div class="product-price">15 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
             </div>
@@ -631,7 +793,7 @@
             <div class="product-content">
               <div class="product-category">Ballons</div>
               <h3 class="product-title">Arche à Ballons</h3>
-              <p class="product-desc">Structure métallique 2.5m de hauteur, inclut 30 ballons</p>
+              <p class="product-desc">Structure métallique 2.5m de hauteur, inclut 30 ballons. Idéale pour entrée ou photobooth.</p>
               <div class="product-price">35 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
             </div>
@@ -648,7 +810,7 @@
             <div class="product-content">
               <div class="product-category">Art de la table</div>
               <h3 class="product-title">Vaisselle Émeraude</h3>
-              <p class="product-desc">12 pièces (assiettes, couverts, verres) couleur vert émeraude</p>
+              <p class="product-desc">12 pièces (assiettes, couverts, verres) couleur vert émeraude. Design élégant pour 6 personnes.</p>
               <div class="product-price">12 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
             </div>
@@ -661,7 +823,7 @@
             <div class="product-content">
               <div class="product-category">Lumières</div>
               <h3 class="product-title">Photobooth LED</h3>
-              <p class="product-desc">Location à la journée avec fond lumineux et accessoires</p>
+              <p class="product-desc">Location à la journée avec fond lumineux et accessoires. Imprimante photo incluse.</p>
               <div class="product-price">75 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
             </div>
@@ -675,7 +837,7 @@
             <div class="product-content">
               <div class="product-category">Décoration</div>
               <h3 class="product-title">Set Bougeoirs</h3>
-              <p class="product-desc">Pack de 6 bougeoirs en verre doré, bougies incluses</p>
+              <p class="product-desc">Pack de 6 bougeoirs en verre doré, bougies LED incluses. Parfait pour ambiance tamisée.</p>
               <div class="product-price">22 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
             </div>
@@ -688,7 +850,7 @@
             <div class="product-content">
               <div class="product-category">Art de la table</div>
               <h3 class="product-title">Nappage Or</h3>
-              <p class="product-desc">Nappe en satin 160x220 cm, chemin de table assorti</p>
+              <p class="product-desc">Nappe en satin 160x220 cm, chemin de table assorti 40x200 cm. Tissu de haute qualité.</p>
               <div class="product-price">8 500 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
             </div>
@@ -705,7 +867,7 @@
             <div class="product-content">
               <div class="product-category">Art de la table</div>
               <h3 class="product-title">Chemin de table</h3>
-              <p class="product-desc">Rouge & Or, tissu brodé main, longueur 3m</p>
+              <p class="product-desc">Rouge & Or, tissu brodé main, longueur 3m. Motifs traditionnels revisités.</p>
               <div class="product-price">18 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -718,7 +880,7 @@
             <div class="product-content">
               <div class="product-category">Mariage</div>
               <h3 class="product-title">Marque-places</h3>
-              <p class="product-desc">Lot de 50 cartons dorés avec porte-nom</p>
+              <p class="product-desc">Lot de 50 cartons dorés avec porte-nom en métal. Personnalisables sur demande.</p>
               <div class="product-price">9 500 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -731,7 +893,7 @@
             <div class="product-content">
               <div class="product-category">Décoration</div>
               <h3 class="product-title">Vase Crystal</h3>
-              <p class="product-desc">Hauteur 40cm, verre taillé, idéal pour centres de table</p>
+              <p class="product-desc">Hauteur 40cm, verre taillé, idéal pour centres de table. Design intemporel.</p>
               <div class="product-price">28 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -744,7 +906,7 @@
             <div class="product-content">
               <div class="product-category">Ballons</div>
               <h3 class="product-title">Structure murale</h3>
-              <p class="product-desc">Pour compositions de ballons, 2x2m démontable</p>
+              <p class="product-desc">Pour compositions de ballons, 2x2m démontable. Structure légère et stable.</p>
               <div class="product-price">42 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -761,7 +923,7 @@
             <div class="product-content">
               <div class="product-category">Lumières</div>
               <h3 class="product-title">Guirlande LED</h3>
-              <p class="product-desc">10m blanc chaud, avec télécommande, 8 modes</p>
+              <p class="product-desc">10m blanc chaud, avec télécommande, 8 modes d'éclairage. Parfait pour extérieur/intérieur.</p>
               <div class="product-price">14 500 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -774,7 +936,7 @@
             <div class="product-content">
               <div class="product-category">Décoration</div>
               <h3 class="product-title">Bougies parfumées</h3>
-              <p class="product-desc">Set de 4, parfums vanille, cannelle, ambre</p>
+              <p class="product-desc">Set de 4, parfums vanille, cannelle, ambre. Durée de combustion: 40h chacune.</p>
               <div class="product-price">11 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -787,7 +949,7 @@
             <div class="product-content">
               <div class="product-category">Décoration</div>
               <h3 class="product-title">Rideau de fond</h3>
-              <p class="product-desc">3x3m doré, parfait pour photobooth et scènes</p>
+              <p class="product-desc">3x3m doré, parfait pour photobooth et scènes. Tissu pailleté de qualité.</p>
               <div class="product-price">32 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -800,7 +962,7 @@
             <div class="product-content">
               <div class="product-category">Mariage</div>
               <h3 class="product-title">Boîtes cadeaux</h3>
-              <p class="product-desc">Lot de 20, finition satin, rubans dorés</p>
+              <p class="product-desc">Lot de 20, finition satin, rubans dorés assortis. Taille 10x10x5cm.</p>
               <div class="product-price">16 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -817,7 +979,7 @@
             <div class="product-content">
               <div class="product-category">Art de la table</div>
               <h3 class="product-title">Serviettes tissu</h3>
-              <p class="product-desc">Lot de 50, coton, couleur ivoire</p>
+              <p class="product-desc">Lot de 50, coton de qualité, couleur ivoire. Lavables et réutilisables.</p>
               <div class="product-price">13 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -830,7 +992,7 @@
             <div class="product-content">
               <div class="product-category">Art de la table</div>
               <h3 class="product-title">Centre de table Or</h3>
-              <p class="product-desc">Collection Luxe, fleurs artificielles de qualité</p>
+              <p class="product-desc">Collection Luxe, fleurs artificielles de qualité supérieure. Diamètre 30cm.</p>
               <div class="product-price">55 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -843,7 +1005,7 @@
             <div class="product-content">
               <div class="product-category">Lumières</div>
               <h3 class="product-title">Projecteur LED</h3>
-              <p class="product-desc">RGB + télécommande, 20W, effet disco</p>
+              <p class="product-desc">RGB + télécommande, 20W, effet disco. Idéal pour ambiance de fête.</p>
               <div class="product-price">29 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -856,7 +1018,7 @@
             <div class="product-content">
               <div class="product-category">Ballons</div>
               <h3 class="product-title">Ballons métallisés</h3>
-              <p class="product-desc">Lot de 30, assortis or, rose, argent</p>
+              <p class="product-desc">Lot de 30, assortis or, rose, argent. Taille standard 30cm.</p>
               <div class="product-price">19 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -873,7 +1035,7 @@
             <div class="product-content">
               <div class="product-category">Décoration</div>
               <h3 class="product-title">Chandelier doré</h3>
-              <p class="product-desc">5 branches, hauteur 60cm, métal doré</p>
+              <p class="product-desc">5 branches, hauteur 60cm, métal doré. Design classique et élégant.</p>
               <div class="product-price">38 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -886,7 +1048,7 @@
             <div class="product-content">
               <div class="product-category">Lumières</div>
               <h3 class="product-title">Lampions chinois</h3>
-              <p class="product-desc">Lot de 20, coloris assortis</p>
+              <p class="product-desc">Lot de 20, coloris assortis, diamètre 25cm. Pour décoration aérienne.</p>
               <div class="product-price">9 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -899,7 +1061,7 @@
             <div class="product-content">
               <div class="product-category">Mariage</div>
               <h3 class="product-title">Dragées amandes</h3>
-              <p class="product-desc">1kg, enrobage doré, qualité supérieure</p>
+              <p class="product-desc">1kg, enrobage doré, qualité supérieure. Amandes de première qualité.</p>
               <div class="product-price">7 500 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -912,7 +1074,7 @@
             <div class="product-content">
               <div class="product-category">Mariage</div>
               <h3 class="product-title">Coussins mariage</h3>
-              <p class="product-desc">Set de 4, satin, broderies dorées</p>
+              <p class="product-desc">Set de 4, satin, broderies dorées. Dimensions 40x40cm.</p>
               <div class="product-price">24 000 FCFA</div>
               <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
             </div>
@@ -921,19 +1083,6 @@
       </div>
     </div>
   </section>
-
-  <!-- Pagination améliorée -->
-  <div class="d-flex justify-content-center mt-4">
-    <nav>
-      <ul class="pagination">
-        <li class="page-item disabled"><a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a></li>
-        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a></li>
-      </ul>
-    </nav>
-  </div>
 
   <!-- Panier flottant amélioré -->
   <div class="cart-floating" id="cartToggle">
@@ -967,19 +1116,19 @@
       <div class="row">
         <div class="col-lg-4 mb-3">
           <div class="logo-njeeygu mb-2">
-            <div class="logo-medallion" style="width: 40px; height: 40px;">
-              <div class="logo-house" style="font-size: 20px;">
-                <i class="fas fa-home"></i>
-                <span class="ngj-center" style="font-size: 8px;">NGJ</span>
-              </div>
-            </div>
-            <span style="color: var(--or-eclatant); font-weight: 600;">NJEEYGU</span>
+            <!-- Petit logo dans footer -->
+            <img src="images/log1.png" 
+                 alt="NJEEYGU Logo" 
+                 style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--or-eclatant);"
+                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
+            <span style="color: var(--or-eclatant); font-weight: 600; margin-left: 8px;">NJEEYGU</span>
           </div>
-          <p class="small opacity-75">Votre partenaire événementiel à Saint-Louis depuis 10 ans. Plus de 500 événements organisés.</p>
+          <p class="small opacity-75">Votre partenaire événementiel à Saint-Louis depuis 10 ans. Plus de 500 événements organisés avec succès.</p>
           <div class="social-links">
             <a href="#"><i class="fab fa-facebook-f"></i></a>
             <a href="#"><i class="fab fa-instagram"></i></a>
             <a href="#"><i class="fab fa-whatsapp"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
           </div>
         </div>
         <div class="col-lg-4 mb-3">
@@ -997,11 +1146,12 @@
           <p class="small"><i class="fas fa-map-marker-alt me-2" style="color: var(--or-eclatant);"></i> Saint-Louis, Sénégal</p>
           <p class="small"><i class="fas fa-phone me-2" style="color: var(--or-eclatant);"></i> +221 77 544 97 95</p>
           <p class="small"><i class="fas fa-envelope me-2" style="color: var(--or-eclatant);"></i> contact@njeeygu.sn</p>
+          <p class="small"><i class="fas fa-clock me-2" style="color: var(--or-eclatant);"></i> Lun-Sam: 9h-19h</p>
         </div>
       </div>
       <hr class="border-light opacity-25 my-3">
       <div class="text-center">
-        <p class="small opacity-75 mb-0">&copy; 2025 NJEEYGU - Le Grand Jour. Tous droits réservés.</p>
+        <p class="small opacity-75 mb-0">&copy; 2025 NJEEYGU - Le Grand Jour. Tous droits réservés. Création d'événements d'exception.</p>
       </div>
     </div>
   </footer>

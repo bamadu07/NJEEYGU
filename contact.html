@@ -33,36 +33,19 @@
       letter-spacing: -0.02em;
     }
     
-    /* Logo compact et élégant */
+    /* Logo avec image */
     .logo-njeeygu {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
-    .logo-medallion {
-      width: 42px;
-      height: 42px;
-      background: var(--rouge-profond);
+    .logo-image {
+      width: 45px;
+      height: 45px;
       border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      object-fit: cover;
       border: 2px solid var(--or-eclatant);
       box-shadow: 0 3px 10px rgba(139,0,0,0.2);
-    }
-    .logo-house {
-      font-size: 22px;
-      color: var(--or-eclatant);
-      position: relative;
-    }
-    .logo-house .ngj-center {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-45%, -55%);
-      font-size: 8px;
-      font-weight: 800;
-      color: var(--blanc-casse);
     }
     .logo-text {
       font-weight: 700;
@@ -86,7 +69,7 @@
     .navbar {
       background: var(--blanc-casse) !important;
       border-bottom: 1px solid rgba(212, 175, 55, 0.15);
-      padding: 0.2rem 0;
+      padding: 0.1rem 0;
       box-shadow: 0 2px 10px var(--ombre-legere);
     }
     .nav-link {
@@ -109,8 +92,8 @@
     
     /* Boutons compacts */
     .btn-rouge, .btn-or {
-      padding: 10px 25px;
-      font-size: 0.9rem;
+      padding: 8px 20px;
+      font-size: 0.85rem;
       font-weight: 600;
       border-radius: 40px;
       transition: all 0.3s;
@@ -137,42 +120,49 @@
       box-shadow: 0 8px 20px rgba(212,175,55,0.4);
     }
     
-    /* Hero Contact amélioré */
+    /* Hero Contact - texte centré */
     .hero-contact {
       background: linear-gradient(115deg, rgba(139,0,0,0.95), rgba(0,107,84,0.9)), 
                   url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop');
       background-size: cover;
       background-position: center;
       color: white;
-      padding: 100px 0 120px;
+      padding: 50px 0 60px;
       position: relative;
+      text-align: center;
     }
     .hero-contact h1 {
-      font-size: 3.5rem;
+      font-size: 2.5rem;
       font-weight: 800;
       color: var(--or-eclatant);
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
     }
     .hero-contact p {
-      font-size: 1.2rem;
+      font-size: 1rem;
       max-width: 700px;
       opacity: 0.95;
+      margin-bottom: 0.5rem;
+      margin-left: auto;
+      margin-right: auto;
     }
     .hero-badge {
       display: inline-block;
       background: rgba(255,255,255,0.1);
       border: 1px solid var(--or-eclatant);
-      padding: 0.3rem 1.5rem;
+      padding: 0.2rem 1.2rem;
       border-radius: 30px;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       letter-spacing: 2px;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .hero-contact .d-flex {
+      justify-content: center;
     }
     
     /* Coordonnées améliorées */
     .info-card {
       background: white;
-      padding: 30px 20px;
+      padding: 20px 15px;
       border-radius: 30px;
       box-shadow: 0 15px 30px var(--ombre-legere);
       height: 100%;
@@ -186,48 +176,48 @@
       box-shadow: 0 25px 45px var(--ombre-doree);
     }
     .info-icon {
-      width: 70px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
       background: linear-gradient(135deg, var(--or-eclatant), #b8960f);
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       color: var(--rouge-profond);
-      margin: 0 auto 1.5rem;
+      margin: 0 auto 1rem;
       box-shadow: 0 10px 20px rgba(212,175,55,0.3);
     }
     .info-card h3 {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       color: var(--rouge-profond);
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.5rem;
     }
     .info-card p {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       color: #555;
       margin-bottom: 0;
     }
     
-    /* Formulaire amélioré */
+    /* Formulaire amélioré - maintenant pleine largeur (carte supprimée) */
     .contact-form {
       background: white;
-      padding: 40px;
+      padding: 30px;
       border-radius: 30px;
       box-shadow: 0 20px 40px var(--ombre-legere);
       border: 1px solid rgba(212,175,55,0.1);
     }
     .contact-form h2 {
       color: var(--rouge-profond);
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
     }
     .form-control, .form-select {
-      padding: 12px 15px;
+      padding: 10px 15px;
       border: 2px solid rgba(212,175,55,0.1);
       border-radius: 15px;
       transition: all 0.3s;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
     .form-control:focus, .form-select:focus {
       border-color: var(--or-eclatant);
@@ -236,30 +226,16 @@
     .form-label {
       font-weight: 600;
       color: var(--rouge-profond);
-      font-size: 0.9rem;
-      margin-bottom: 0.3rem;
-    }
-    
-    /* Carte améliorée */
-    .map-container {
-      border-radius: 30px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px var(--ombre-legere);
-      border: 3px solid var(--or-eclatant);
-      height: 100%;
-      min-height: 500px;
-    }
-    .map-container iframe {
-      width: 100%;
-      height: 100%;
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
     }
     
     /* FAQ améliorée */
     .faq-item {
       background: white;
-      padding: 25px;
+      padding: 20px;
       border-radius: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       border: 1px solid rgba(212,175,55,0.1);
       transition: all 0.3s ease;
       box-shadow: 0 8px 20px var(--ombre-legere);
@@ -271,18 +247,18 @@
     }
     .faq-item h4 {
       color: var(--rouge-profond);
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
       display: flex;
       align-items: center;
     }
     .faq-item h4 i {
       color: var(--or-eclatant);
       margin-right: 10px;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
     }
     .faq-item p {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: #555;
       margin-bottom: 0;
       padding-left: 2rem;
@@ -294,14 +270,14 @@
       bottom: 30px;
       left: 30px;
       background: #25d366;
-      width: 60px;
-      height: 60px;
+      width: 55px;
+      height: 55px;
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
       color: white;
-      font-size: 2rem;
+      font-size: 1.8rem;
       box-shadow: 0 10px 25px rgba(37,211,102,0.4);
       cursor: pointer;
       z-index: 1000;
@@ -320,55 +296,55 @@
       100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
     }
     
-    /* Sections */
+    /* Sections - espacement réduit */
     section {
-      padding: 60px 0;
+      padding: 40px 0;
     }
     .section-title {
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: var(--rouge-profond);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.3rem;
     }
     .section-subtitle {
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: #666;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
     }
     .divider {
-      width: 60px;
+      width: 50px;
       height: 2px;
       background: var(--or-eclatant);
-      margin: 1rem 0 1.5rem;
+      margin: 0.5rem 0 1.2rem;
     }
     
     /* Footer compact */
     footer {
       background: var(--rouge-profond);
       color: var(--blanc-casse);
-      padding: 50px 0 20px;
+      padding: 40px 0 15px;
       border-top: 2px solid var(--or-eclatant);
-      margin-top: 60px;
+      margin-top: 40px;
     }
     .footer-title {
       color: var(--or-eclatant);
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
     .social-links a {
-      width: 38px;
-      height: 38px;
+      width: 35px;
+      height: 35px;
       background: rgba(212,175,55,0.1);
       color: var(--or-eclatant);
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      margin-right: 10px;
+      margin-right: 8px;
       border: 1px solid var(--or-eclatant);
       transition: all 0.2s;
       text-decoration: none;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
     .social-links a:hover {
       background: var(--or-eclatant);
@@ -379,8 +355,8 @@
       color: rgba(255,255,255,0.8);
       text-decoration: none;
       transition: color 0.2s;
-      font-size: 0.9rem;
-      line-height: 2;
+      font-size: 0.85rem;
+      line-height: 1.8;
     }
     .footer-links a:hover {
       color: var(--or-eclatant);
@@ -393,18 +369,14 @@
   </style>
 </head>
 <body>
-  <!-- Navigation compacte -->
+  <!-- Navigation compacte avec logo image -->
   <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
       <a class="navbar-brand" href="index.html">
         <div class="logo-njeeygu">
-          <div class="logo-medallion">
-            <div class="logo-house">
-              <i class="fas fa-home"></i>
-              <span class="ngj-center">NGJ</span>
-            </div>
-          </div>
-          <div class="logo-text">
+          <!-- Logo image (utilisez votre propre URL d'image) -->
+            <img src="images/log1.png" alt="NJEEYGU Logo" class="logo-image">
+            <div class="logo-text">
             NJEEYGU
             <span class="le-grand-jour">LE GRAND JOUR</span>
           </div>
@@ -428,13 +400,13 @@
     </div>
   </nav>
 
-  <!-- Hero Contact amélioré -->
+  <!-- Hero Contact - texte centré -->
   <div class="hero-contact">
     <div class="container">
       <span class="hero-badge"><i class="fas fa-crown me-2"></i>PRÊT À ORGANISER ?</span>
-      <h1 class="display-3 fw-bold">Contactez-nous</h1>
-      <p class="fs-4 mb-3">Prêt à organiser votre événement ? N'attendez plus pour faire de votre rêve une réalité. Notre équipe est à votre écoute pour vous conseiller.</p>
-      <div class="d-flex gap-3 mt-4">
+      <h1 class="fw-bold">Contactez-nous</h1>
+      <p>Prêt à organiser votre événement ? Notre équipe est à votre écoute pour vous conseiller et faire de votre rêve une réalité.</p>
+      <div class="d-flex gap-3 mt-3">
         <a href="#form" class="btn btn-or">Envoyer un message</a>
         <a href="tel:+221775449795" class="btn btn-rouge">Appeler</a>
       </div>
@@ -444,7 +416,7 @@
   <!-- Coordonnées améliorées -->
   <section>
     <div class="container">
-      <div class="row g-4">
+      <div class="row g-3">
         <div class="col-md-3">
           <div class="info-card">
             <div class="info-icon">
@@ -485,33 +457,33 @@
     </div>
   </section>
 
-  <!-- Formulaire et Carte améliorés -->
+  <!-- Formulaire SEUL (carte itinéraire supprimée) -->
   <section id="form">
     <div class="container">
-      <div class="row g-4">
-        <div class="col-lg-6">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
           <div class="contact-form">
             <h2>Envoyez-nous un message</h2>
             <div class="divider"></div>
-            <form>
+            <form id="contactForm" onsubmit="sendViaWhatsApp(event)">
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Nom complet</label>
-                  <input type="text" class="form-control" placeholder="Votre nom" required>
+                  <input type="text" class="form-control" id="nom" placeholder="Votre nom" required>
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Email</label>
-                  <input type="email" class="form-control" placeholder="votre@email.com" required>
+                  <input type="email" class="form-control" id="email" placeholder="votre@email.com" required>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Téléphone</label>
-                  <input type="tel" class="form-control" placeholder="+221 77 XXX XX XX">
+                  <input type="tel" class="form-control" id="telephone" placeholder="+221 77 XXX XX XX" required>
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Type d'événement</label>
-                  <select class="form-select">
+                  <select class="form-select" id="evenement">
                     <option selected>Choisissez</option>
                     <option>Mariage</option>
                     <option>Baptême</option>
@@ -525,25 +497,22 @@
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Date prévue</label>
-                  <input type="date" class="form-control">
+                  <input type="date" class="form-control" id="date">
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Nombre d'invités</label>
-                  <input type="number" class="form-control" placeholder="Ex: 100">
+                  <input type="number" class="form-control" id="invites" placeholder="Ex: 100">
                 </div>
               </div>
               <div class="mb-3">
                 <label class="form-label">Votre message</label>
-                <textarea class="form-control" rows="5" placeholder="Parlez-nous de votre projet, de vos envies, de votre budget..."></textarea>
+                <textarea class="form-control" id="message" rows="4" placeholder="Parlez-nous de votre projet, de vos envies, de votre budget..." required></textarea>
               </div>
-              <button type="submit" class="btn btn-rouge w-100 py-3">Envoyer ma demande <i class="fas fa-paper-plane ms-2"></i></button>
+              <button type="submit" class="btn btn-rouge w-100 py-2">
+                <i class="fab fa-whatsapp me-2"></i>Envoyer via WhatsApp
+              </button>
             </form>
-            <p class="small text-muted mt-3"><i class="fas fa-lock me-1" style="color: var(--or-eclatant);"></i> Vos données sont confidentielles</p>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="map-container">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2473.184251931132!2d-16.5066323!3d16.0276957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xe9501bf2c4f2d55%3A0xac6737577a91c93!2sSaint-Louis%2C%20S%C3%A9n%C3%A9gal!5e0!3m2!1sfr!2sfr!4v1700000000000!5m2!1sfr!2sfr" allowfullscreen="" loading="lazy"></iframe>
+            <p class="small text-muted mt-2"><i class="fas fa-lock me-1" style="color: var(--or-eclatant);"></i> Vos données sont confidentielles</p>
           </div>
         </div>
       </div>
@@ -557,11 +526,11 @@
         <h2 class="section-title">Questions fréquentes</h2>
         <p class="section-subtitle">Tout ce que vous devez savoir avant de nous contacter</p>
       </div>
-      <div class="row">
+      <div class="row g-3">
         <div class="col-md-6">
           <div class="faq-item">
             <h4><i class="fas fa-question-circle"></i> Comment réserver ?</h4>
-            <p>Contactez-nous par téléphone ou via le formulaire ci-dessus. Nous vous rappellerons sous 24h pour discuter de votre projet et établir un devis personnalisé.</p>
+            <p>Contactez-nous par téléphone ou via le formulaire. Nous vous rappellerons sous 24h pour discuter de votre projet.</p>
           </div>
           <div class="faq-item">
             <h4><i class="fas fa-question-circle"></i> Quels sont les délais ?</h4>
@@ -591,35 +560,30 @@
   </section>
 
   <!-- Section contact direct -->
-  <section class="py-4" style="background: linear-gradient(135deg, var(--rouge-profond), #6b0000);">
+  <section class="py-3" style="background: linear-gradient(135deg, var(--rouge-profond), #6b0000);">
     <div class="container text-center text-white">
-      <h3 class="fw-bold mb-3">Besoin d'une réponse immédiate ?</h3>
-      <p class="mb-4">Appelez-nous directement ou écrivez-nous sur WhatsApp</p>
+      <h4 class="fw-bold mb-2">Besoin d'une réponse immédiate ?</h4>
+      <p class="mb-3 small">Appelez-nous directement ou écrivez-nous sur WhatsApp</p>
       <div class="d-flex justify-content-center gap-3">
-        <a href="tel:+221775449795" class="btn btn-or"><i class="fas fa-phone-alt me-2"></i> +221 77 544 97 95</a>
-        <a href="https://wa.me/221775449795" class="btn btn-or" style="background: #25d366; color: white;"><i class="fab fa-whatsapp me-2"></i> WhatsApp</a>
+        <a href="tel:+221775449795" class="btn btn-or btn-sm"><i class="fas fa-phone-alt me-2"></i> +221 77 544 97 95</a>
+        <a href="https://wa.me/221775449795" class="btn btn-or btn-sm" style="background: #25d366; color: white;"><i class="fab fa-whatsapp me-2"></i> WhatsApp</a>
       </div>
     </div>
   </section>
 
-  <!-- WhatsApp flottant -->
+  <!-- WhatsApp flottant 
   <a href="https://wa.me/221775449795" class="whatsapp-float" target="_blank">
     <i class="fab fa-whatsapp"></i>
-  </a>
+  </a> -->
 
-  <!-- Footer compact -->
+  <!-- Footer compact avec logo image -->
   <footer>
     <div class="container">
       <div class="row">
-        <div class="col-lg-4 mb-3">
+        <div class="col-lg-4 mb-2">
           <div class="logo-njeeygu mb-2">
-            <div class="logo-medallion" style="width: 40px; height: 40px;">
-              <div class="logo-house" style="font-size: 20px;">
-                <i class="fas fa-home"></i>
-                <span class="ngj-center" style="font-size: 8px;">NGJ</span>
-              </div>
-            </div>
-            <span style="color: var(--or-eclatant); font-weight: 600;">NJEEYGU</span>
+            <img src="images/log1.png" alt="NJEEYGU Logo" class="logo-image">
+            <span style="color: var(--or-eclatant); font-weight: 600; font-size: 1rem;">NJEEYGU</span>
           </div>
           <p class="small opacity-75">Votre partenaire événementiel à Saint-Louis depuis 10 ans.</p>
           <div class="small">
@@ -628,7 +592,7 @@
             <i class="fas fa-envelope me-1" style="color: var(--or-eclatant);"></i> contact@njeeygu.sn
           </div>
         </div>
-        <div class="col-lg-4 mb-3">
+        <div class="col-lg-4 mb-2">
           <h5 class="footer-title">Liens rapides</h5>
           <div class="footer-links">
             <div><a href="index.html">Accueil</a></div>
@@ -638,9 +602,9 @@
             <div><a href="contact.html">Contact</a></div>
           </div>
         </div>
-        <div class="col-lg-4 mb-3">
+        <div class="col-lg-4 mb-2">
           <h5 class="footer-title">Suivez-nous</h5>
-          <div class="social-links mb-3">
+          <div class="social-links mb-2">
             <a href="#"><i class="fab fa-facebook-f"></i></a>
             <a href="#"><i class="fab fa-instagram"></i></a>
             <a href="#"><i class="fab fa-tiktok"></i></a>
@@ -651,6 +615,50 @@
       </div>
     </div>
   </footer>
+
+  <!-- Script pour l'envoi via WhatsApp -->
+  <script>
+    function sendViaWhatsApp(event) {
+      event.preventDefault();
+      
+      // Récupérer les valeurs du formulaire
+      const nom = document.getElementById('nom').value;
+      const email = document.getElementById('email').value;
+      const telephone = document.getElementById('telephone').value;
+      const evenement = document.getElementById('evenement').value;
+      const date = document.getElementById('date').value;
+      const invites = document.getElementById('invites').value;
+      const message = document.getElementById('message').value;
+      
+      // Numéro WhatsApp (à remplacer par votre numéro)
+      const phoneNumber = '221775449795'; // Format international sans le +
+      
+      // Construire le message
+      let whatsappMessage = `*Nouvelle demande de contact - NJEEYGU*%0A%0A`;
+      whatsappMessage += `*Nom :* ${nom}%0A`;
+      whatsappMessage += `*Email :* ${email}%0A`;
+      whatsappMessage += `*Téléphone :* ${telephone}%0A`;
+      whatsappMessage += `*Événement :* ${evenement}%0A`;
+      
+      if (date) {
+        whatsappMessage += `*Date prévue :* ${date}%0A`;
+      }
+      
+      if (invites) {
+        whatsappMessage += `*Nombre d'invités :* ${invites}%0A`;
+      }
+      
+      whatsappMessage += `*Message :* ${message}%0A%0A`;
+      whatsappMessage += `_Message envoyé depuis le site web NJEEYGU_`;
+      
+      // Ouvrir WhatsApp avec le message pré-rempli
+      const whatsappURL = `https://wa.me/${phoneNumber}?text=${whatsappMessage}`;
+      window.open(whatsappURL, '_blank');
+      
+      // Optionnel : Afficher un message de confirmation
+      alert('Vous allez être redirigé vers WhatsApp pour envoyer votre demande.');
+    }
+  </script>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

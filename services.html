@@ -33,36 +33,20 @@
       letter-spacing: -0.02em;
     }
     
-    /* Logo compact et élégant */
+    /* Logo avec image réelle */
     .logo-njeeygu {
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .logo-medallion {
+    .logo-image {
       width: 42px;
       height: 42px;
-      background: var(--rouge-profond);
       border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      object-fit: cover;
       border: 2px solid var(--or-eclatant);
       box-shadow: 0 3px 10px rgba(139,0,0,0.2);
-    }
-    .logo-house {
-      font-size: 22px;
-      color: var(--or-eclatant);
-      position: relative;
-    }
-    .logo-house .ngj-center {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-45%, -55%);
-      font-size: 8px;
-      font-weight: 800;
-      color: var(--blanc-casse);
+      background: white;
     }
     .logo-text {
       font-weight: 700;
@@ -304,20 +288,53 @@
       margin-bottom: 0;
     }
     
-    /* Section Galerie */
-    .gallery-img {
+    /* Section Galerie avec descriptions */
+    .gallery-item {
+      position: relative;
       border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 15px var(--ombre-legere);
+      border: 2px solid rgba(212,175,55,0.15);
+      transition: all 0.3s ease;
+    }
+    .gallery-item:hover {
+      border-color: var(--or-eclatant);
+      box-shadow: 0 15px 25px var(--ombre-doree);
+    }
+    .gallery-img {
       width: 100%;
       height: 180px;
       object-fit: cover;
-      border: 2px solid rgba(212,175,55,0.15);
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 15px var(--ombre-legere);
+      transition: transform 0.5s ease;
     }
-    .gallery-img:hover {
-      transform: scale(1.03);
-      border-color: var(--or-eclatant);
-      box-shadow: 0 15px 25px var(--ombre-doree);
+    .gallery-item:hover .gallery-img {
+      transform: scale(1.05);
+    }
+    .gallery-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(139,0,0,0.9), transparent);
+      color: var(--blanc-casse);
+      padding: 1rem 0.8rem 0.5rem;
+      transform: translateY(100%);
+      transition: transform 0.4s ease;
+    }
+    .gallery-item:hover .gallery-overlay {
+      transform: translateY(0);
+    }
+    .gallery-overlay h4 {
+      color: var(--or-eclatant);
+      font-size: 0.9rem;
+      margin-bottom: 0.1rem;
+      font-weight: 700;
+    }
+    .gallery-overlay p {
+      font-size: 0.7rem;
+      margin-bottom: 0;
+      opacity: 0.9;
+      line-height: 1.2;
     }
     
     /* Sections */
@@ -399,12 +416,11 @@
     <div class="container">
       <a class="navbar-brand" href="index.html">
         <div class="logo-njeeygu">
-          <div class="logo-medallion">
-            <div class="logo-house">
-              <i class="fas fa-home"></i>
-              <span class="ngj-center">NGJ</span>
-            </div>
-          </div>
+          <!-- Logo image réelle -->
+          <img src="images/log1.png" 
+               alt="NJEEYGU Logo" 
+               class="logo-image"
+               onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
           <div class="logo-text">
             NJEEYGU
             <span class="le-grand-jour">LE GRAND JOUR</span>
@@ -563,7 +579,7 @@
     </div>
   </section>
 
-  <!-- Galerie de réalisations -->
+  <!-- Galerie de réalisations avec descriptions -->
   <section>
     <div class="container">
       <div class="text-center">
@@ -572,16 +588,40 @@
       </div>
       <div class="row g-3">
         <div class="col-md-3 col-6">
-          <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop" alt="Mariage" class="gallery-img">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop" alt="Mariage" class="gallery-img">
+            <div class="gallery-overlay">
+              <h4>Mariage traditionnel</h4>
+              <p>Décoration rouge & or pour Fatou & Amadou - 150 invités</p>
+            </div>
+          </div>
         </div>
         <div class="col-md-3 col-6">
-          <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop" alt="Baptême" class="gallery-img">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop" alt="Baptême" class="gallery-img">
+            <div class="gallery-overlay">
+              <h4>Baptême élégant</h4>
+              <p>Ambiance blanche & dorée - 80 invités, coussins personnalisés</p>
+            </div>
+          </div>
         </div>
         <div class="col-md-3 col-6">
-          <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2070&auto=format&fit=crop" alt="Réception" class="gallery-img">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2070&auto=format&fit=crop" alt="Réception" class="gallery-img">
+            <div class="gallery-overlay">
+              <h4>Réception privée</h4>
+              <p>Anniversaire surprise - éclairage tamisé et vaisselle prestige</p>
+            </div>
+          </div>
         </div>
         <div class="col-md-3 col-6">
-          <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=2070&auto=format&fit=crop" alt="Décoration" class="gallery-img">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=2070&auto=format&fit=crop" alt="Décoration" class="gallery-img">
+            <div class="gallery-overlay">
+              <h4>Soirée d'entreprise</h4>
+              <p>Inauguration - 200 personnes, décoration moderne et lounge</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -692,13 +732,12 @@
       <div class="row">
         <div class="col-lg-4 mb-3">
           <div class="logo-njeeygu mb-2">
-            <div class="logo-medallion" style="width: 40px; height: 40px;">
-              <div class="logo-house" style="font-size: 20px;">
-                <i class="fas fa-home"></i>
-                <span class="ngj-center" style="font-size: 8px;">NGJ</span>
-              </div>
-            </div>
-            <span style="color: var(--or-eclatant); font-weight: 600;">NJEEYGU</span>
+            <!-- Petit logo dans footer -->
+            <img src="images/log1.png" 
+                 alt="NJEEYGU Logo" 
+                 style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--or-eclatant);"
+                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
+            <span style="color: var(--or-eclatant); font-weight: 600; margin-left: 8px;">NJEEYGU</span>
           </div>
           <p class="small opacity-75">Votre partenaire événementiel à Saint-Louis depuis 10 ans.</p>
           <div class="small">
