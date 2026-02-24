@@ -92,7 +92,7 @@
     }
     
     /* Boutons compacts */
-    .btn-rouge, .btn-or {
+    .btn-rouge, .btn-or, .btn-devis {
       padding: 8px 20px;
       font-size: 0.8rem;
       font-weight: 600;
@@ -110,6 +110,12 @@
       color: var(--rouge-profond);
       box-shadow: 0 3px 10px rgba(212,175,55,0.2);
     }
+    .btn-devis {
+      background: var(--vert-emeraude);
+      color: white;
+      box-shadow: 0 3px 10px rgba(0,107,84,0.2);
+      width: 100%;
+    }
     .btn-rouge:hover {
       background: #6b0000;
       transform: translateY(-2px);
@@ -120,84 +126,93 @@
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(212,175,55,0.3);
     }
+    .btn-devis:hover {
+      background: #004c3a;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,107,84,0.3);
+    }
     
-    /* Header Boutique amélioré avec description */
-    .boutique-header {
-      background: 
-                   url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop');
+    /* Hero Boutique */
+    .hero-boutique {
+      background: url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop');
       background-size: cover;
       background-position: center;
       color: white;
-      padding: 60px 0 70px;
+      padding: 40px 0 50px;
       position: relative;
       text-align: center;
     }
-    .boutique-header h1 {
-      font-size: 3rem;
-      font-weight: 800;
+    .hero-boutique h1 {
+      font-size: 2.5rem;
       color: var(--or-eclatant);
-      margin-bottom: 0.8rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-weight: 800;
+      margin-bottom: 0.75rem;
     }
-    .boutique-header p {
-      font-size: 1.1rem;
+    .hero-boutique p {
+      font-size: 1rem;
       max-width: 700px;
-      margin: 0 auto;
       opacity: 0.95;
+      margin-left: auto;
+      margin-right: auto;
     }
     .hero-badge {
       display: inline-block;
       background: rgba(212,175,55,0.15);
       border: 1px solid var(--or-eclatant);
-      padding: 0.3rem 1.5rem;
+      padding: 0.2rem 1.2rem;
       border-radius: 30px;
-      font-size: 0.8rem;
-      letter-spacing: 2px;
-      margin-bottom: 1.2rem;
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+    }
+    .hero-boutique .d-flex {
+      justify-content: center;
     }
     
-    /* Bannière de présentation améliorée */
+    /* Section présentation */
     .presentation-banner {
       background: linear-gradient(135deg, #f8f1e0, #fff);
-      padding: 40px 0;
+      padding: 60px 0;
       border-bottom: 2px solid var(--or-eclatant);
       border-top: 2px solid var(--or-eclatant);
     }
     .presentation-content {
       display: flex;
       align-items: center;
-      gap: 30px;
+      gap: 50px;
     }
     .presentation-text {
       flex: 1;
     }
     .presentation-text h2 {
       color: var(--rouge-profond);
-      font-size: 2rem;
-      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
     }
-    .presentation-text p {
-      font-size: 1rem;
-      color: #444;
-      margin-bottom: 0.5rem;
-    }
-    .presentation-highlight {
-      color: var(--vert-emeraude);
-      font-weight: 600;
+    .presentation-text h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 80px;
+      height: 3px;
+      background: var(--or-eclatant);
     }
     .presentation-stats {
       display: flex;
-      gap: 30px;
-      margin-top: 20px;
+      gap: 40px;
+      margin-top: 30px;
     }
     .stat-item {
       text-align: center;
     }
     .stat-number {
-      font-size: 2rem;
+      font-size: 2.5rem;
       font-weight: 800;
       color: var(--rouge-profond);
       font-family: 'Playfair Display', serif;
+      line-height: 1;
     }
     .stat-label {
       font-size: 0.8rem;
@@ -209,8 +224,13 @@
       flex: 1;
       border-radius: 30px;
       overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
       border: 3px solid var(--or-eclatant);
+      transform: rotate(2deg);
+      transition: transform 0.3s;
+    }
+    .presentation-image:hover {
+      transform: rotate(0deg) scale(1.02);
     }
     .presentation-image img {
       width: 100%;
@@ -218,33 +238,32 @@
       display: block;
     }
     
-    /* Filtres améliorés */
+    /* Filtres */
     .filtres-container {
-      padding: 30px 0 10px;
+      padding: 40px 0 20px;
     }
     .filtre-categorie {
       display: inline-block;
-      padding: 8px 22px;
-      margin: 0 4px 12px;
+      padding: 8px 20px;
+      margin: 0 5px 10px;
       border: 2px solid var(--or-eclatant);
       border-radius: 40px;
       color: var(--rouge-profond);
       font-weight: 500;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.3s;
       background: white;
-      box-shadow: 0 3px 8px var(--ombre-legere);
     }
     .filtre-categorie:hover,
     .filtre-categorie.active {
       background: var(--or-eclatant);
       color: var(--rouge-profond);
       transform: translateY(-2px);
-      box-shadow: 0 8px 15px var(--ombre-doree);
+      box-shadow: 0 10px 20px var(--ombre-doree);
     }
     
-    /* Cards produits améliorées */
+    /* Cards produits - SANS PRIX */
     .product-card {
       background: white;
       border-radius: 24px;
@@ -252,7 +271,6 @@
       box-shadow: 0 15px 30px var(--ombre-legere);
       transition: all 0.3s ease;
       height: 100%;
-      position: relative;
       border: 1px solid rgba(212,175,55,0.1);
     }
     .product-card:hover {
@@ -266,25 +284,30 @@
       right: 15px;
       background: var(--or-eclatant);
       color: var(--rouge-profond);
-      padding: 5px 15px;
+      padding: 4px 12px;
       border-radius: 30px;
       font-weight: 600;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       z-index: 2;
       box-shadow: 0 3px 8px rgba(0,0,0,0.1);
     }
+    .product-img-container {
+      overflow: hidden;
+      height: 200px;
+      position: relative;
+    }
     .product-img {
-      height: 220px;
+      height: 200px;
       object-fit: cover;
       width: 100%;
       transition: transform 0.5s;
       border-bottom: 2px solid rgba(212,175,55,0.2);
     }
     .product-card:hover .product-img {
-      transform: scale(1.05);
+      transform: scale(1.1);
     }
     .product-content {
-      padding: 1.5rem 1.2rem 1.2rem;
+      padding: 1.5rem 1rem 1.2rem;
     }
     .product-category {
       font-size: 0.7rem;
@@ -298,195 +321,103 @@
       font-size: 1.1rem;
       font-weight: 700;
       color: var(--rouge-profond);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.5rem;
     }
     .product-desc {
       font-size: 0.8rem;
       color: #666;
-      margin-bottom: 1rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
     }
     .product-price {
-      color: var(--vert-emeraude);
-      font-size: 1.4rem;
-      font-weight: 700;
-      font-family: 'Playfair Display', serif;
-      margin-bottom: 1rem;
-    }
-    .old-price {
-      color: #999;
-      text-decoration: line-through;
-      font-size: 0.9rem;
-      margin-left: 8px;
-      font-weight: 400;
+      display: none; /* Cacher complètement les prix */
     }
     
-    /* Panier flottant amélioré */
+    /* Panier flottant - SUPPRIMÉ */
     .cart-floating {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: var(--or-eclatant);
-      width: 65px;
-      height: 65px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--rouge-profond);
-      font-size: 1.8rem;
-      box-shadow: 0 10px 25px rgba(212,175,55,0.4);
-      cursor: pointer;
-      z-index: 1000;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      border: 2px solid white;
-    }
-    .cart-floating:hover {
-      transform: scale(1.15) rotate(3deg);
-      background: var(--rouge-profond);
-      color: var(--or-eclatant);
-      box-shadow: 0 15px 35px rgba(139,0,0,0.4);
-    }
-    .cart-count {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      background: var(--rouge-profond);
-      color: white;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 0.8rem;
-      font-weight: bold;
-      border: 2px solid white;
+      display: none; /* Désactiver le panier */
     }
     
-    /* Mini panier détaillé */
+    /* Mini panier - SUPPRIMÉ */
     .cart-preview {
+      display: none; /* Désactiver le mini panier */
+    }
+    
+    /* Checkout modal - SUPPRIMÉ */
+    #checkoutModal {
+      display: none !important;
+    }
+    
+    /* Modal devis personnalisé */
+    .devis-modal {
       position: fixed;
-      bottom: 105px;
-      right: 30px;
-      width: 350px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+    .devis-modal-content {
       background: white;
-      border-radius: 25px;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-      z-index: 999;
-      border: 2px solid var(--or-eclatant);
-      overflow: hidden;
-      display: none;
-      transform-origin: bottom right;
-      animation: slideIn 0.3s ease;
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    .cart-preview.show {
-      display: block;
-    }
-    .cart-header {
-      background: var(--rouge-profond);
-      color: var(--or-eclatant);
-      padding: 15px 20px;
-      font-weight: 700;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .cart-header button {
-      background: none;
-      border: none;
-      color: var(--blanc-casse);
-      font-size: 1.2rem;
-      transition: 0.2s;
-    }
-    .cart-header button:hover {
-      color: var(--or-eclatant);
-      transform: scale(1.2);
-    }
-    .cart-items {
-      max-height: 300px;
+      border-radius: 30px;
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
       overflow-y: auto;
-      padding: 10px;
-      background: #fefaf0;
+      border: 3px solid var(--or-eclatant);
     }
-    .cart-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px dashed var(--or-eclatant);
+    .devis-modal h3 {
+      color: var(--rouge-profond);
+      margin-bottom: 20px;
     }
-    .cart-item-img {
-      width: 50px;
-      height: 50px;
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #eee;
       border-radius: 12px;
-      object-fit: cover;
-      border: 2px solid var(--or-eclatant);
-    }
-    .cart-item-details {
-      flex: 1;
-    }
-    .cart-item-title {
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: var(--rouge-profond);
-    }
-    .cart-item-price {
-      color: var(--vert-emeraude);
-      font-weight: 700;
       font-size: 0.9rem;
     }
-    .cart-item-remove {
-      color: #a00;
-      background: none;
-      border: none;
-      font-size: 0.9rem;
-      padding: 5px;
-      transition: 0.2s;
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--or-eclatant);
+      outline: none;
     }
-    .cart-item-remove:hover {
-      color: red;
-      transform: scale(1.2);
-    }
-    .cart-footer {
-      padding: 15px 20px;
-      background: #f0e9d8;
-      border-top: 2px solid var(--or-eclatant);
-    }
-    .cart-total {
+    .modal-actions {
       display: flex;
-      justify-content: space-between;
-      font-weight: 800;
-      color: var(--rouge-profond);
-      font-size: 1.1rem;
-      margin-bottom: 10px;
+      gap: 10px;
+      margin-top: 20px;
     }
-    .btn-checkout {
+    .modal-actions button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .btn-cancel {
+      background: #eee;
+    }
+    .btn-submit {
       background: var(--vert-emeraude);
       color: white;
-      border: none;
-      width: 100%;
-      padding: 12px;
-      border-radius: 40px;
-      font-weight: 600;
-      transition: 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .btn-checkout:hover {
-      background: var(--rouge-profond);
-      color: var(--or-eclatant);
-    }
-    .empty-cart-msg {
-      padding: 25px;
-      text-align: center;
-      color: #666;
-      font-style: italic;
     }
     
     /* Newsletter */
@@ -507,29 +438,24 @@
       padding: 12px 20px;
       border: none;
       border-radius: 30px;
-      font-size: 0.9rem;
     }
     .newsletter-form button {
-      padding: 12px 30px;
+      padding: 12px 25px;
       border: none;
       border-radius: 30px;
       background: var(--or-eclatant);
       color: var(--rouge-profond);
       font-weight: 600;
-      transition: 0.3s;
-    }
-    .newsletter-form button:hover {
-      background: var(--rouge-profond);
-      color: var(--or-eclatant);
+      cursor: pointer;
     }
     
-    /* Footer compact */
+    /* Footer */
     footer {
       background: var(--rouge-profond);
       color: var(--blanc-casse);
-      padding: 50px 0 20px;
+      padding: 40px 0 20px;
       border-top: 2px solid var(--or-eclatant);
-      margin-top: 0;
+      margin-top: 60px;
     }
     .footer-title {
       color: var(--or-eclatant);
@@ -538,8 +464,8 @@
       margin-bottom: 15px;
     }
     .social-links a {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       background: rgba(212,175,55,0.1);
       color: var(--or-eclatant);
       border-radius: 50%;
@@ -550,12 +476,10 @@
       border: 1px solid var(--or-eclatant);
       transition: all 0.2s;
       text-decoration: none;
-      font-size: 1rem;
     }
     .social-links a:hover {
       background: var(--or-eclatant);
       color: var(--rouge-profond);
-      transform: translateY(-3px) rotate(360deg);
     }
     .footer-links a {
       color: rgba(255,255,255,0.8);
@@ -573,74 +497,91 @@
       max-width: 1140px;
     }
     
-    /* Responsive pour mobile : 2 produits par ligne */
-    @media (max-width: 768px) {
-      .presentation-content {
-        flex-direction: column;
+    /* Toast notification */
+    .toast-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      z-index: 9999;
+      animation: slideInRight 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+    }
+    .toast-notification.success {
+      background: var(--vert-emeraude);
+    }
+    .toast-notification.error {
+      background: #dc3545;
+    }
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
       }
-      .newsletter-form {
-        flex-direction: column;
-        padding: 0 20px;
-      }
-      
-      /* 2 colonnes sur mobile */
-      .row > .col-lg-3.col-md-6 {
-        flex: 0 0 auto;
-        width: 50%;
-      }
-      
-      /* Ajustement des cards pour mobile */
-      .product-img {
-        height: 160px;
-      }
-      
-      .product-content {
-        padding: 1rem 0.8rem 0.8rem;
-      }
-      
-      .product-title {
-        font-size: 0.9rem;
-      }
-      
-      .product-desc {
-        font-size: 0.7rem;
-        margin-bottom: 0.5rem;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-      
-      .product-price {
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-      }
-      
-      .btn-rouge {
-        padding: 5px 10px;
-        font-size: 0.7rem;
-      }
-      
-      .product-badge {
-        font-size: 0.6rem;
-        padding: 3px 8px;
-        top: 8px;
-        right: 8px;
+      to {
+        transform: translateX(0);
+        opacity: 1;
       }
     }
     
-    /* Très petits écrans */
-    @media (max-width: 480px) {
+    /* Admin badge */
+    .admin-badge {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background: var(--rouge-profond);
+      color: var(--or-eclatant);
+      padding: 8px 15px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      z-index: 1001;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      border: 2px solid var(--or-eclatant);
+      cursor: pointer;
+    }
+    
+    /* Message devis uniquement */
+    .devis-only-message {
+      text-align: center;
+      color: var(--vert-emeraude);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.8rem;
+      padding: 5px;
+      background: rgba(0,107,84,0.05);
+      border-radius: 20px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-boutique h1 {
+        font-size: 2rem;
+      }
+      .presentation-content {
+        flex-direction: column;
+      }
+      .presentation-stats {
+        justify-content: center;
+      }
+      .newsletter-form {
+        flex-direction: column;
+      }
+      .row > .col-md-6 {
+        flex: 0 0 auto;
+        width: 50%;
+      }
+      .product-img-container,
       .product-img {
-        height: 140px;
+        height: 160px;
       }
-      
       .product-title {
-        font-size: 0.8rem;
-      }
-      
-      .product-price {
-        font-size: 0.9rem;
+        font-size: 1rem;
       }
     }
   </style>
@@ -651,7 +592,6 @@
     <div class="container">
       <a class="navbar-brand" href="index.html">
         <div class="logo-njeeygu">
-          <!-- Logo image réelle -->
           <img src="images/log1.png" 
                alt="NJEEYGU Logo" 
                class="logo-image"
@@ -672,6 +612,7 @@
           <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
           <li class="nav-item"><a class="nav-link" href="apropos.html">À propos</a></li>
           <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="admin.html">Admin</a></li>
           <li class="nav-item ms-2">
             <a href="contact.html" class="btn btn-or btn-sm">Rdv</a>
           </li>
@@ -680,25 +621,29 @@
     </div>
   </nav>
 
-  <!-- Header Boutique amélioré -->
-  <div class="boutique-header">
+  <!-- Hero Boutique -->
+  <div class="hero-boutique">
     <div class="container">
       <span class="hero-badge"><i class="fas fa-crown me-2"></i>COLLECTION PRESTIGE 2025</span>
-      <h1 class="display-3 fw-bold">Notre Boutique</h1>
-      <p class="fs-5">Découvrez notre sélection d'accessoires et décorations d'exception pour vos événements</p>
+      <h1 class="fw-bold">Notre Boutique</h1>
+      <p>Découvrez notre sélection d'accessoires et décorations d'exception pour vos événements</p>
+      <div class="d-flex gap-3 mt-4">
+        <a href="#produits" class="btn btn-or">Voir les produits</a>
+        <a href="contact.html" class="btn btn-rouge">Contact</a>
+      </div>
     </div>
   </div>
 
-  <!-- Nouvelle section de présentation améliorée -->
+  <!-- Section présentation -->
   <div class="presentation-banner">
     <div class="container">
       <div class="presentation-content">
         <div class="presentation-text">
           <h2>L'art de la réception</h2>
           <p>Bienvenue dans notre boutique dédiée à l'élégance et au raffinement. Chaque pièce que nous sélectionnons est choisie avec soin pour apporter une touche d'exception à vos célébrations.</p>
-          <p><span class="presentation-highlight">✨ Des collections exclusives</span> - Nos accessoires et décorations sont soigneusement sélectionnés pour leur qualité et leur esthétique unique.</p>
-          <p><span class="presentation-highlight">🎯 Pour tous vos événements</span> - Mariages, baptêmes, anniversaires, réceptions professionnelles... Nous avons ce qu'il vous faut.</p>
-          <p><span class="presentation-highlight">💫 Personnalisation possible</span> - Contactez-nous pour des créations sur mesure adaptées à votre thème et vos couleurs.</p>
+          <p><i class="fas fa-star me-2" style="color: var(--or-eclatant);"></i> Des collections exclusives</p>
+          <p><i class="fas fa-glass-cheers me-2" style="color: var(--or-eclatant);"></i> Pour tous vos événements</p>
+          <p><i class="fas fa-palette me-2" style="color: var(--or-eclatant);"></i> Personnalisation possible</p>
           
           <div class="presentation-stats">
             <div class="stat-item">
@@ -710,7 +655,7 @@
               <div class="stat-label">Produits</div>
             </div>
             <div class="stat-item">
-              <div class="stat-number">10 ans</div>
+              <div class="stat-number">20 ans</div>
               <div class="stat-label">d'expertise</div>
             </div>
           </div>
@@ -722,413 +667,91 @@
     </div>
   </div>
 
-  <!-- Filtres par catégorie -->
-  <div class="filtres-container">
+  <!-- Filtres -->
+  <div class="filtres-container" id="produits">
     <div class="container">
       <div class="text-center">
-        <div class="d-flex flex-wrap justify-content-center">
+        <div class="d-flex flex-wrap justify-content-center" id="filterButtons">
           <span class="filtre-categorie active" data-category="all">Tous les produits</span>
-          <span class="filtre-categorie" data-category="table">Art de la table</span>
+          <span class="filtre-categorie" data-category="ballons">Ballons</span>
+          <span class="filtre-categorie" data-category="fleurs">Fleurs</span>
+          <span class="filtre-categorie" data-category="chaises">Chaises</span>
+          <span class="filtre-categorie" data-category="baches">Bâches</span>
+          <span class="filtre-categorie" data-category="vaisselle">Vaisselle</span>
+          <span class="filtre-categorie" data-category="traditionnelle">Décoration traditionnelle</span>
           <span class="filtre-categorie" data-category="lumiere">Lumières</span>
-          <span class="filtre-categorie" data-category="mariage">Mariage</span>
-          <span class="filtre-categorie" data-category="ballon">Ballons</span>
-          <span class="filtre-categorie" data-category="deco">Décoration</span>
         </div>
-        <p class="mt-3 small text-muted">Cliquez sur une catégorie pour filtrer les produits</p>
       </div>
     </div>
   </div>
 
-  <!-- Grille produits améliorée (24 produits avec descriptions détaillées) -->
-  <section>
+  <!-- Grille produits - SANS PRIX -->
+  <section class="pb-5">
     <div class="container" id="productGrid">
-      <!-- Ligne 1 -->
-      <div class="row g-4 mb-4">
-        <!-- Produit 1 : table -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="table">
-          <div class="product-card" data-id="1" data-name="Centre de table Royal" data-price="45000">
-            <span class="product-badge">Nouveau</span>
-            <img src="https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=2070&auto=format&fit=crop" class="product-img" alt="Centre de table">
-            <div class="product-content">
-              <div class="product-category">Art de la table</div>
-              <h3 class="product-title">Centre de table Royal</h3>
-              <p class="product-desc">Collection Prestige - Composition florale dorée avec cristaux. Hauteur 45cm. Idéal pour tables de réception.</p>
-              <div class="product-price">45 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 2 : lumiere -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="lumiere">
-          <div class="product-card" data-id="2" data-name="Guirlande Dorée" data-price="25000">
-            <span class="product-badge" style="background: var(--vert-emeraude); color: white;">-20%</span>
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop" class="product-img" alt="Guirlande">
-            <div class="product-content">
-              <div class="product-category">Lumières</div>
-              <h3 class="product-title">Guirlande Dorée</h3>
-              <p class="product-desc">5 mètres de guirlande lumineuse LED, 100 ampoules chaudes. Idéale pour ambiance chaleureuse. Télécommande incluse.</p>
-              <div class="product-price">25 000 FCFA <span class="old-price">32 000</span></div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 3 : mariage -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="mariage">
-          <div class="product-card" data-id="3" data-name="Coffret Mariage" data-price="15000">
-            <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop" class="product-img" alt="Coffret">
-            <div class="product-content">
-              <div class="product-category">Mariage</div>
-              <h3 class="product-title">Coffret Mariage</h3>
-              <p class="product-desc">Lot de 10 boîtes cadeaux pour dragées, finition satinée avec rubans dorés. Personnalisables sur demande.</p>
-              <div class="product-price">15 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 4 : ballon -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="ballon">
-          <div class="product-card" data-id="4" data-name="Arche à Ballons" data-price="35000">
-            <span class="product-badge">Top</span>
-            <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=2070&auto=format&fit=crop" class="product-img" alt="Arche">
-            <div class="product-content">
-              <div class="product-category">Ballons</div>
-              <h3 class="product-title">Arche à Ballons</h3>
-              <p class="product-desc">Structure métallique 2.5m de hauteur, inclut 30 ballons. Idéale pour entrée ou photobooth.</p>
-              <div class="product-price">35 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ligne 2 -->
-      <div class="row g-4 mb-4">
-        <!-- Produit 5 : table -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="table">
-          <div class="product-card" data-id="5" data-name="Vaisselle Émeraude" data-price="12000">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop" class="product-img" alt="Vaisselle">
-            <div class="product-content">
-              <div class="product-category">Art de la table</div>
-              <h3 class="product-title">Vaisselle Émeraude</h3>
-              <p class="product-desc">12 pièces (assiettes, couverts, verres) couleur vert émeraude. Design élégant pour 6 personnes.</p>
-              <div class="product-price">12 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 6 : lumiere -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="lumiere">
-          <div class="product-card" data-id="6" data-name="Photobooth LED" data-price="75000">
-            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop" class="product-img" alt="Photobooth">
-            <div class="product-content">
-              <div class="product-category">Lumières</div>
-              <h3 class="product-title">Photobooth LED</h3>
-              <p class="product-desc">Location à la journée avec fond lumineux et accessoires. Imprimante photo incluse.</p>
-              <div class="product-price">75 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 7 : deco -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="deco">
-          <div class="product-card" data-id="7" data-name="Set Bougeoirs" data-price="22000">
-            <span class="product-badge">Nouveau</span>
-            <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=2070&auto=format&fit=crop" class="product-img" alt="Bougeoirs">
-            <div class="product-content">
-              <div class="product-category">Décoration</div>
-              <h3 class="product-title">Set Bougeoirs</h3>
-              <p class="product-desc">Pack de 6 bougeoirs en verre doré, bougies LED incluses. Parfait pour ambiance tamisée.</p>
-              <div class="product-price">22 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 8 : table -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="table">
-          <div class="product-card" data-id="8" data-name="Nappage Or" data-price="8500">
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop" class="product-img" alt="Nappage">
-            <div class="product-content">
-              <div class="product-category">Art de la table</div>
-              <h3 class="product-title">Nappage Or</h3>
-              <p class="product-desc">Nappe en satin 160x220 cm, chemin de table assorti 40x200 cm. Tissu de haute qualité.</p>
-              <div class="product-price">8 500 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter au panier</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ligne 3 -->
-      <div class="row g-4 mb-4">
-        <!-- Produit 9 : table -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="table">
-          <div class="product-card" data-id="9" data-name="Chemin de table" data-price="18000">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Art de la table</div>
-              <h3 class="product-title">Chemin de table</h3>
-              <p class="product-desc">Rouge & Or, tissu brodé main, longueur 3m. Motifs traditionnels revisités.</p>
-              <div class="product-price">18 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 10 : mariage -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="mariage">
-          <div class="product-card" data-id="10" data-name="Marque-places" data-price="9500">
-            <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Mariage</div>
-              <h3 class="product-title">Marque-places</h3>
-              <p class="product-desc">Lot de 50 cartons dorés avec porte-nom en métal. Personnalisables sur demande.</p>
-              <div class="product-price">9 500 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 11 : deco -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="deco">
-          <div class="product-card" data-id="11" data-name="Vase Crystal" data-price="28000">
-            <img src="https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=2070&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Décoration</div>
-              <h3 class="product-title">Vase Crystal</h3>
-              <p class="product-desc">Hauteur 40cm, verre taillé, idéal pour centres de table. Design intemporel.</p>
-              <div class="product-price">28 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 12 : ballon -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="ballon">
-          <div class="product-card" data-id="12" data-name="Structure murale" data-price="42000">
-            <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=2070&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Ballons</div>
-              <h3 class="product-title">Structure murale</h3>
-              <p class="product-desc">Pour compositions de ballons, 2x2m démontable. Structure légère et stable.</p>
-              <div class="product-price">42 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ligne 4 -->
-      <div class="row g-4 mb-4">
-        <!-- Produit 13 : lumiere -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="lumiere">
-          <div class="product-card" data-id="13" data-name="Guirlande LED" data-price="14500">
-            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Lumières</div>
-              <h3 class="product-title">Guirlande LED</h3>
-              <p class="product-desc">10m blanc chaud, avec télécommande, 8 modes d'éclairage. Parfait pour extérieur/intérieur.</p>
-              <div class="product-price">14 500 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 14 : deco -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="deco">
-          <div class="product-card" data-id="14" data-name="Bougies parfumées" data-price="11000">
-            <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=2070&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Décoration</div>
-              <h3 class="product-title">Bougies parfumées</h3>
-              <p class="product-desc">Set de 4, parfums vanille, cannelle, ambre. Durée de combustion: 40h chacune.</p>
-              <div class="product-price">11 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 15 : deco -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="deco">
-          <div class="product-card" data-id="15" data-name="Rideau de fond" data-price="32000">
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Décoration</div>
-              <h3 class="product-title">Rideau de fond</h3>
-              <p class="product-desc">3x3m doré, parfait pour photobooth et scènes. Tissu pailleté de qualité.</p>
-              <div class="product-price">32 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 16 : mariage -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="mariage">
-          <div class="product-card" data-id="16" data-name="Boîtes cadeaux" data-price="16000">
-            <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Mariage</div>
-              <h3 class="product-title">Boîtes cadeaux</h3>
-              <p class="product-desc">Lot de 20, finition satin, rubans dorés assortis. Taille 10x10x5cm.</p>
-              <div class="product-price">16 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ligne 5 -->
-      <div class="row g-4 mb-4">
-        <!-- Produit 17 : table -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="table">
-          <div class="product-card" data-id="17" data-name="Serviettes tissu" data-price="13000">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Art de la table</div>
-              <h3 class="product-title">Serviettes tissu</h3>
-              <p class="product-desc">Lot de 50, coton de qualité, couleur ivoire. Lavables et réutilisables.</p>
-              <div class="product-price">13 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 18 : table -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="table">
-          <div class="product-card" data-id="18" data-name="Centre de table Or" data-price="55000">
-            <img src="https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=2070&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Art de la table</div>
-              <h3 class="product-title">Centre de table Or</h3>
-              <p class="product-desc">Collection Luxe, fleurs artificielles de qualité supérieure. Diamètre 30cm.</p>
-              <div class="product-price">55 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 19 : lumiere -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="lumiere">
-          <div class="product-card" data-id="19" data-name="Projecteur LED" data-price="29000">
-            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Lumières</div>
-              <h3 class="product-title">Projecteur LED</h3>
-              <p class="product-desc">RGB + télécommande, 20W, effet disco. Idéal pour ambiance de fête.</p>
-              <div class="product-price">29 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 20 : ballon -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="ballon">
-          <div class="product-card" data-id="20" data-name="Ballons métallisés" data-price="19000">
-            <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=2070&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Ballons</div>
-              <h3 class="product-title">Ballons métallisés</h3>
-              <p class="product-desc">Lot de 30, assortis or, rose, argent. Taille standard 30cm.</p>
-              <div class="product-price">19 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ligne 6 -->
-      <div class="row g-4 mb-4">
-        <!-- Produit 21 : deco -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="deco">
-          <div class="product-card" data-id="21" data-name="Chandelier doré" data-price="38000">
-            <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=2070&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Décoration</div>
-              <h3 class="product-title">Chandelier doré</h3>
-              <p class="product-desc">5 branches, hauteur 60cm, métal doré. Design classique et élégant.</p>
-              <div class="product-price">38 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 22 : lumiere -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="lumiere">
-          <div class="product-card" data-id="22" data-name="Lampions chinois" data-price="9000">
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Lumières</div>
-              <h3 class="product-title">Lampions chinois</h3>
-              <p class="product-desc">Lot de 20, coloris assortis, diamètre 25cm. Pour décoration aérienne.</p>
-              <div class="product-price">9 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 23 : mariage -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="mariage">
-          <div class="product-card" data-id="23" data-name="Dragées amandes" data-price="7500">
-            <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Mariage</div>
-              <h3 class="product-title">Dragées amandes</h3>
-              <p class="product-desc">1kg, enrobage doré, qualité supérieure. Amandes de première qualité.</p>
-              <div class="product-price">7 500 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-        <!-- Produit 24 : mariage -->
-        <div class="col-lg-3 col-md-6 product-item" data-category="mariage">
-          <div class="product-card" data-id="24" data-name="Coussins mariage" data-price="24000">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop" class="product-img">
-            <div class="product-content">
-              <div class="product-category">Mariage</div>
-              <h3 class="product-title">Coussins mariage</h3>
-              <p class="product-desc">Set de 4, satin, broderies dorées. Dimensions 40x40cm.</p>
-              <div class="product-price">24 000 FCFA</div>
-              <button class="btn btn-rouge w-100 add-to-cart">Ajouter</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- Les produits seront générés dynamiquement -->
     </div>
   </section>
 
-  <!-- Panier flottant amélioré -->
-  <div class="cart-floating" id="cartToggle">
-    <i class="fas fa-shopping-cart"></i>
-    <span class="cart-count" id="cartCount">0</span>
-  </div>
-
-  <!-- Mini panier détaillé -->
-  <div class="cart-preview" id="cartPreview">
-    <div class="cart-header">
-      <span><i class="fas fa-shopping-bag me-2"></i>Votre panier</span>
-      <button id="closeCart"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="cart-items" id="cartItemsList">
-      <div class="empty-cart-msg">Votre panier est vide</div>
-    </div>
-    <div class="cart-footer">
-      <div class="cart-total">
-        <span>Total</span>
-        <span id="cartTotalPrice">0 FCFA</span>
+  
+  <!-- Modal pour demande de devis personnalisé -->
+  <div class="devis-modal" id="devisModal" style="display: none;">
+    <div class="devis-modal-content">
+      <h3><i class="fas fa-file-invoice me-2" style="color: var(--or-eclatant);"></i>Demande de devis personnalisé</h3>
+      <div id="devisProductInfo" class="mb-3 p-3" style="background: #f8f1e0; border-radius: 10px;">
+        <!-- Informations produit affichées dynamiquement -->
       </div>
-      <button class="btn-checkout" id="whatsappCheckout">
-        <i class="fab fa-whatsapp"></i> Valider via WhatsApp
-      </button>
+      <div class="form-group">
+        <label>Nom complet *</label>
+        <input type="text" id="devisName" placeholder="Votre nom" required>
+      </div>
+      <div class="form-group">
+        <label>Téléphone *</label>
+        <input type="tel" id="devisPhone" placeholder="77 000 00 00" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="devisEmail" placeholder="votre@email.com">
+      </div>
+      <div class="form-group">
+        <label>Quantité souhaitée</label>
+        <input type="number" id="devisQuantity" min="1" value="1">
+      </div>
+      <div class="form-group">
+        <label>Date de l'événement</label>
+        <input type="date" id="devisEventDate">
+      </div>
+      <div class="form-group">
+        <label>Budget approximatif (FCFA)</label>
+        <input type="text" id="devisBudget" placeholder="Ex: 100000">
+      </div>
+      <div class="form-group">
+        <label>Demande spécifique</label>
+        <textarea id="devisMessage" rows="3" placeholder="Décrivez vos besoins spécifiques..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeDevisModal()">Annuler</button>
+        <button class="btn-submit" onclick="submitDevisRequest()">Envoyer la demande</button>
+      </div>
     </div>
   </div>
 
-  <!-- Footer compact -->
+  <!-- Footer -->
   <footer>
     <div class="container">
       <div class="row">
         <div class="col-lg-4 mb-3">
           <div class="logo-njeeygu mb-2">
-            <!-- Petit logo dans footer -->
             <img src="images/log1.png" 
                  alt="NJEEYGU Logo" 
                  style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--or-eclatant);"
                  onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
             <span style="color: var(--or-eclatant); font-weight: 600; margin-left: 8px;">NJEEYGU</span>
           </div>
-          <p class="small opacity-75">Votre partenaire événementiel à Saint-Louis depuis 10 ans. Plus de 500 événements organisés avec succès.</p>
-          <div class="social-links">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-whatsapp"></i></a>
-            <a href="#"><i class="fab fa-tiktok"></i></a>
+          <p class="small opacity-75">Votre partenaire événementiel à Saint-Louis depuis 10 ans.</p>
+          <div class="small">
+            <i class="fas fa-map-marker-alt me-1" style="color: var(--or-eclatant);"></i> Saint-Louis, Sénégal<br>
+            <i class="fas fa-phone me-1" style="color: var(--or-eclatant);"></i> +221 77 544 97 95<br>
+            <i class="fas fa-envelope me-1" style="color: var(--or-eclatant);"></i> contact@njeeygu.sn
           </div>
         </div>
         <div class="col-lg-4 mb-3">
@@ -1142,32 +765,175 @@
           </div>
         </div>
         <div class="col-lg-4 mb-3">
-          <h5 class="footer-title">Contact</h5>
-          <p class="small"><i class="fas fa-map-marker-alt me-2" style="color: var(--or-eclatant);"></i> Saint-Louis, Sénégal</p>
-          <p class="small"><i class="fas fa-phone me-2" style="color: var(--or-eclatant);"></i> +221 77 544 97 95</p>
-          <p class="small"><i class="fas fa-envelope me-2" style="color: var(--or-eclatant);"></i> contact@njeeygu.sn</p>
-          <p class="small"><i class="fas fa-clock me-2" style="color: var(--or-eclatant);"></i> Lun-Sam: 9h-19h</p>
+          <h5 class="footer-title">Suivez-nous</h5>
+          <div class="social-links mb-3">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-whatsapp"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
+          </div>
+          <p class="small opacity-75 mb-0">© 2025 NJEEYGU - Tous droits réservés</p>
         </div>
-      </div>
-      <hr class="border-light opacity-25 my-3">
-      <div class="text-center">
-        <p class="small opacity-75 mb-0">&copy; 2025 NJEEYGU - Le Grand Jour. Tous droits réservés. Création d'événements d'exception.</p>
       </div>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Filtres interactifs
-    const filterButtons = document.querySelectorAll('.filtre-categorie');
-    const products = document.querySelectorAll('.product-item');
+    // Liste des produits avec les 7 catégories - SANS PRIX
+    const productsData = [
+      // Ballons
+      { id: 1, category: 'ballons', name: 'Arche à Ballons Prestige', badge: 'Top', 
+        image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Structure métallique 2.5m de hauteur, inclut 30 ballons de qualité supérieure.' },
+      { id: 2, category: 'ballons', name: 'Ballons Métallisés Or', badge: '',
+        image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Lot de 30 ballons, assortis or, rose, argent, avec supports.' },
+      { id: 3, category: 'ballons', name: 'Structure Murale Ballons', badge: 'Nouveau',
+        image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Pour compositions de ballons, 2x2m démontable et réutilisable.' },
+      
+      // Fleurs
+      { id: 4, category: 'fleurs', name: 'Centre de table Fleurs', badge: 'Nouveau', 
+        image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Composition florale de luxe avec roses, pivoines et eucalyptus.' },
+      { id: 5, category: 'fleurs', name: 'Bouquet Mariée', badge: 'Sur commande',
+        image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Bouquet personnalisé selon vos goûts et couleurs préférées.' },
+      { id: 6, category: 'fleurs', name: 'Pétales de Roses', badge: '',
+        image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Lot de 500 pétales de roses naturelles pour allée et décoration.' },
+      
+      // Chaises
+      { id: 7, category: 'chaises', name: 'Chaise Tiffany Dorée', badge: 'Location',
+        image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Chaise Tiffany avec housse dorée, location à l\'unité.' },
+      { id: 8, category: 'chaises', name: 'Chaise Napoléon Rouge', badge: 'Location',
+        image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Chaise Napoléon, finition rouge velours, location à l\'unité.' },
+      { id: 9, category: 'chaises', name: 'Housse de Chaise', badge: '',
+        image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Housse élastique pour chaise, plusieurs couleurs disponibles.' },
+      
+      // Bâches
+      { id: 10, category: 'baches', name: 'Bâche Fond Scène', badge: 'Imprimable',
+        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Bâche 3x3m avec œillets, personnalisable avec votre logo ou message.' },
+      { id: 11, category: 'baches', name: 'Bâche Plastifiée', badge: '',
+        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Bâche protection sol 4x5m, résistante pour extérieur.' },
+      { id: 12, category: 'baches', name: 'Bâche Calendrier', badge: 'Collection',
+        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Bâche avec motifs traditionnels sénégalais, 2x3m.' },
+      
+      // Vaisselle
+      { id: 13, category: 'vaisselle', name: 'Vaisselle Émeraude', badge: 'Lot',
+        image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Lot de 12 pièces (assiettes, couverts, verres) couleur vert émeraude.' },
+      { id: 14, category: 'vaisselle', name: 'Vaisselle Dorée', badge: 'Prestige',
+        image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Lot de 12 pièces, finition dorée, vaisselle de luxe.' },
+      { id: 15, category: 'vaisselle', name: 'Verres à Pied', badge: '',
+        image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop',
+        desc: 'Lot de 6 verres à pied en cristal, gravure possible.' },
+      
+      // Décoration traditionnelle
+      { id: 16, category: 'traditionnelle', name: 'Parure Mariage Traditionnel', badge: 'Authentique',
+        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop',
+        desc: 'Ensemble complet de décoration traditionnelle sénégalaise (bassin, boubous, accessoires).' },
+      { id: 17, category: 'traditionnelle', name: 'Kora Décorative', badge: 'Artisanat',
+        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop',
+        desc: 'Kora traditionnelle, pièce décorative pour ambiance authentique.' },
+      { id: 18, category: 'traditionnelle', name: 'Tenture Wax', badge: '',
+        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop',
+        desc: 'Tenture en wax 2x3m, motifs traditionnels, plusieurs modèles.' },
+      
+      // Lumières
+      { id: 19, category: 'lumiere', name: 'Guirlande Lumineuse Dorée', badge: 'Nouveau',
+        image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop',
+        desc: '5 mètres de guirlande lumineuse LED, 100 ampoules chaudes.' },
+      { id: 20, category: 'lumiere', name: 'Photobooth LED', badge: 'Location',
+        image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop',
+        desc: 'Location à la journée avec fond lumineux et accessoires.' },
+      { id: 21, category: 'lumiere', name: 'Projecteur Ambiance', badge: '',
+        image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop',
+        desc: 'Projecteur LED RGB avec télécommande, 20W, effet disco et ambiance.' }
+    ];
 
+    // Variables globales
+    let currentDevisProduct = null;
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+      renderProducts();
+      initEventListeners();
+      addAdminQuickAccess();
+    });
+
+    // Rendu des produits - SANS PRIX
+    function renderProducts() {
+      const grid = document.getElementById('productGrid');
+      let html = '';
+      
+      for (let i = 0; i < productsData.length; i += 4) {
+        html += '<div class="row g-3 mb-3">';
+        
+        for (let j = i; j < i + 4 && j < productsData.length; j++) {
+          const p = productsData[j];
+          const badgeHtml = p.badge ? `<span class="product-badge">${p.badge}</span>` : '';
+          
+          html += `
+            <div class="col-lg-3 col-md-6 product-item" data-category="${p.category}">
+              <div class="product-card" data-id="${p.id}" data-name="${p.name}">
+                ${badgeHtml}
+                <div class="product-img-container">
+                  <img src="${p.image}" class="product-img" alt="${p.name}" loading="lazy">
+                </div>
+                <div class="product-content">
+                  <div class="product-category">${getCategoryLabel(p.category)}</div>
+                  <h3 class="product-title">${p.name}</h3>
+                  <p class="product-desc">${p.desc}</p>
+                  <div class="devis-only-message">
+                    <i class="fas fa-file-invoice me-1"></i> Devis personnalisé
+                  </div>
+                  <button class="btn btn-devis w-100" onclick="openDevisModal(${p.id})">
+                    <i class="fas fa-file-invoice me-2"></i>Demander un devis
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        
+        html += '</div>';
+      }
+      
+      grid.innerHTML = html;
+    }
+
+    function getCategoryLabel(category) {
+      const labels = {
+        'ballons': 'Ballons',
+        'fleurs': 'Fleurs',
+        'chaises': 'Chaises',
+        'baches': 'Bâches',
+        'vaisselle': 'Vaisselle',
+        'traditionnelle': 'Décoration traditionnelle',
+        'lumiere': 'Lumières'
+      };
+      return labels[category] || category;
+    }
+
+    // Filtres
+    const filterButtons = document.querySelectorAll('.filtre-categorie');
+    
     filterButtons.forEach(btn => {
       btn.addEventListener('click', function() {
         filterButtons.forEach(f => f.classList.remove('active'));
         this.classList.add('active');
         
         const category = this.dataset.category;
+        const products = document.querySelectorAll('.product-item');
         
         products.forEach(product => {
           if (category === 'all' || product.dataset.category === category) {
@@ -1179,144 +945,160 @@
       });
     });
 
-    // Système de panier
-    let cart = JSON.parse(localStorage.getItem('njeeyguCart')) || [];
-
-    function saveCart() {
-      localStorage.setItem('njeeyguCart', JSON.stringify(cart));
-      updateCartUI();
-    }
-
-    function addItemToCart(product) {
-      const existing = cart.find(item => item.id === product.id);
-      if (existing) {
-        existing.quantity += 1;
-      } else {
-        cart.push({ ...product, quantity: 1 });
-      }
-      saveCart();
+    // Gestion du devis personnalisé
+    window.openDevisModal = function(productId) {
+      const product = productsData.find(p => p.id === productId);
+      if (!product) return;
       
-      // Feedback visuel
-      const btn = event.target;
-      const originalText = btn.innerText;
-      btn.innerText = '✓ Ajouté';
-      btn.style.background = 'var(--vert-emeraude)';
-      setTimeout(() => {
-        btn.innerText = originalText;
-        btn.style.background = '';
-      }, 800);
+      currentDevisProduct = product;
       
-      // Afficher le panier
-      document.getElementById('cartPreview').classList.add('show');
-    }
-
-    function removeItemFromCart(productId) {
-      cart = cart.filter(item => item.id !== productId);
-      saveCart();
-    }
-
-    function getProductImageFromCard(card) {
-      const img = card.querySelector('.product-img');
-      return img ? img.src : '';
-    }
-
-    function updateCartUI() {
-      const cartItemsList = document.getElementById('cartItemsList');
-      const cartCount = document.getElementById('cartCount');
-      const cartTotalSpan = document.getElementById('cartTotalPrice');
-      
-      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-      cartCount.innerText = totalItems;
-
-      const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      cartTotalSpan.innerText = totalPrice.toLocaleString() + ' FCFA';
-
-      if (cart.length === 0) {
-        cartItemsList.innerHTML = '<div class="empty-cart-msg">Votre panier est vide</div>';
-        return;
-      }
-
-      let html = '';
-      cart.forEach(item => {
-        const imgSrc = item.img || 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=150';
-        html += `
-          <div class="cart-item" data-id="${item.id}">
-            <img src="${imgSrc}" class="cart-item-img" alt="${item.name}">
-            <div class="cart-item-details">
-              <div class="cart-item-title">${item.name} x${item.quantity}</div>
-              <div class="cart-item-price">${(item.price * item.quantity).toLocaleString()} FCFA</div>
-            </div>
-            <button class="cart-item-remove" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+      const productInfo = document.getElementById('devisProductInfo');
+      productInfo.innerHTML = `
+        <div class="d-flex align-items-center gap-3">
+          <img src="${product.image}" style="width: 60px; height: 60px; border-radius: 10px; object-fit: cover;">
+          <div>
+            <h4 class="h6 mb-1">${product.name}</h4>
+            <p class="small mb-0">${product.desc}</p>
           </div>
-        `;
-      });
-      cartItemsList.innerHTML = html;
+        </div>
+      `;
+      
+      document.getElementById('devisModal').style.display = 'flex';
+    };
 
-      document.querySelectorAll('.cart-item-remove').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const id = parseInt(btn.dataset.id);
-          removeItemFromCart(id);
-        });
-      });
-    }
+    window.closeDevisModal = function() {
+      document.getElementById('devisModal').style.display = 'none';
+      currentDevisProduct = null;
+    };
 
-    // Attacher les événements "Ajouter"
-    document.querySelectorAll('.add-to-cart').forEach(btn => {
-      btn.addEventListener('click', function(event) {
-        const card = this.closest('.product-card');
-        if (!card) return;
-        const id = parseInt(card.dataset.id);
-        const name = card.dataset.name;
-        const price = parseInt(card.dataset.price);
-        const img = getProductImageFromCard(card);
-        addItemToCart({ id, name, price, img });
-      });
-    });
-
-    // Toggle panier
-    const cartToggle = document.getElementById('cartToggle');
-    const cartPreview = document.getElementById('cartPreview');
-    const closeCart = document.getElementById('closeCart');
-
-    cartToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      cartPreview.classList.toggle('show');
-    });
-
-    closeCart.addEventListener('click', () => {
-      cartPreview.classList.remove('show');
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!cartPreview.contains(e.target) && !cartToggle.contains(e.target)) {
-        cartPreview.classList.remove('show');
-      }
-    });
-
-    cartPreview.addEventListener('click', (e) => e.stopPropagation());
-
-    // Validation via WhatsApp
-    document.getElementById('whatsappCheckout').addEventListener('click', function() {
-      if (cart.length === 0) {
-        alert('Votre panier est vide');
+    window.submitDevisRequest = function() {
+      const name = document.getElementById('devisName').value.trim();
+      const phone = document.getElementById('devisPhone').value.trim();
+      
+      if (!name || !phone) {
+        showToast('Veuillez remplir tous les champs obligatoires', 'error');
         return;
       }
 
-      let message = '*Commande NJEEYGU - Le Grand Jour*%0A%0A';
-      cart.forEach(item => {
-        message += `🛍️ *${item.name}* x${item.quantity} : ${(item.price * item.quantity).toLocaleString()} FCFA%0A`;
+      if (!currentDevisProduct) return;
+
+      const devisData = {
+        id: 'DEV-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase(),
+        date: new Date().toLocaleString('fr-FR'),
+        timestamp: new Date().toISOString(),
+        type: 'Devis personnalisé',
+        product: {
+          id: currentDevisProduct.id,
+          name: currentDevisProduct.name,
+          category: currentDevisProduct.category
+        },
+        customerInfo: {
+          name: name,
+          phone: phone,
+          email: document.getElementById('devisEmail').value.trim() || 'Non spécifié',
+          quantity: document.getElementById('devisQuantity').value,
+          eventDate: document.getElementById('devisEventDate').value || 'Non spécifiée',
+          budget: document.getElementById('devisBudget').value || 'Non spécifié',
+          message: document.getElementById('devisMessage').value.trim() || ''
+        }
+      };
+
+      // Sauvegarder dans localStorage
+      const devisRequests = JSON.parse(localStorage.getItem('njeeygu_devis') || '[]');
+      devisRequests.push(devisData);
+      localStorage.setItem('njeeygu_devis', JSON.stringify(devisRequests));
+
+      // Envoi WhatsApp pour le devis
+      let message = '*NJEEYGU - DEMANDE DE DEVIS PERSONNALISÉ*%0A%0A';
+      message += `*Produit:* ${currentDevisProduct.name}%0A`;
+      message += `*Catégorie:* ${getCategoryLabel(currentDevisProduct.category)}%0A`;
+      message += `*Client:* ${name}%0A`;
+      message += `*Téléphone:* ${phone}%0A`;
+      message += `*Email:* ${devisData.customerInfo.email}%0A`;
+      message += `*Quantité:* ${devisData.customerInfo.quantity}%0A`;
+      message += `*Date événement:* ${devisData.customerInfo.eventDate}%0A`;
+      message += `*Budget:* ${devisData.customerInfo.budget} FCFA%0A`;
+      
+      if (devisData.customerInfo.message) {
+        message += `%0A*Message:* ${devisData.customerInfo.message}%0A`;
+      }
+      
+      message += `%0A🆔 *Réf:* ${devisData.id}`;
+
+      window.open(`https://wa.me/221775449795?text=${message}`, '_blank');
+
+      // Fermer le modal et réinitialiser
+      closeDevisModal();
+      
+      document.getElementById('devisName').value = '';
+      document.getElementById('devisPhone').value = '';
+      document.getElementById('devisEmail').value = '';
+      document.getElementById('devisQuantity').value = '1';
+      document.getElementById('devisEventDate').value = '';
+      document.getElementById('devisBudget').value = '';
+      document.getElementById('devisMessage').value = '';
+      
+      showToast('Demande de devis envoyée avec succès !', 'success');
+    };
+
+    // Toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast-notification ${type}`;
+      toast.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+        ${message}
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideInRight 0.3s reverse';
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 300);
+      }, 3000);
+    }
+
+    // Newsletter
+    window.subscribeNewsletter = function() {
+      const email = document.getElementById('newsletterEmail').value;
+      if (!email || !email.includes('@')) {
+        showToast('Email invalide', 'error');
+        return;
+      }
+      
+      const subscribers = JSON.parse(localStorage.getItem('njeeygu_subscribers') || '[]');
+      subscribers.push({ email, date: new Date().toISOString() });
+      localStorage.setItem('njeeygu_subscribers', JSON.stringify(subscribers));
+      
+      document.getElementById('newsletterEmail').value = '';
+      showToast('Merci de votre inscription !', 'success');
+    }
+
+    // Event listeners
+    function initEventListeners() {
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeDevisModal();
+        }
       });
-      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      message += `%0A*Total : ${total.toLocaleString()} FCFA*%0A`;
-      message += `%0A---%0AMerci de confirmer votre commande.`;
 
-      const phoneNumber = '221775449795';
-      const url = `https://wa.me/${phoneNumber}?text=${message}`;
-      window.open(url, '_blank');
-    });
+      // Fermer le modal en cliquant sur l'overlay
+      document.getElementById('devisModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeDevisModal();
+        }
+      });
+    }
 
-    updateCartUI();
+    // Admin quick access
+    function addAdminQuickAccess() {
+      const adminBtn = document.createElement('div');
+      adminBtn.className = 'admin-badge';
+      adminBtn.innerHTML = '<i class="fas fa-crown me-2"></i>Admin Panel';
+      adminBtn.onclick = () => window.open('admin.html', '_blank');
+      document.body.appendChild(adminBtn);
+    }
   </script>
 </body>
 </html>

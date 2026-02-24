@@ -1,0 +1,3281 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NJEEYGU · Administration - Gestion complète</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Chart.js pour les statistiques -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- DataTables pour les tableaux avancés -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+  <!-- jsPDF pour générer des PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --rouge-profond: #8B0000;
+      --or-eclatant: #D4AF37;
+      --vert-emeraude: #006B54;
+      --blanc-casse: #FDF5E6;
+      --gris-elegant: #2c2c2c;
+      --ombre-legere: rgba(0, 0, 0, 0.03);
+      --ombre-doree: rgba(212, 175, 55, 0.15);
+      --admin-bg: #f4f4f4;
+      --admin-sidebar: #1e1e2d;
+      --admin-sidebar-hover: #2c2c3f;
+    }
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--admin-bg);
+      color: var(--gris-elegant);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    h1, h2, h3, h4 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    
+    /* Layout Admin */
+    .admin-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .admin-sidebar {
+      width: 280px;
+      background: var(--admin-sidebar);
+      color: white;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+    
+    .admin-sidebar::-webkit-scrollbar {
+      width: 5px;
+    }
+    
+    .admin-sidebar::-webkit-scrollbar-track {
+      background: #2c2c3f;
+    }
+    
+    .admin-sidebar::-webkit-scrollbar-thumb {
+      background: var(--or-eclatant);
+      border-radius: 10px;
+    }
+    
+    .sidebar-header {
+      padding: 20px 15px;
+      border-bottom: 1px solid rgba(212,175,55,0.2);
+      text-align: center;
+    }
+    
+    .sidebar-header h3 {
+      color: var(--or-eclatant);
+      font-size: 1.3rem;
+      margin-bottom: 0.2rem;
+    }
+    
+    .sidebar-header p {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      letter-spacing: 1px;
+    }
+    
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+    
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+      border-left: 3px solid transparent;
+      position: relative;
+    }
+    
+    .sidebar-menu a:hover, 
+    .sidebar-menu a.active {
+      background: var(--admin-sidebar-hover);
+      color: var(--or-eclatant);
+      border-left-color: var(--or-eclatant);
+    }
+    
+    .sidebar-menu a i {
+      width: 30px;
+      font-size: 1.1rem;
+    }
+    
+    .sidebar-menu a span {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      right: 15px;
+      background: var(--or-eclatant);
+      color: var(--rouge-profond);
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+    
+    .sidebar-menu .menu-divider {
+      height: 1px;
+      background: rgba(212,175,55,0.1);
+      margin: 15px 20px;
+    }
+    
+    /* Main Content */
+    .admin-main {
+      flex: 1;
+      margin-left: 280px;
+      padding: 20px 30px;
+    }
+    
+    /* Top Bar */
+    .admin-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 15px 25px;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px var(--ombre-legere);
+      margin-bottom: 25px;
+    }
+    
+    .admin-topbar h2 {
+      font-size: 1.5rem;
+      color: var(--rouge-profond);
+      margin: 0;
+    }
+    
+    .admin-user {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .admin-user img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      border: 2px solid var(--or-eclatant);
+      object-fit: cover;
+    }
+    
+    .admin-user-info {
+      text-align: right;
+    }
+    
+    .admin-user-info .name {
+      font-weight: 600;
+      color: var(--rouge-profond);
+    }
+    
+    .admin-user-info .role {
+      font-size: 0.8rem;
+      color: #666;
+    }
+    
+    /* Stats Cards */
+    .stat-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 5px 15px var(--ombre-legere);
+      transition: all 0.3s;
+      height: 100%;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px var(--ombre-doree);
+    }
+    
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      background: rgba(212,175,55,0.1);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: var(--or-eclatant);
+    }
+    
+    .stat-info h3 {
+      font-size: 1.5rem;
+      color: var(--rouge-profond);
+      margin-bottom: 0;
+    }
+    
+    .stat-info p {
+      margin: 0;
+      color: #666;
+      font-size: 0.85rem;
+    }
+    
+    /* Tables */
+    .admin-table {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 5px 15px var(--ombre-legere);
+      margin-bottom: 20px;
+    }
+    
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .table-header h4 {
+      color: var(--rouge-profond);
+      font-size: 1.2rem;
+      margin: 0;
+    }
+    
+    .admin-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .admin-table th {
+      text-align: left;
+      padding: 12px 10px;
+      color: var(--rouge-profond);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-bottom: 2px solid rgba(212,175,55,0.2);
+    }
+    
+    .admin-table td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #eee;
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+    
+    .admin-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .admin-table tr:hover td {
+      background: rgba(212,175,55,0.05);
+    }
+    
+    .badge-status {
+      padding: 5px 12px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+    
+    .badge-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .badge-confirmed {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .badge-shipped {
+      background: #cce5ff;
+      color: #004085;
+    }
+    
+    .badge-delivered {
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+    
+    .badge-cancelled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    .badge-active {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .badge-inactive {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    .badge-paid {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .badge-unpaid {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: #666;
+      transition: all 0.2s;
+      margin: 0 2px;
+    }
+    
+    .action-btn:hover {
+      background: rgba(212,175,55,0.1);
+      color: var(--or-eclatant);
+      transform: scale(1.1);
+    }
+    
+    .action-btn.delete:hover {
+      background: #fee;
+      color: #dc3545;
+    }
+    
+    .action-btn.whatsapp:hover {
+      background: #25d36620;
+      color: #25d366;
+    }
+    
+    .action-btn.pdf:hover {
+      background: #dc354520;
+      color: #dc3545;
+    }
+    
+    /* Forms */
+    .admin-form {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 5px 15px var(--ombre-legere);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      font-weight: 600;
+      color: var(--rouge-profond);
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+      display: block;
+    }
+    
+    .form-control, .form-select {
+      padding: 10px 15px;
+      border: 2px solid rgba(212,175,55,0.1);
+      border-radius: 15px;
+      width: 100%;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: var(--or-eclatant);
+      outline: none;
+      box-shadow: 0 0 0 0.2rem rgba(212,175,55,0.25);
+    }
+    
+    /* Modal */
+    .modal-content {
+      border-radius: 25px;
+      border: none;
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, var(--rouge-profond), #6b0000);
+      color: white;
+      border-radius: 25px 25px 0 0;
+      padding: 20px 25px;
+    }
+    
+    .modal-header .btn-close {
+      filter: brightness(0) invert(1);
+    }
+    
+    .modal-body {
+      padding: 25px;
+    }
+    
+    .modal-footer {
+      padding: 20px 25px;
+      border-top: 1px solid rgba(212,175,55,0.1);
+    }
+    
+    /* Charts - Version réduite */
+    .chart-container {
+      background: white;
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: 0 5px 15px var(--ombre-legere);
+      height: auto;
+      min-height: 280px;
+    }
+    
+    .chart-container h4 {
+      font-size: 1rem;
+      margin-bottom: 15px !important;
+    }
+    
+    #salesChart, #ordersStatusChart, #categorySalesChart, #revenueChart {
+      max-height: 220px !important;
+      width: 100% !important;
+    }
+    
+    /* Tabs */
+    .admin-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .admin-tab {
+      padding: 10px 20px;
+      background: white;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 1px solid rgba(212,175,55,0.1);
+    }
+    
+    .admin-tab:hover {
+      border-color: var(--or-eclatant);
+    }
+    
+    .admin-tab.active {
+      background: var(--or-eclatant);
+      color: var(--rouge-profond);
+      font-weight: 600;
+    }
+    
+    /* Login Page */
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--rouge-profond), #2c2c2c);
+    }
+    
+    .login-box {
+      background: white;
+      border-radius: 30px;
+      padding: 40px;
+      width: 400px;
+      max-width: 90%;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    }
+    
+    .login-box .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .login-box .logo img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid var(--or-eclatant);
+      object-fit: cover;
+    }
+    
+    .login-box h2 {
+      color: var(--rouge-profond);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    
+    .login-box p {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+    }
+    
+    /* Order Details */
+    .order-details {
+      background: #f9f9f9;
+      border-radius: 15px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+    
+    .order-product-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px dashed #ddd;
+    }
+    
+    .order-product-item:last-child {
+      border-bottom: none;
+    }
+    
+    .order-product-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+    
+    /* Invoice */
+    .invoice-box {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      border: 1px solid #eee;
+    }
+    
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--or-eclatant);
+    }
+    
+    .invoice-logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .invoice-logo img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid var(--or-eclatant);
+      object-fit: cover;
+    }
+    
+    .invoice-title {
+      color: var(--rouge-profond);
+      font-size: 2rem;
+      margin-bottom: 0;
+    }
+    
+    .invoice-details {
+      margin-bottom: 30px;
+    }
+    
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    
+    .invoice-table th {
+      background: var(--rouge-profond);
+      color: white;
+      padding: 12px;
+      text-align: left;
+    }
+    
+    .invoice-table td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .invoice-table tfoot tr:last-child td {
+      border-bottom: none;
+      font-weight: bold;
+    }
+    
+    .invoice-footer {
+      margin-top: 40px;
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    /* Notification */
+    .notification-toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      border-left: 4px solid var(--or-eclatant);
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      z-index: 9999;
+      animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    /* Search box */
+    .search-box {
+      position: relative;
+    }
+    
+    .search-box i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+    }
+    
+    .search-box input {
+      padding-left: 40px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+      .admin-sidebar {
+        width: 70px;
+      }
+      
+      .sidebar-header h3,
+      .sidebar-header p,
+      .sidebar-menu a span {
+        display: none;
+      }
+      
+      .sidebar-menu a i {
+        width: 100%;
+        text-align: center;
+        font-size: 1.3rem;
+      }
+      
+      .notification-badge {
+        right: 5px;
+        font-size: 0.6rem;
+        padding: 1px 4px;
+      }
+      
+      .admin-main {
+        margin-left: 70px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .admin-main {
+        padding: 15px;
+      }
+      
+      .admin-topbar {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+      
+      .admin-user {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    
+    /* Print styles */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .invoice-box, .invoice-box * {
+        visibility: visible;
+      }
+      .invoice-box {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+
+    .btn-rouge {
+      background: var(--rouge-profond);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 10px;
+      transition: all 0.3s;
+    }
+    
+    .btn-rouge:hover {
+      background: #6b0000;
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .btn-or {
+      background: var(--or-eclatant);
+      color: var(--rouge-profond);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 10px;
+      transition: all 0.3s;
+    }
+    
+    .btn-or:hover {
+      background: #c4a030;
+      color: var(--rouge-profond);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Page de connexion -->
+  <div id="loginPage" class="login-container">
+    <div class="login-box">
+      <div class="logo">
+        <img src="images/log1.png" alt="NJEEYGU" onerror="this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
+      </div>
+      <h2>Administration</h2>
+      <p>Connectez-vous pour accéder au tableau de bord</p>
+      <form id="loginForm">
+        <div class="mb-3">
+          <label class="form-label">Nom d'utilisateur</label>
+          <input type="text" class="form-control" id="username" placeholder="admin" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Mot de passe</label>
+          <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-rouge w-100 py-2">Se connecter</button>
+      </form>
+      <p class="text-center small text-muted mt-3">
+        <i class="fas fa-lock me-1"></i> Identifiants: admin / admin123
+      </p>
+    </div>
+  </div>
+
+  <!-- Interface Admin -->
+  <div id="adminInterface" style="display: none;">
+    <div class="admin-wrapper">
+      <!-- Sidebar -->
+      <div class="admin-sidebar">
+        <div class="sidebar-header">
+          <h3>NJEEYGU</h3>
+          <p>ADMIN PANEL</p>
+        </div>
+        
+        <div class="sidebar-menu">
+          <a href="#" class="active" onclick="showSection('dashboard', event)">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Tableau de bord</span>
+          </a>
+          <a href="#" onclick="showSection('commandes', event)">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Commandes</span>
+            <span class="notification-badge" id="pendingOrdersBadge">0</span>
+          </a>
+          <a href="#" onclick="showSection('produits', event)">
+            <i class="fas fa-box"></i>
+            <span>Produits</span>
+            <span class="notification-badge" id="lowStockBadge">0</span>
+          </a>
+          <a href="#" onclick="showSection('factures', event)">
+            <i class="fas fa-file-invoice"></i>
+            <span>Factures</span>
+          </a>
+          <a href="#" onclick="showSection('clients', event)">
+            <i class="fas fa-users"></i>
+            <span>Clients</span>
+          </a>
+          <a href="#" onclick="showSection('services', event)">
+            <i class="fas fa-crown"></i>
+            <span>Services</span>
+          </a>
+          <a href="#" onclick="showSection('messages', event)">
+            <i class="fas fa-envelope"></i>
+            <span>Messages</span>
+            <span class="notification-badge" id="messagesBadge">0</span>
+          </a>
+          <a href="#" onclick="showSection('temoignages', event)">
+            <i class="fas fa-star"></i>
+            <span>Témoignages</span>
+          </a>
+          <a href="#" onclick="showSection('equipe', event)">
+            <i class="fas fa-user-tie"></i>
+            <span>Équipe</span>
+          </a>
+          <a href="#" onclick="showSection('liens', event)">
+            <i class="fas fa-link"></i>
+            <span>Liens & Pages</span>
+          </a>
+          
+          <div class="menu-divider"></div>
+          
+          <a href="#" onclick="showSection('parametres', event)">
+            <i class="fas fa-cog"></i>
+            <span>Paramètres</span>
+          </a>
+          <a href="#" onclick="showSection('statistiques', event)">
+            <i class="fas fa-chart-bar"></i>
+            <span>Statistiques</span>
+          </a>
+          <a href="#" onclick="handleLogout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Déconnexion</span>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Main Content -->
+      <div class="admin-main">
+        <!-- Top Bar -->
+        <div class="admin-topbar">
+          <h2 id="pageTitle">Tableau de bord</h2>
+          <div class="admin-user">
+            <div class="admin-user-info">
+              <div class="name" id="adminName">Mariama Ndiaye</div>
+              <div class="role" id="adminRole">Administrateur</div>
+            </div>
+            <img src="images/log1.png" alt="Admin" onerror="this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
+          </div>
+        </div>
+        
+        <!-- Notification Toast -->
+        <div id="notificationToast" class="notification-toast" style="display: none;">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-shopping-cart me-2" style="color: var(--or-eclatant);"></i>
+            <div>
+              <strong id="notificationTitle">Nouvelle commande</strong>
+              <p id="notificationMessage" class="small mb-0">Une nouvelle commande a été reçue</p>
+            </div>
+            <button class="btn-close ms-3" onclick="closeNotification()"></button>
+          </div>
+        </div>
+        
+        <!-- ==================== DASHBOARD ==================== -->
+        <div id="section-dashboard" class="admin-section">
+          <!-- Stats Cards -->
+          <div class="row g-4 mb-4">
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statProduits">0</h3>
+                  <p>Produits</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statCommandes">0</h3>
+                  <p>Commandes totales</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statEnAttente">0</h3>
+                  <p>En attente</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statClients">0</h3>
+                  <p>Clients</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row g-4 mb-4">
+            <div class="col-lg-8">
+              <div class="chart-container">
+                <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Ventes mensuelles (en milliers FCFA)</h4>
+                <canvas id="salesChart" style="width: 100%; height: 220px;"></canvas>
+                <div class="mt-3 text-center" id="salesTotal">
+                  <strong>Total annuel: </strong> <span id="totalAnnualSales">0</span> FCFA
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="chart-container">
+                <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Statut des commandes</h4>
+                <canvas id="ordersStatusChart" style="width: 100%; height: 220px;"></canvas>
+                <div class="mt-3 text-center">
+                  <div><span class="badge-status badge-pending">En attente: <span id="statPendingCount">0</span></span></div>
+                  <div><span class="badge-status badge-confirmed">Confirmées: <span id="statConfirmedCount">0</span></span></div>
+                  <div><span class="badge-status badge-shipped">Expédiées: <span id="statShippedCount">0</span></span></div>
+                  <div><span class="badge-status badge-delivered">Livrées: <span id="statDeliveredCount">0</span></span></div>
+                  <div><span class="badge-status badge-cancelled">Annulées: <span id="statCancelledCount">0</span></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Dernières commandes -->
+          <div class="admin-table">
+            <div class="table-header">
+              <h4>Dernières commandes</h4>
+              <a href="#" onclick="showSection('commandes', event)" class="btn btn-or btn-sm">Voir tout</a>
+            </div>
+            <table id="recentOrdersTable" class="display nowrap" style="width:100%">
+              <thead>
+                <tr>
+                  <th>N° Commande</th>
+                  <th>Client</th>
+                  <th>Total</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recentOrdersList">
+                <!-- Les commandes seront insérées ici dynamiquement -->
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Produits en rupture -->
+          <div class="admin-table">
+            <div class="table-header">
+              <h4>Produits en stock faible</h4>
+              <a href="#" onclick="showSection('produits', event)" class="btn btn-or btn-sm">Gérer</a>
+            </div>
+            <table id="lowStockTable" class="display nowrap" style="width:100%">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Produit</th>
+                  <th>Catégorie</th>
+                  <th>Stock</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="lowStockList">
+                <!-- Les produits seront insérés ici -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- ==================== COMMANDES ==================== -->
+        <div id="section-commandes" class="admin-section" style="display: none;">
+          <div class="admin-tabs">
+            <div class="admin-tab active" onclick="filterOrders('all', event)">Toutes (<span id="countAll">0</span>)</div>
+            <div class="admin-tab" onclick="filterOrders('pending', event)">En attente (<span id="countPending">0</span>)</div>
+            <div class="admin-tab" onclick="filterOrders('confirmed', event)">Confirmées (<span id="countConfirmed">0</span>)</div>
+            <div class="admin-tab" onclick="filterOrders('shipped', event)">Expédiées (<span id="countShipped">0</span>)</div>
+            <div class="admin-tab" onclick="filterOrders('delivered', event)">Livrées (<span id="countDelivered">0</span>)</div>
+            <div class="admin-tab" onclick="filterOrders('cancelled', event)">Annulées (<span id="countCancelled">0</span>)</div>
+          </div>
+          
+          <div class="admin-table">
+            <div class="table-header">
+              <h4>Gestion des commandes</h4>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div class="search-box">
+                  <i class="fas fa-search"></i>
+                  <input type="text" id="searchOrder" class="form-control" placeholder="Rechercher..." style="width: 250px;">
+                </div>
+                <button class="btn btn-or btn-sm" onclick="exportOrders()">
+                  <i class="fas fa-download me-1"></i> Exporter
+                </button>
+                <button class="btn btn-rouge btn-sm" onclick="generateReport()">
+                  <i class="fas fa-file-pdf me-1"></i> Rapport
+                </button>
+              </div>
+            </div>
+            <table id="ordersTable" class="display nowrap" style="width:100%">
+              <thead>
+                <tr>
+                  <th>N° Commande</th>
+                  <th>Client</th>
+                  <th>Téléphone</th>
+                  <th>Email</th>
+                  <th>Total</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                  <th>Paiement</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ordersList">
+                <!-- Les commandes seront insérées ici dynamiquement -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- ==================== PRODUITS ==================== -->
+        <div id="section-produits" class="admin-section" style="display: none;">
+          <div class="admin-tabs">
+            <div class="admin-tab active" onclick="showProductsTab('list', event)">Liste des produits</div>
+            <div class="admin-tab" onclick="showProductsTab('add', event)">Ajouter un produit</div>
+            <div class="admin-tab" onclick="showProductsTab('categories', event)">Catégories</div>
+          </div>
+          
+          <div id="products-list" class="products-tab-content">
+            <div class="admin-table">
+              <div class="table-header">
+                <h4>Tous les produits (<span id="totalProducts">0</span>)</h4>
+                <div class="search-box">
+                  <i class="fas fa-search"></i>
+                  <input type="text" id="searchProduct" class="form-control" placeholder="Rechercher un produit..." style="width: 250px;">
+                </div>
+              </div>
+              <table id="productsTable" class="display nowrap" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Produit</th>
+                    <th>Catégorie</th>
+                    <th>Prix</th>
+                    <th>Stock</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="productsList">
+                  <!-- Les produits seront insérés ici -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div id="products-add" class="products-tab-content" style="display: none;">
+            <div class="admin-form">
+              <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Ajouter un nouveau produit</h4>
+              <form id="addProductForm" onsubmit="addProduct(event)">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Nom du produit *</label>
+                      <input type="text" class="form-control" id="productName" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Catégorie *</label>
+                      <select class="form-select" id="productCategory" required>
+                        <option value="">Sélectionnez</option>
+                        <option value="table">Art de la table</option>
+                        <option value="lumiere">Lumières</option>
+                        <option value="mariage">Mariage</option>
+                        <option value="ballon">Ballons</option>
+                        <option value="deco">Décoration</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Prix (FCFA) *</label>
+                      <input type="number" class="form-control" id="productPrice" required>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Stock *</label>
+                      <input type="number" class="form-control" id="productStock" required>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Statut</label>
+                      <select class="form-select" id="productStatus">
+                        <option value="active">Actif</option>
+                        <option value="inactive">Inactif</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea class="form-control" id="productDesc" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label>URL de l'image</label>
+                  <input type="url" class="form-control" id="productImage" placeholder="https://...">
+                </div>
+                
+                <div class="form-group">
+                  <label>Badge spécial</label>
+                  <select class="form-select" id="productBadge">
+                    <option value="">Aucun</option>
+                    <option value="Nouveau">Nouveau</option>
+                    <option value="Top">Top vente</option>
+                    <option value="Promo">Promo -20%</option>
+                  </select>
+                </div>
+                
+                <button type="submit" class="btn btn-rouge">Ajouter le produit</button>
+              </form>
+            </div>
+          </div>
+          
+          <div id="products-categories" class="products-tab-content" style="display: none;">
+            <div class="admin-table">
+              <div class="table-header">
+                <h4>Catégories</h4>
+                <button class="btn btn-or btn-sm" onclick="showAddCategoryModal()">
+                  <i class="fas fa-plus me-1"></i> Ajouter
+                </button>
+              </div>
+              <table id="categoriesTable" class="display nowrap" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Nombre de produits</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="categoriesList">
+                  <!-- Les catégories seront insérées ici -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <!-- ==================== FACTURES ==================== -->
+        <div id="section-factures" class="admin-section" style="display: none;">
+          <div class="admin-tabs">
+            <div class="admin-tab active" onclick="filterInvoices('all', event)">Toutes les factures</div>
+            <div class="admin-tab" onclick="filterInvoices('paid', event)">Payées</div>
+            <div class="admin-tab" onclick="filterInvoices('unpaid', event)">Impayées</div>
+          </div>
+          
+          <div class="admin-table">
+            <div class="table-header">
+              <h4>Gestion des factures</h4>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn btn-or btn-sm" onclick="generateInvoiceReport()">
+                  <i class="fas fa-file-pdf me-1"></i> Rapport
+                </button>
+              </div>
+            </div>
+            <table id="invoicesTable" class="display nowrap" style="width:100%">
+              <thead>
+                <tr>
+                  <th>N° Facture</th>
+                  <th>N° Commande</th>
+                  <th>Client</th>
+                  <th>Montant</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="invoicesList">
+                <!-- Les factures seront insérées ici -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- ==================== CLIENTS ==================== -->
+        <div id="section-clients" class="admin-section" style="display: none;">
+          <div class="admin-table">
+            <div class="table-header">
+              <h4>Liste des clients</h4>
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchClient" class="form-control" placeholder="Rechercher un client..." style="width: 250px;">
+              </div>
+            </div>
+            <table id="clientsTable" class="display nowrap" style="width:100%">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Téléphone</th>
+                  <th>Email</th>
+                  <th>Commandes</th>
+                  <th>Total dépensé</th>
+                  <th>Dernière commande</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="clientsList">
+                <!-- Les clients seront insérés ici -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- ==================== SERVICES ==================== -->
+        <div id="section-services" class="admin-section" style="display: none;">
+          <div class="admin-tabs">
+            <div class="admin-tab active">Liste des services</div>
+            <div class="admin-tab">Ajouter un service</div>
+          </div>
+          
+          <div class="admin-table">
+            <table class="display nowrap" style="width:100%">
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Description</th>
+                  <th>Prix</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Mariage</strong></td>
+                  <td>Décoration complète de cérémonie</td>
+                  <td>250 000 FCFA</td>
+                  <td>
+                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Événements Pro</strong></td>
+                  <td>Séminaires, inaugurations</td>
+                  <td>Sur mesure</td>
+                  <td>
+                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Événements Privés</strong></td>
+                  <td>Baptêmes, anniversaires</td>
+                  <td>150 000 FCFA</td>
+                  <td>
+                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- ==================== MESSAGES ==================== -->
+        <div id="section-messages" class="admin-section" style="display: none;">
+          <div class="admin-tabs">
+            <div class="admin-tab active">Tous les messages</div>
+            <div class="admin-tab">Non lus</div>
+          </div>
+          
+          <div class="admin-table">
+            <table class="display nowrap" style="width:100%">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Nom</th>
+                  <th>Email</th>
+                  <th>Sujet</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>23/02/2026</td>
+                  <td>Fatou Diop</td>
+                  <td>fatou.diop@email.com</td>
+                  <td>Question sur la livraison</td>
+                  <td><span class="badge-status badge-pending">Non lu</span></td>
+                  <td>
+                    <button class="action-btn"><i class="fas fa-eye"></i></button>
+                    <button class="action-btn"><i class="fas fa-reply"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>22/02/2026</td>
+                  <td>Amadou Fall</td>
+                  <td>amadou.fall@email.com</td>
+                  <td>Demande de devis</td>
+                  <td><span class="badge-status badge-active">Lu</span></td>
+                  <td>
+                    <button class="action-btn"><i class="fas fa-eye"></i></button>
+                    <button class="action-btn"><i class="fas fa-reply"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- ==================== TÉMOIGNAGES ==================== -->
+        <div id="section-temoignages" class="admin-section" style="display: none;">
+          <div class="admin-table">
+            <div class="table-header">
+              <h4>Témoignages clients</h4>
+              <button class="btn btn-or btn-sm">Ajouter</button>
+            </div>
+            <table class="display nowrap" style="width:100%">
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Note</th>
+                  <th>Témoignage</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Mariama Ndiaye</td>
+                  <td>5 ★</td>
+                  <td>Excellent service, décoration magnifique !</td>
+                  <td>15/02/2026</td>
+                  <td><span class="badge-status badge-active">Publié</span></td>
+                  <td>
+                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- ==================== ÉQUIPE ==================== -->
+        <div id="section-equipe" class="admin-section" style="display: none;">
+          <div class="admin-table">
+            <div class="table-header">
+              <h4>Membres de l'équipe</h4>
+              <button class="btn btn-or btn-sm">Ajouter</button>
+            </div>
+            <table class="display nowrap" style="width:100%">
+              <thead>
+                <tr>
+                  <th>Photo</th>
+                  <th>Nom</th>
+                  <th>Poste</th>
+                  <th>Bio</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><img src="https://randomuser.me/api/portraits/women/44.jpg" style="width: 40px; height: 40px; border-radius: 50%;"></td>
+                  <td>Mariama Ndiaye</td>
+                  <td>Directrice Créative</td>
+                  <td>10 ans d'expérience en décoration</td>
+                  <td>
+                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- ==================== LIENS & PAGES ==================== -->
+        <div id="section-liens" class="admin-section" style="display: none;">
+          <div class="admin-tabs">
+            <div class="admin-tab active" onclick="showLinksTab('menu', event)">Menu principal</div>
+            <div class="admin-tab" onclick="showLinksTab('footer', event)">Footer</div>
+            <div class="admin-tab" onclick="showLinksTab('social', event)">Réseaux sociaux</div>
+            <div class="admin-tab" onclick="showLinksTab('pages', event)">Pages du site</div>
+          </div>
+          
+          <!-- Menu principal -->
+          <div id="links-menu" class="links-tab-content">
+            <div class="admin-table">
+              <div class="table-header">
+                <h4>Liens du menu principal</h4>
+                <button class="btn btn-or btn-sm" onclick="addMenuItem()">
+                  <i class="fas fa-plus me-1"></i> Ajouter un lien
+                </button>
+              </div>
+              <table class="display nowrap" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Ordre</th>
+                    <th>Titre</th>
+                    <th>Lien</th>
+                    <th>Page</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="menuLinksList">
+                  <tr>
+                    <td>1</td>
+                    <td>Accueil</td>
+                    <td>index.html</td>
+                    <td><span class="badge-status badge-active">Active</span></td>
+                    <td>
+                      <button class="action-btn"><i class="fas fa-edit"></i></button>
+                      <button class="action-btn"><i class="fas fa-arrow-up"></i></button>
+                      <button class="action-btn"><i class="fas fa-arrow-down"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Boutique</td>
+                    <td>boutique.html</td>
+                    <td><span class="badge-status badge-active">Active</span></td>
+                    <td>
+                      <button class="action-btn"><i class="fas fa-edit"></i></button>
+                      <button class="action-btn"><i class="fas fa-arrow-up"></i></button>
+                      <button class="action-btn"><i class="fas fa-arrow-down"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Services</td>
+                    <td>services.html</td>
+                    <td><span class="badge-status badge-active">Active</span></td>
+                    <td>
+                      <button class="action-btn"><i class="fas fa-edit"></i></button>
+                      <button class="action-btn"><i class="fas fa-arrow-up"></i></button>
+                      <button class="action-btn"><i class="fas fa-arrow-down"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>À propos</td>
+                    <td>apropos.html</td>
+                    <td><span class="badge-status badge-active">Active</span></td>
+                    <td>
+                      <button class="action-btn"><i class="fas fa-edit"></i></button>
+                      <button class="action-btn"><i class="fas fa-arrow-up"></i></button>
+                      <button class="action-btn"><i class="fas fa-arrow-down"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>Contact</td>
+                    <td>contact.html</td>
+                    <td><span class="badge-status badge-active">Active</span></td>
+                    <td>
+                      <button class="action-btn"><i class="fas fa-edit"></i></button>
+                      <button class="action-btn"><i class="fas fa-arrow-up"></i></button>
+                      <button class="action-btn"><i class="fas fa-arrow-down"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Footer -->
+          <div id="links-footer" class="links-tab-content" style="display: none;">
+            <div class="admin-table">
+              <div class="table-header">
+                <h4>Liens du footer</h4>
+                <button class="btn btn-or btn-sm" onclick="addFooterLink()">
+                  <i class="fas fa-plus me-1"></i> Ajouter un lien
+                </button>
+              </div>
+              <table class="display nowrap" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Colonne</th>
+                    <th>Titre</th>
+                    <th>Lien</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Colonne 1</td>
+                    <td>Accueil</td>
+                    <td>index.html</td>
+                    <td>
+                      <button class="action-btn"><i class="fas fa-edit"></i></button>
+                      <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Colonne 1</td>
+                    <td>Boutique</td>
+                    <td>boutique.html</td>
+                    <td>
+                      <button class="action-btn"><i class="fas fa-edit"></i></button>
+                      <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Colonne 2</td>
+                    <td>Contact</td>
+                    <td>contact.html</td>
+                    <td>
+                      <button class="action-btn"><i class="fas fa-edit"></i></button>
+                      <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Réseaux sociaux -->
+          <div id="links-social" class="links-tab-content" style="display: none;">
+            <div class="admin-table">
+              <div class="table-header">
+                <h4>Réseaux sociaux</h4>
+                <button class="btn btn-or btn-sm" onclick="addSocialLink()">
+                  <i class="fas fa-plus me-1"></i> Ajouter
+                </button>
+              </div>
+              <table class="display nowrap" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Réseau</th>
+                    <th>URL</th>
+                    <th>Icône</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><i class="fab fa-facebook-f me-2"></i> Facebook</td>
+                    <td>https://facebook.com/njeeygu</td>
+                    <td><i class="fab fa-facebook-f"></i></td>
+                    <td>
+                      <button class="action-btn"><i class="fas fa-edit"></i></button>
+                      <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><i class="fab fa-instagram me-2"></i> Instagram</td>
+                    <td>https://instagram.com/njeeygu</td>
+                    <td><i class="fab fa-instagram"></i></td>
+                    <td>
+                      <button class="action-btn"><i class="fas fa-edit"></i></button>
+                      <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Pages du site -->
+          <div id="links-pages" class="links-tab-content" style="display: none;">
+            <div class="admin-table">
+              <div class="table-header">
+                <h4>Pages du site</h4>
+                <button class="btn btn-or btn-sm" onclick="addPage()">
+                  <i class="fas fa-plus me-1"></i> Nouvelle page
+                </button>
+              </div>
+              <table class="display nowrap" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Titre</th>
+                    <th>URL</th>
+                    <th>Statut</th>
+                    <th>Dernière modification</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Accueil</td>
+                    <td>/index.html</td>
+                    <td><span class="badge-status badge-active">Publiée</span></td>
+                    <td>23/02/2026</td>
+                    <td>
+                      <button class="action-btn"><i class="fas fa-edit"></i></button>
+                      <button class="action-btn"><i class="fas fa-eye"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Boutique</td>
+                    <td>/boutique.html</td>
+                    <td><span class="badge-status badge-active">Publiée</span></td>
+                    <td>23/02/2026</td>
+                    <td>
+                      <button class="action-btn"><i class="fas fa-edit"></i></button>
+                      <button class="action-btn"><i class="fas fa-eye"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <!-- ==================== PARAMÈTRES ==================== -->
+        <div id="section-parametres" class="admin-section" style="display: none;">
+          <div class="admin-tabs">
+            <div class="admin-tab active">Général</div>
+            <div class="admin-tab">Utilisateurs</div>
+            <div class="admin-tab">Notifications</div>
+            <div class="admin-tab">Paiements</div>
+          </div>
+          
+          <div class="admin-form">
+            <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Paramètres généraux</h4>
+            <form>
+              <div class="form-group">
+                <label>Nom de l'entreprise</label>
+                <input type="text" class="form-control" value="NJEEYGU - Le Grand Jour">
+              </div>
+              
+              <div class="form-group">
+                <label>Email de contact</label>
+                <input type="email" class="form-control" value="contact@njeeygu.sn">
+              </div>
+              
+              <div class="form-group">
+                <label>Téléphone</label>
+                <input type="text" class="form-control" value="+221 77 544 97 95">
+              </div>
+              
+              <div class="form-group">
+                <label>Adresse</label>
+                <input type="text" class="form-control" value="123 Rue Principale, Saint-Louis">
+              </div>
+              
+              <div class="form-group">
+                <label>Numéro WhatsApp</label>
+                <input type="text" class="form-control" value="221775449795">
+              </div>
+              
+              <div class="form-group">
+                <label>Devise</label>
+                <select class="form-select">
+                  <option value="FCFA" selected>FCFA</option>
+                  <option value="EUR">Euro</option>
+                  <option value="USD">Dollar</option>
+                </select>
+              </div>
+              
+              <button type="submit" class="btn btn-rouge">Enregistrer les modifications</button>
+            </form>
+          </div>
+        </div>
+        
+        <!-- ==================== STATISTIQUES ==================== -->
+        <div id="section-statistiques" class="admin-section" style="display: none;">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="chart-container">
+                <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Ventes par catégorie</h4>
+                <canvas id="categorySalesChart" style="width: 100%; height: 220px;"></canvas>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="chart-container">
+                <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Évolution du chiffre d'affaires</h4>
+                <canvas id="revenueChart" style="width: 100%; height: 220px;"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Détails Commande -->
+  <div class="modal fade" id="orderDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Détails de la commande <span id="modalOrderId"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6 style="color: var(--rouge-profond);">Informations client</h6>
+              <p><strong>Nom :</strong> <span id="modalClientName"></span></p>
+              <p><strong>Téléphone :</strong> <span id="modalClientPhone"></span></p>
+              <p><strong>Email :</strong> <span id="modalClientEmail"></span></p>
+            </div>
+            <div class="col-md-6">
+              <h6 style="color: var(--rouge-profond);">Informations commande</h6>
+              <p><strong>Date :</strong> <span id="modalOrderDate"></span></p>
+              <p><strong>Total :</strong> <span id="modalOrderTotal"></span></p>
+              <p><strong>Statut :</strong> <span id="modalOrderStatus"></span></p>
+              <p><strong>Paiement :</strong> <span id="modalPaymentStatus"></span></p>
+            </div>
+          </div>
+          
+          <h6 style="color: var(--rouge-profond); margin-top: 20px;">Produits commandés</h6>
+          <div id="modalOrderItems" class="order-details">
+            <!-- Les produits seront insérés ici -->
+          </div>
+          
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <label><strong>Modifier le statut :</strong></label>
+              <select id="modalStatusSelect" class="form-select" onchange="updateOrderStatus(this.value)">
+                <option value="pending">En attente</option>
+                <option value="confirmed">Confirmée</option>
+                <option value="shipped">Expédiée</option>
+                <option value="delivered">Livrée</option>
+                <option value="cancelled">Annulée</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label><strong>Statut de paiement :</strong></label>
+              <select id="modalPaymentSelect" class="form-select" onchange="updatePaymentStatus(this.value)">
+                <option value="unpaid">Impayé</option>
+                <option value="paid">Payé</option>
+                <option value="partial">Paiement partiel</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-or" onclick="generateInvoice()">
+            <i class="fas fa-file-invoice me-2"></i>Générer facture
+          </button>
+          <button type="button" class="btn btn-or" onclick="contactCustomerFromModal()">
+            <i class="fab fa-whatsapp me-2"></i>Contacter
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Facture -->
+  <div class="modal fade" id="invoiceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Facture <span id="invoiceModalId"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="invoiceContent" class="invoice-box">
+            <!-- La facture sera générée ici dynamiquement -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-or" onclick="downloadInvoicePDF()">
+            <i class="fas fa-download me-2"></i>Télécharger PDF
+          </button>
+          <button type="button" class="btn btn-or" onclick="printInvoice()">
+            <i class="fas fa-print me-2"></i>Imprimer
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Ajouter Catégorie -->
+  <div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Ajouter une catégorie</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Nom de la catégorie</label>
+            <input type="text" class="form-control" id="newCategoryName" placeholder="Ex: Nouveautés">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-rouge" onclick="addCategory()">Ajouter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==================== DONNÉES ====================
+    
+    // Clés pour le stockage localStorage
+    const STORAGE_KEY = 'njeeygu_orders';
+    const PRODUCTS_KEY = 'njeeygu_products';
+    const INVOICES_KEY = 'njeeygu_invoices';
+    const CLIENTS_KEY = 'njeeygu_clients';
+    
+    // Données
+    let orders = [];
+    let products = [];
+    let invoices = [];
+    let clients = [];
+    
+    let currentOrderId = null;
+    let currentInvoiceId = null;
+    
+    // ==================== PRODUITS (tous ceux de boutique.html) ====================
+    
+    function initProducts() {
+      const stored = localStorage.getItem(PRODUCTS_KEY);
+      if (stored) {
+        products = JSON.parse(stored);
+      } else {
+        // Tous les produits de boutique.html
+        products = [
+          // Ligne 1
+          { id: 1, name: 'Centre de table Royal', category: 'table', price: 45000, stock: 12, status: 'active', badge: 'Nouveau', desc: 'Collection Prestige - Composition florale dorée avec cristaux. Hauteur 45cm.', image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200' },
+          { id: 2, name: 'Guirlande Dorée', category: 'lumiere', price: 25000, stock: 8, status: 'active', badge: 'Promo', oldPrice: 32000, desc: '5 mètres de guirlande lumineuse LED, 100 ampoules chaudes.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200' },
+          { id: 3, name: 'Coffret Mariage', category: 'mariage', price: 15000, stock: 25, status: 'active', badge: '', desc: 'Lot de 10 boîtes cadeaux pour dragées, finition satinée.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200' },
+          { id: 4, name: 'Arche à Ballons', category: 'ballon', price: 35000, stock: 5, status: 'active', badge: 'Top', desc: 'Structure métallique 2.5m de hauteur, inclut 30 ballons.', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200' },
+          
+          // Ligne 2
+          { id: 5, name: 'Vaisselle Émeraude', category: 'table', price: 12000, stock: 18, status: 'active', badge: '', desc: '12 pièces (assiettes, couverts, verres) couleur vert émeraude.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200' },
+          { id: 6, name: 'Photobooth LED', category: 'lumiere', price: 75000, stock: 3, status: 'active', badge: '', desc: 'Location à la journée avec fond lumineux et accessoires.', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200' },
+          { id: 7, name: 'Set Bougeoirs', category: 'deco', price: 22000, stock: 10, status: 'active', badge: 'Nouveau', desc: 'Pack de 6 bougeoirs en verre doré, bougies LED incluses.', image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=200' },
+          { id: 8, name: 'Nappage Or', category: 'table', price: 8500, stock: 30, status: 'active', badge: '', desc: 'Nappe en satin 160x220 cm, chemin de table assorti.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200' },
+          
+          // Ligne 3
+          { id: 9, name: 'Chemin de table', category: 'table', price: 18000, stock: 15, status: 'active', badge: '', desc: 'Rouge & Or, tissu brodé main, longueur 3m.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200' },
+          { id: 10, name: 'Marque-places', category: 'mariage', price: 9500, stock: 50, status: 'active', badge: '', desc: 'Lot de 50 cartons dorés avec porte-nom en métal.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200' },
+          { id: 11, name: 'Vase Crystal', category: 'deco', price: 28000, stock: 7, status: 'active', badge: '', desc: 'Hauteur 40cm, verre taillé, idéal pour centres de table.', image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200' },
+          { id: 12, name: 'Structure murale', category: 'ballon', price: 42000, stock: 4, status: 'active', badge: '', desc: 'Pour compositions de ballons, 2x2m démontable.', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200' },
+          
+          // Ligne 4
+          { id: 13, name: 'Guirlande LED', category: 'lumiere', price: 14500, stock: 20, status: 'active', badge: '', desc: '10m blanc chaud, avec télécommande, 8 modes.', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200' },
+          { id: 14, name: 'Bougies parfumées', category: 'deco', price: 11000, stock: 35, status: 'active', badge: '', desc: 'Set de 4, parfums vanille, cannelle, ambre.', image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=200' },
+          { id: 15, name: 'Rideau de fond', category: 'deco', price: 32000, stock: 6, status: 'active', badge: '', desc: '3x3m doré, parfait pour photobooth et scènes.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200' },
+          { id: 16, name: 'Boîtes cadeaux', category: 'mariage', price: 16000, stock: 22, status: 'active', badge: '', desc: 'Lot de 20, finition satin, rubans dorés assortis.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200' },
+          
+          // Ligne 5
+          { id: 17, name: 'Serviettes tissu', category: 'table', price: 13000, stock: 40, status: 'active', badge: '', desc: 'Lot de 50, coton de qualité, couleur ivoire.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200' },
+          { id: 18, name: 'Centre de table Or', category: 'table', price: 55000, stock: 5, status: 'active', badge: 'Luxe', desc: 'Collection Luxe, fleurs artificielles de qualité supérieure.', image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200' },
+          { id: 19, name: 'Projecteur LED', category: 'lumiere', price: 29000, stock: 8, status: 'active', badge: '', desc: 'RGB + télécommande, 20W, effet disco.', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200' },
+          { id: 20, name: 'Ballons métallisés', category: 'ballon', price: 19000, stock: 30, status: 'active', badge: '', desc: 'Lot de 30, assortis or, rose, argent.', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200' },
+          
+          // Ligne 6
+          { id: 21, name: 'Chandelier doré', category: 'deco', price: 38000, stock: 4, status: 'active', badge: '', desc: '5 branches, hauteur 60cm, métal doré.', image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=200' },
+          { id: 22, name: 'Lampions chinois', category: 'lumiere', price: 9000, stock: 45, status: 'active', badge: '', desc: 'Lot de 20, coloris assortis, diamètre 25cm.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200' },
+          { id: 23, name: 'Dragées amandes', category: 'mariage', price: 7500, stock: 60, status: 'active', badge: '', desc: '1kg, enrobage doré, qualité supérieure.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200' },
+          { id: 24, name: 'Coussins mariage', category: 'mariage', price: 24000, stock: 12, status: 'active', badge: '', desc: 'Set de 4, satin, broderies dorées. Dimensions 40x40cm.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200' }
+        ];
+        localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+      }
+    }
+    
+    // ==================== COMMANDES ====================
+    
+    
+        
+    
+    function saveOrders() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      updateClientsFromOrders();
+      updateStats();
+      updateOrdersTable();
+      updateRecentOrders();
+      updateBadges();
+      initCharts();
+    }
+    
+    // ==================== FACTURES ====================
+    
+    function initInvoices() {
+      const stored = localStorage.getItem(INVOICES_KEY);
+      if (stored) {
+        invoices = JSON.parse(stored);
+      } else {
+        // Générer des factures pour les commandes existantes
+        orders.forEach(order => {
+          if (order.status !== 'cancelled') {
+            generateInvoiceForOrder(order, true);
+          }
+        });
+      }
+    }
+    
+    function generateInvoiceForOrder(order, silent = false) {
+      const invoiceId = 'INV-' + order.id.replace('CMD-', '');
+      
+      // Vérifier si la facture existe déjà
+      const existing = invoices.find(inv => inv.orderId === order.id);
+      if (existing) return existing;
+      
+      const invoice = {
+        id: invoiceId,
+        orderId: order.id,
+        client: order.client,
+        phone: order.phone,
+        email: order.email,
+        date: new Date().toISOString(),
+        dueDate: new Date(Date.now() + 15 * 86400000).toISOString(),
+        items: order.items,
+        subtotal: order.total,
+        tax: 0,
+        total: order.total,
+        status: order.paymentStatus === 'paid' ? 'paid' : 'unpaid'
+      };
+      
+      invoices.push(invoice);
+      localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
+      
+      if (!silent) {
+        showNotification('Facture générée', `Facture ${invoiceId} créée avec succès`);
+      }
+      
+      return invoice;
+    }
+    
+    // ==================== CLIENTS ====================
+    
+    function updateClientsFromOrders() {
+      const clientMap = new Map();
+      
+      orders.forEach(order => {
+        const key = order.phone;
+        if (!clientMap.has(key)) {
+          clientMap.set(key, {
+            name: order.client,
+            phone: order.phone,
+            email: order.email,
+            orders: [],
+            totalSpent: 0,
+            lastOrder: order.date
+          });
+        }
+        
+        const client = clientMap.get(key);
+        client.orders.push(order.id);
+        client.totalSpent += order.total;
+        if (new Date(order.date) > new Date(client.lastOrder)) {
+          client.lastOrder = order.date;
+        }
+      });
+      
+      clients = Array.from(clientMap.values());
+      localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
+    }
+    
+    // ==================== RECEVOIR UNE NOUVELLE COMMANDE ====================
+    
+    function receiveNewOrder(orderData) {
+      const newOrder = {
+        id: 'CMD-' + new Date().getFullYear() + '-' + String(orders.length + 1).padStart(3, '0'),
+        ...orderData,
+        date: new Date().toISOString(),
+        status: 'pending',
+        paymentStatus: 'unpaid'
+      };
+      
+      orders.push(newOrder);
+      saveOrders();
+      
+      // Générer la facture
+      generateInvoiceForOrder(newOrder);
+      
+      // Afficher une notification
+      showNotification('Nouvelle commande', `Commande de ${orderData.client} - ${orderData.total.toLocaleString()} FCFA`);
+      
+      return newOrder.id;
+    }
+    
+    // ==================== MISES À JOUR UI ====================
+    
+    function updateStats() {
+      const totalOrders = orders.length;
+      const pendingOrders = orders.filter(o => o.status === 'pending').length;
+      const confirmedOrders = orders.filter(o => o.status === 'confirmed').length;
+      const shippedOrders = orders.filter(o => o.status === 'shipped').length;
+      const deliveredOrders = orders.filter(o => o.status === 'delivered').length;
+      const cancelledOrders = orders.filter(o => o.status === 'cancelled').length;
+      const uniqueClients = new Set(orders.map(o => o.phone)).size;
+      
+      document.getElementById('statCommandes').innerText = totalOrders;
+      document.getElementById('statEnAttente').innerText = pendingOrders;
+      document.getElementById('statProduits').innerText = products.length;
+      document.getElementById('statClients').innerText = uniqueClients;
+      
+      // Mettre à jour les compteurs pour les filtres
+      document.getElementById('countAll').innerText = totalOrders;
+      document.getElementById('countPending').innerText = pendingOrders;
+      document.getElementById('countConfirmed').innerText = confirmedOrders;
+      document.getElementById('countShipped').innerText = shippedOrders;
+      document.getElementById('countDelivered').innerText = deliveredOrders;
+      document.getElementById('countCancelled').innerText = cancelledOrders;
+      
+      // Mettre à jour les stats du dashboard
+      document.getElementById('statPendingCount').innerText = pendingOrders;
+      document.getElementById('statConfirmedCount').innerText = confirmedOrders;
+      document.getElementById('statShippedCount').innerText = shippedOrders;
+      document.getElementById('statDeliveredCount').innerText = deliveredOrders;
+      document.getElementById('statCancelledCount').innerText = cancelledOrders;
+      
+      // Total annuel des ventes
+      const totalAnnual = orders.reduce((sum, o) => sum + o.total, 0);
+      document.getElementById('totalAnnualSales').innerText = totalAnnual.toLocaleString();
+    }
+    
+    function updateBadges() {
+      const pendingCount = orders.filter(o => o.status === 'pending').length;
+      document.getElementById('pendingOrdersBadge').innerText = pendingCount;
+      
+      const lowStock = products.filter(p => p.stock < 5).length;
+      document.getElementById('lowStockBadge').innerText = lowStock;
+      
+      // Messages badge (simulé)
+      document.getElementById('messagesBadge').innerText = '2';
+    }
+    
+    function updateOrdersTable(filter = 'all') {
+      const tbody = document.getElementById('ordersList');
+      if (!tbody) return;
+      
+      let filteredOrders = orders;
+      if (filter !== 'all') {
+        filteredOrders = orders.filter(o => o.status === filter);
+      }
+      
+      filteredOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      tbody.innerHTML = '';
+      filteredOrders.forEach(order => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${order.id}</strong></td>
+          <td>${order.client}</td>
+          <td>${order.phone}</td>
+          <td>${order.email}</td>
+          <td>${order.total.toLocaleString()} FCFA</td>
+          <td>${formatDate(order.date)}</td>
+          <td>
+            <span class="badge-status ${getStatusClass(order.status)}">${getStatusLabel(order.status)}</span>
+          </td>
+          <td>
+            <span class="badge-status ${order.paymentStatus === 'paid' ? 'badge-paid' : order.paymentStatus === 'partial' ? 'badge-pending' : 'badge-unpaid'}">
+              ${order.paymentStatus === 'paid' ? 'Payé' : order.paymentStatus === 'partial' ? 'Partiel' : 'Impayé'}
+            </span>
+          </td>
+          <td>
+            <button class="action-btn" onclick="viewOrderDetails('${order.id}')" title="Voir détails"><i class="fas fa-eye"></i></button>
+            <button class="action-btn whatsapp" onclick="contactCustomer('${order.phone}', '${order.id}')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
+            <button class="action-btn pdf" onclick="viewInvoice('${order.id}')" title="Facture"><i class="fas fa-file-invoice"></i></button>
+            <button class="action-btn delete" onclick="deleteOrder('${order.id}')" title="Supprimer"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      // Réinitialiser DataTables
+      if ($.fn.DataTable.isDataTable('#ordersTable')) {
+        $('#ordersTable').DataTable().destroy();
+      }
+      
+      $('#ordersTable').DataTable({
+        pageLength: 10,
+        order: [[5, 'desc']],
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    function updateRecentOrders() {
+      const tbody = document.getElementById('recentOrdersList');
+      if (!tbody) return;
+      
+      const recentOrders = [...orders].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+      
+      tbody.innerHTML = '';
+      recentOrders.forEach(order => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${order.id}</strong></td>
+          <td>${order.client}</td>
+          <td>${order.total.toLocaleString()} FCFA</td>
+          <td>${formatDate(order.date)}</td>
+          <td><span class="badge-status ${getStatusClass(order.status)}">${getStatusLabel(order.status)}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewOrderDetails('${order.id}')"><i class="fas fa-eye"></i></button>
+            <button class="action-btn whatsapp" onclick="contactCustomer('${order.phone}', '${order.id}')"><i class="fab fa-whatsapp"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#recentOrdersTable')) {
+        $('#recentOrdersTable').DataTable().destroy();
+      }
+      
+      $('#recentOrdersTable').DataTable({
+        pageLength: 5,
+        order: [[3, 'desc']],
+        searching: false,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    function updateProductsTable() {
+      const tbody = document.getElementById('productsList');
+      if (!tbody) return;
+      
+      document.getElementById('totalProducts').innerText = products.length;
+      
+      tbody.innerHTML = '';
+      products.forEach(product => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><img src="${product.image}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;"></td>
+          <td><strong>${product.name}</strong></td>
+          <td>${getCategoryLabel(product.category)}</td>
+          <td>${product.price.toLocaleString()} FCFA</td>
+          <td>
+            <span class="${product.stock < 5 ? 'text-danger fw-bold' : ''}">${product.stock}</span>
+          </td>
+          <td><span class="badge-status ${product.status === 'active' ? 'badge-active' : 'badge-inactive'}">${product.status === 'active' ? 'Actif' : 'Inactif'}</span></td>
+          <td>
+            <button class="action-btn" onclick="editProduct(${product.id})"><i class="fas fa-edit"></i></button>
+            <button class="action-btn delete" onclick="deleteProduct(${product.id})"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#productsTable')) {
+        $('#productsTable').DataTable().destroy();
+      }
+      
+      $('#productsTable').DataTable({
+        pageLength: 10,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+      
+      // Mise à jour des produits en stock faible
+      updateLowStockTable();
+    }
+    
+    function updateLowStockTable() {
+      const tbody = document.getElementById('lowStockList');
+      if (!tbody) return;
+      
+      const lowStock = products.filter(p => p.stock < 5);
+      
+      tbody.innerHTML = '';
+      lowStock.slice(0, 5).forEach(product => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><img src="${product.image}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;"></td>
+          <td><strong>${product.name}</strong></td>
+          <td>${getCategoryLabel(product.category)}</td>
+          <td class="text-danger fw-bold">${product.stock}</td>
+          <td>
+            <button class="action-btn" onclick="editProduct(${product.id})"><i class="fas fa-edit"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#lowStockTable')) {
+        $('#lowStockTable').DataTable().destroy();
+      }
+      
+      $('#lowStockTable').DataTable({
+        pageLength: 5,
+        searching: false,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    function updateInvoicesTable() {
+      const tbody = document.getElementById('invoicesList');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      invoices.forEach(invoice => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${invoice.id}</strong></td>
+          <td>${invoice.orderId}</td>
+          <td>${invoice.client}</td>
+          <td>${invoice.total.toLocaleString()} FCFA</td>
+          <td>${formatDate(invoice.date)}</td>
+          <td><span class="badge-status ${invoice.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${invoice.status === 'paid' ? 'Payée' : 'Impayée'}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewInvoiceDetails('${invoice.id}')"><i class="fas fa-eye"></i></button>
+            <button class="action-btn pdf" onclick="downloadInvoicePDF('${invoice.id}')"><i class="fas fa-download"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#invoicesTable')) {
+        $('#invoicesTable').DataTable().destroy();
+      }
+      
+      $('#invoicesTable').DataTable({
+        pageLength: 10,
+        order: [[4, 'desc']],
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    function updateClientsTable() {
+      const tbody = document.getElementById('clientsList');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      clients.forEach(client => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${client.name}</strong></td>
+          <td>${client.phone}</td>
+          <td>${client.email || 'Non renseigné'}</td>
+          <td>${client.orders.length}</td>
+          <td>${client.totalSpent.toLocaleString()} FCFA</td>
+          <td>${formatDate(client.lastOrder)}</td>
+          <td>
+            <button class="action-btn" onclick="contactCustomer('${client.phone}')"><i class="fab fa-whatsapp"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#clientsTable')) {
+        $('#clientsTable').DataTable().destroy();
+      }
+      
+      $('#clientsTable').DataTable({
+        pageLength: 10,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    // ==================== ACTIONS SUR LES COMMANDES ====================
+    
+    function viewOrderDetails(orderId) {
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
+      
+      currentOrderId = orderId;
+      
+      document.getElementById('modalOrderId').innerText = order.id;
+      document.getElementById('modalClientName').innerText = order.client;
+      document.getElementById('modalClientPhone').innerText = order.phone;
+      document.getElementById('modalClientEmail').innerText = order.email;
+      document.getElementById('modalOrderDate').innerText = formatDate(order.date);
+      document.getElementById('modalOrderTotal').innerText = order.total.toLocaleString() + ' FCFA';
+      document.getElementById('modalOrderStatus').innerHTML = `<span class="badge-status ${getStatusClass(order.status)}">${getStatusLabel(order.status)}</span>`;
+      
+      const paymentLabel = order.paymentStatus === 'paid' ? 'Payé' : order.paymentStatus === 'partial' ? 'Paiement partiel' : 'Impayé';
+      const paymentClass = order.paymentStatus === 'paid' ? 'badge-paid' : order.paymentStatus === 'partial' ? 'badge-pending' : 'badge-unpaid';
+      document.getElementById('modalPaymentStatus').innerHTML = `<span class="badge-status ${paymentClass}">${paymentLabel}</span>`;
+      
+      // Produits
+      const itemsDiv = document.getElementById('modalOrderItems');
+      itemsDiv.innerHTML = '';
+      order.items.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'order-product-item';
+        itemDiv.innerHTML = `
+          <img src="${item.image}" class="order-product-img">
+          <div style="flex: 1;">
+            <strong>${item.name}</strong><br>
+            <small>Quantité: ${item.quantity} - Prix unitaire: ${item.price.toLocaleString()} FCFA</small>
+          </div>
+          <strong>${(item.quantity * item.price).toLocaleString()} FCFA</strong>
+        `;
+        itemsDiv.appendChild(itemDiv);
+      });
+      
+      // Statuts
+      document.getElementById('modalStatusSelect').value = order.status;
+      document.getElementById('modalPaymentSelect').value = order.paymentStatus || 'unpaid';
+      
+      new bootstrap.Modal(document.getElementById('orderDetailsModal')).show();
+    }
+    
+    function updateOrderStatus(status) {
+      if (!currentOrderId) return;
+      const order = orders.find(o => o.id === currentOrderId);
+      if (order) {
+        order.status = status;
+        saveOrders();
+        document.getElementById('modalOrderStatus').innerHTML = `<span class="badge-status ${getStatusClass(status)}">${getStatusLabel(status)}</span>`;
+        showNotification('Statut mis à jour', `La commande ${order.id} est maintenant ${getStatusLabel(status)}`);
+      }
+    }
+    
+    function updatePaymentStatus(status) {
+      if (!currentOrderId) return;
+      const order = orders.find(o => o.id === currentOrderId);
+      if (order) {
+        order.paymentStatus = status;
+        saveOrders();
+        
+        // Mettre à jour la facture associée
+        const invoice = invoices.find(inv => inv.orderId === order.id);
+        if (invoice) {
+          invoice.status = status === 'paid' ? 'paid' : 'unpaid';
+          localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
+        }
+        
+        const paymentLabel = status === 'paid' ? 'Payé' : status === 'partial' ? 'Paiement partiel' : 'Impayé';
+        const paymentClass = status === 'paid' ? 'badge-paid' : status === 'partial' ? 'badge-pending' : 'badge-unpaid';
+        document.getElementById('modalPaymentStatus').innerHTML = `<span class="badge-status ${paymentClass}">${paymentLabel}</span>`;
+        showNotification('Paiement mis à jour', `Le statut de paiement a été modifié`);
+      }
+    }
+    
+    function deleteOrder(orderId) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')) {
+        orders = orders.filter(o => o.id !== orderId);
+        invoices = invoices.filter(inv => inv.orderId !== orderId);
+        saveOrders();
+        localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
+        updateOrdersTable();
+        showNotification('Commande supprimée', 'La commande a été supprimée avec succès');
+      }
+    }
+    
+    function filterOrders(filter, event) {
+      document.querySelectorAll('#section-commandes .admin-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      updateOrdersTable(filter);
+    }
+    
+    function filterInvoices(filter, event) {
+      document.querySelectorAll('#section-factures .admin-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      const tbody = document.getElementById('invoicesList');
+      if (!tbody) return;
+      
+      let filteredInvoices = invoices;
+      if (filter === 'paid') {
+        filteredInvoices = invoices.filter(inv => inv.status === 'paid');
+      } else if (filter === 'unpaid') {
+        filteredInvoices = invoices.filter(inv => inv.status === 'unpaid');
+      }
+      
+      tbody.innerHTML = '';
+      filteredInvoices.forEach(invoice => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${invoice.id}</strong></td>
+          <td>${invoice.orderId}</td>
+          <td>${invoice.client}</td>
+          <td>${invoice.total.toLocaleString()} FCFA</td>
+          <td>${formatDate(invoice.date)}</td>
+          <td><span class="badge-status ${invoice.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${invoice.status === 'paid' ? 'Payée' : 'Impayée'}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewInvoiceDetails('${invoice.id}')"><i class="fas fa-eye"></i></button>
+            <button class="action-btn pdf" onclick="downloadInvoicePDF('${invoice.id}')"><i class="fas fa-download"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#invoicesTable')) {
+        $('#invoicesTable').DataTable().destroy();
+      }
+      
+      $('#invoicesTable').DataTable({
+        pageLength: 10,
+        order: [[4, 'desc']],
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    // ==================== ACTIONS SUR LES PRODUITS ====================
+    
+    function addProduct(event) {
+      event.preventDefault();
+      
+      const newProduct = {
+        id: products.length + 1,
+        name: document.getElementById('productName').value,
+        category: document.getElementById('productCategory').value,
+        price: parseInt(document.getElementById('productPrice').value),
+        stock: parseInt(document.getElementById('productStock').value),
+        status: document.getElementById('productStatus').value,
+        desc: document.getElementById('productDesc').value,
+        image: document.getElementById('productImage').value || 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200',
+        badge: document.getElementById('productBadge').value
+      };
+      
+      products.push(newProduct);
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+      
+      updateProductsTable();
+      showProductsTab('list', event);
+      showNotification('Produit ajouté', `${newProduct.name} a été ajouté avec succès`);
+      
+      document.getElementById('addProductForm').reset();
+    }
+    
+    function editProduct(productId) {
+      alert(`Édition du produit ${productId} - Fonctionnalité à implémenter`);
+    }
+    
+    function deleteProduct(productId) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+        products = products.filter(p => p.id !== productId);
+        localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+        updateProductsTable();
+        showNotification('Produit supprimé', 'Le produit a été supprimé avec succès');
+      }
+    }
+    
+    function showProductsTab(tab, event) {
+      document.querySelectorAll('#section-produits .products-tab-content').forEach(el => {
+        el.style.display = 'none';
+      });
+      
+      if (tab === 'list') {
+        document.getElementById('products-list').style.display = 'block';
+        updateProductsTable();
+      } else if (tab === 'add') {
+        document.getElementById('products-add').style.display = 'block';
+      } else if (tab === 'categories') {
+        document.getElementById('products-categories').style.display = 'block';
+        updateCategoriesTable();
+      }
+      
+      document.querySelectorAll('#section-produits .admin-tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      event.target.classList.add('active');
+    }
+    
+    function updateCategoriesTable() {
+      const tbody = document.getElementById('categoriesList');
+      if (!tbody) return;
+      
+      const categories = [
+        { name: 'Art de la table', count: products.filter(p => p.category === 'table').length },
+        { name: 'Lumières', count: products.filter(p => p.category === 'lumiere').length },
+        { name: 'Mariage', count: products.filter(p => p.category === 'mariage').length },
+        { name: 'Ballons', count: products.filter(p => p.category === 'ballon').length },
+        { name: 'Décoration', count: products.filter(p => p.category === 'deco').length }
+      ];
+      
+      tbody.innerHTML = '';
+      categories.forEach(cat => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${cat.name}</strong></td>
+          <td>${cat.count}</td>
+          <td>
+            <button class="action-btn"><i class="fas fa-edit"></i></button>
+            <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#categoriesTable')) {
+        $('#categoriesTable').DataTable().destroy();
+      }
+      
+      $('#categoriesTable').DataTable({
+        pageLength: 10,
+        searching: false,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    function showAddCategoryModal() {
+      new bootstrap.Modal(document.getElementById('addCategoryModal')).show();
+    }
+    
+    function addCategory() {
+      const categoryName = document.getElementById('newCategoryName').value;
+      if (categoryName) {
+        alert(`Catégorie "${categoryName}" ajoutée (simulation)`);
+        bootstrap.Modal.getInstance(document.getElementById('addCategoryModal')).hide();
+      }
+    }
+    
+    function showLinksTab(tab, event) {
+      document.querySelectorAll('#section-liens .links-tab-content').forEach(el => {
+        el.style.display = 'none';
+      });
+      
+      document.getElementById(`links-${tab}`).style.display = 'block';
+      
+      document.querySelectorAll('#section-liens .admin-tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      event.target.classList.add('active');
+    }
+    
+    function addMenuItem() {
+      alert('Fonctionnalité d\'ajout de lien à implémenter');
+    }
+    
+    function addFooterLink() {
+      alert('Fonctionnalité d\'ajout de lien footer à implémenter');
+    }
+    
+    function addSocialLink() {
+      alert('Fonctionnalité d\'ajout de réseau social à implémenter');
+    }
+    
+    function addPage() {
+      alert('Fonctionnalité d\'ajout de page à implémenter');
+    }
+    
+    // ==================== FACTURES ====================
+    
+    function generateInvoice() {
+      if (!currentOrderId) return;
+      const order = orders.find(o => o.id === currentOrderId);
+      if (!order) return;
+      
+      const invoice = generateInvoiceForOrder(order);
+      viewInvoiceDetails(invoice.id);
+    }
+    
+    function viewInvoice(orderId) {
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
+      
+      const invoice = invoices.find(inv => inv.orderId === orderId) || generateInvoiceForOrder(order);
+      viewInvoiceDetails(invoice.id);
+    }
+    
+    function viewInvoiceDetails(invoiceId) {
+      const invoice = invoices.find(inv => inv.id === invoiceId);
+      if (!invoice) return;
+      
+      currentInvoiceId = invoiceId;
+      document.getElementById('invoiceModalId').innerText = invoice.id;
+      
+      const content = document.getElementById('invoiceContent');
+      content.innerHTML = generateInvoiceHTML(invoice);
+      
+      new bootstrap.Modal(document.getElementById('invoiceModal')).show();
+    }
+    
+    function generateInvoiceHTML(invoice) {
+      let itemsHTML = '';
+      invoice.items.forEach(item => {
+        itemsHTML += `
+          <tr>
+            <td>${item.name}</td>
+            <td class="text-center">${item.quantity}</td>
+            <td class="text-end">${item.price.toLocaleString()} FCFA</td>
+            <td class="text-end">${(item.quantity * item.price).toLocaleString()} FCFA</td>
+          </tr>
+        `;
+      });
+      
+      const totalHT = invoice.subtotal;
+      const tva = 0;
+      const totalTTC = invoice.total;
+      
+      return `
+        <div class="invoice-header">
+          <div class="invoice-logo">
+            <img src="images/log1.png" alt="NJEEYGU Logo" onerror="this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
+            <div>
+              <h2 class="invoice-title">NJEEYGU</h2>
+              <p style="color: var(--or-eclatant);">Le Grand Jour</p>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <h3 style="color: var(--rouge-profond);">FACTURE</h3>
+            <p><strong>N° ${invoice.id}</strong></p>
+          </div>
+        </div>
+        
+        <div class="row invoice-details">
+          <div class="col-6">
+            <strong style="color: var(--rouge-profond);">Facturé à :</strong><br>
+            ${invoice.client}<br>
+            Tél: ${invoice.phone}<br>
+            Email: ${invoice.email}
+          </div>
+          <div class="col-6 text-end">
+            <strong style="color: var(--rouge-profond);">Détails :</strong><br>
+            Date d'émission: ${formatDate(invoice.date)}<br>
+            Date d'échéance: ${formatDate(invoice.dueDate)}<br>
+            Commande: ${invoice.orderId}
+          </div>
+        </div>
+        
+        <table class="invoice-table">
+          <thead>
+            <tr>
+              <th>Produit</th>
+              <th class="text-center">Qté</th>
+              <th class="text-end">Prix unitaire</th>
+              <th class="text-end">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHTML}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="text-end"><strong>Sous-total</strong></td>
+              <td class="text-end">${totalHT.toLocaleString()} FCFA</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="text-end"><strong>TVA (0%)</strong></td>
+              <td class="text-end">${tva.toLocaleString()} FCFA</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="text-end"><strong style="color: var(--rouge-profond);">TOTAL</strong></td>
+              <td class="text-end"><strong style="color: var(--rouge-profond);">${totalTTC.toLocaleString()} FCFA</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+        
+        <div class="invoice-footer">
+          <p>Merci de votre confiance ! Pour toute question, contactez-nous au +221 77 544 97 95</p>
+          <p style="font-size: 0.8rem;">NJEEYGU - Le Grand Jour - 123 Rue Principale, Saint-Louis</p>
+        </div>
+      `;
+    }
+    
+    function downloadInvoicePDF(invoiceId) {
+      const invoice = invoices.find(inv => inv.id === invoiceId) || invoices.find(inv => inv.id === currentInvoiceId);
+      if (!invoice) return;
+      
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // Configuration des couleurs
+      const rougeProfond = [139, 0, 0];
+      const orEclatant = [212, 175, 55];
+      
+      // En-tête avec logo et titre
+      doc.setFillColor(...rougeProfond);
+      doc.rect(0, 0, 210, 40, 'F');
+      
+      doc.setFontSize(24);
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.text('NJEEYGU', 105, 20, { align: 'center' });
+      
+      doc.setFontSize(12);
+      doc.setTextColor(...orEclatant);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Le Grand Jour', 105, 30, { align: 'center' });
+      
+      // Titre FACTURE
+      doc.setFontSize(20);
+      doc.setTextColor(...rougeProfond);
+      doc.setFont('helvetica', 'bold');
+      doc.text('FACTURE', 20, 55);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`N° ${invoice.id}`, 20, 62);
+      
+      // Informations client et détails
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Facturé à :', 20, 80);
+      doc.text('Détails :', 120, 80);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.text(invoice.client, 20, 88);
+      doc.text(`Tél: ${invoice.phone}`, 20, 95);
+      doc.text(`Email: ${invoice.email}`, 20, 102);
+      
+      doc.text(`Date d'émission: ${formatDate(invoice.date)}`, 120, 88);
+      doc.text(`Date d'échéance: ${formatDate(invoice.dueDate)}`, 120, 95);
+      doc.text(`Commande: ${invoice.orderId}`, 120, 102);
+      
+      // Tableau des produits
+      const startY = 120;
+      
+      // En-tête du tableau
+      doc.setFillColor(...rougeProfond);
+      doc.rect(20, startY - 5, 170, 8, 'F');
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.text('Produit', 22, startY);
+      doc.text('Qté', 100, startY);
+      doc.text('Prix unitaire', 120, startY);
+      doc.text('Total', 160, startY);
+      
+      // Lignes du tableau
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'normal');
+      let y = startY + 8;
+      
+      invoice.items.forEach((item, index) => {
+        // Alterner les couleurs de fond
+        if (index % 2 === 0) {
+          doc.setFillColor(245, 245, 245);
+          doc.rect(20, y - 4, 170, 8, 'F');
+        }
+        
+        doc.text(item.name.substring(0, 25), 22, y);
+        doc.text(item.quantity.toString(), 105, y, { align: 'center' });
+        doc.text(`${item.price.toLocaleString()} FCFA`, 140, y, { align: 'right' });
+        doc.text(`${(item.quantity * item.price).toLocaleString()} FCFA`, 180, y, { align: 'right' });
+        y += 8;
+      });
+      
+      // Ligne de séparation
+      doc.setDrawColor(...orEclatant);
+      doc.line(20, y, 190, y);
+      y += 6;
+      
+      // Totaux
+      doc.setFont('helvetica', 'bold');
+      doc.text('Sous-total', 130, y);
+      doc.text(`${invoice.subtotal.toLocaleString()} FCFA`, 180, y, { align: 'right' });
+      y += 6;
+      
+      doc.text('TVA (0%)', 130, y);
+      doc.text('0 FCFA', 180, y, { align: 'right' });
+      y += 8;
+      
+      doc.setFontSize(12);
+      doc.setTextColor(...rougeProfond);
+      doc.text('TOTAL', 130, y);
+      doc.text(`${invoice.total.toLocaleString()} FCFA`, 180, y, { align: 'right' });
+      
+      // Pied de page
+      y += 20;
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Merci de votre confiance ! Pour toute question, contactez-nous au +221 77 544 97 95', 105, y, { align: 'center' });
+      
+      y += 6;
+      doc.setFontSize(8);
+      doc.text('NJEEYGU - Le Grand Jour - 123 Rue Principale, Saint-Louis', 105, y, { align: 'center' });
+      
+      doc.save(`facture-${invoice.id}.pdf`);
+      showNotification('PDF généré', `La facture ${invoice.id} a été téléchargée`);
+    }
+    
+    function printInvoice() {
+      window.print();
+    }
+    
+    // ==================== CONTACT CLIENT ====================
+    
+    function contactCustomer(phone, orderId = '') {
+      const phoneNumber = phone.replace(/\s/g, '');
+      let message = 'Bonjour, je vous contacte de la part de NJEEYGU.';
+      
+      if (orderId) {
+        message = `Bonjour, je vous contacte au sujet de votre commande ${orderId}.`;
+      }
+      
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+    
+    function contactCustomerFromModal() {
+      if (!currentOrderId) return;
+      const order = orders.find(o => o.id === currentOrderId);
+      if (order) {
+        contactCustomer(order.phone, order.id);
+      }
+    }
+    
+    // ==================== NOTIFICATIONS ====================
+    
+    function showNotification(title, message) {
+      document.getElementById('notificationTitle').innerText = title;
+      document.getElementById('notificationMessage').innerText = message;
+      document.getElementById('notificationToast').style.display = 'block';
+      
+      setTimeout(() => {
+        closeNotification();
+      }, 5000);
+    }
+    
+    function closeNotification() {
+      document.getElementById('notificationToast').style.display = 'none';
+    }
+    
+    // ==================== EXPORT / RAPPORTS ====================
+    
+    function exportOrders() {
+      const data = orders.map(o => ({
+        'N° Commande': o.id,
+        'Client': o.client,
+        'Téléphone': o.phone,
+        'Email': o.email,
+        'Total': o.total,
+        'Date': formatDate(o.date),
+        'Statut': getStatusLabel(o.status),
+        'Paiement': o.paymentStatus
+      }));
+      
+      const csv = convertToCSV(data);
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `commandes_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      showNotification('Export réussi', 'Le fichier CSV a été généré');
+    }
+    
+    function generateReport() {
+      const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
+      const pendingCount = orders.filter(o => o.status === 'pending').length;
+      
+      const report = `
+        RAPPORT DES COMMANDES
+        =====================
+        
+        Date: ${new Date().toLocaleDateString()}
+        Total commandes: ${orders.length}
+        Chiffre d'affaires: ${totalRevenue.toLocaleString()} FCFA
+        Commandes en attente: ${pendingCount}
+        Commandes livrées: ${orders.filter(o => o.status === 'delivered').length}
+        Commandes annulées: ${orders.filter(o => o.status === 'cancelled').length}
+      `;
+      
+      alert(report);
+    }
+    
+    function generateInvoiceReport() {
+      const paidInvoices = invoices.filter(i => i.status === 'paid').length;
+      const unpaidInvoices = invoices.filter(i => i.status === 'unpaid').length;
+      const totalAmount = invoices.reduce((sum, i) => sum + i.total, 0);
+      
+      alert(`
+        RAPPORT DES FACTURES
+        ====================
+        
+        Total factures: ${invoices.length}
+        Factures payées: ${paidInvoices}
+        Factures impayées: ${unpaidInvoices}
+        Montant total: ${totalAmount.toLocaleString()} FCFA
+      `);
+    }
+    
+    function convertToCSV(data) {
+      const headers = Object.keys(data[0]);
+      const rows = data.map(obj => headers.map(header => obj[header]).join(','));
+      return [headers.join(','), ...rows].join('\n');
+    }
+    
+    // ==================== GRAPHIQUES ====================
+    
+    let salesChart, ordersChart, categoryChart;
+    
+    function initCharts() {
+      // Ventes mensuelles
+      const monthlySales = Array(12).fill(0);
+      orders.forEach(order => {
+        const date = new Date(order.date);
+        const month = date.getMonth();
+        monthlySales[month] += order.total / 1000; // en milliers
+      });
+      
+      const ctx = document.getElementById('salesChart')?.getContext('2d');
+      if (ctx) {
+        if (salesChart) salesChart.destroy();
+        salesChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+            datasets: [{
+              label: 'Ventes (milliers FCFA)',
+              data: monthlySales,
+              borderColor: '#8B0000',
+              backgroundColor: 'rgba(139, 0, 0, 0.1)',
+              tension: 0.4,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 2,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  font: {
+                    size: 9
+                  }
+                }
+              },
+              x: {
+                ticks: {
+                  font: {
+                    size: 9
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+      
+      // Statut des commandes
+      const statusCounts = [
+        orders.filter(o => o.status === 'pending').length,
+        orders.filter(o => o.status === 'confirmed').length,
+        orders.filter(o => o.status === 'shipped').length,
+        orders.filter(o => o.status === 'delivered').length,
+        orders.filter(o => o.status === 'cancelled').length
+      ];
+      
+      const ctx2 = document.getElementById('ordersStatusChart')?.getContext('2d');
+      if (ctx2) {
+        if (ordersChart) ordersChart.destroy();
+        ordersChart = new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+            labels: ['En attente', 'Confirmées', 'Expédiées', 'Livrées', 'Annulées'],
+            datasets: [{
+              data: statusCounts,
+              backgroundColor: ['#FFC107', '#17A2B8', '#007BFF', '#28A745', '#DC3545'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        });
+      }
+      
+      // Ventes par catégorie
+      const categorySales = {};
+      orders.forEach(order => {
+        order.items.forEach(item => {
+          const product = products.find(p => p.id === item.productId);
+          if (product) {
+            const cat = product.category;
+            categorySales[cat] = (categorySales[cat] || 0) + (item.quantity * item.price);
+          }
+        });
+      });
+      
+      const ctx3 = document.getElementById('categorySalesChart')?.getContext('2d');
+      if (ctx3) {
+        if (categoryChart) categoryChart.destroy();
+        categoryChart = new Chart(ctx3, {
+          type: 'bar',
+          data: {
+            labels: ['Table', 'Lumières', 'Mariage', 'Ballons', 'Déco'],
+            datasets: [{
+              label: 'Ventes (FCFA)',
+              data: [
+                categorySales['table'] || 0,
+                categorySales['lumiere'] || 0,
+                categorySales['mariage'] || 0,
+                categorySales['ballon'] || 0,
+                categorySales['deco'] || 0
+              ],
+              backgroundColor: '#D4AF37'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        });
+      }
+      
+      // Revenue chart
+      const ctx4 = document.getElementById('revenueChart')?.getContext('2d');
+      if (ctx4) {
+        new Chart(ctx4, {
+          type: 'line',
+          data: {
+            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+            datasets: [{
+              label: 'Chiffre d\'affaires',
+              data: monthlySales.map(v => v * 1000),
+              borderColor: '#D4AF37',
+              backgroundColor: 'rgba(212, 175, 55, 0.1)',
+              tension: 0.4,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        });
+      }
+    }
+    
+    // ==================== UTILITAIRES ====================
+    
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    }
+    
+    function getStatusClass(status) {
+      switch(status) {
+        case 'pending': return 'badge-pending';
+        case 'confirmed': return 'badge-confirmed';
+        case 'shipped': return 'badge-shipped';
+        case 'delivered': return 'badge-delivered';
+        case 'cancelled': return 'badge-cancelled';
+        default: return 'badge-pending';
+      }
+    }
+    
+    function getStatusLabel(status) {
+      switch(status) {
+        case 'pending': return 'En attente';
+        case 'confirmed': return 'Confirmée';
+        case 'shipped': return 'Expédiée';
+        case 'delivered': return 'Livrée';
+        case 'cancelled': return 'Annulée';
+        default: return status;
+      }
+    }
+    
+    function getCategoryLabel(cat) {
+      switch(cat) {
+        case 'table': return 'Art de la table';
+        case 'lumiere': return 'Lumières';
+        case 'mariage': return 'Mariage';
+        case 'ballon': return 'Ballons';
+        case 'deco': return 'Décoration';
+        default: return cat;
+      }
+    }
+    
+    // ==================== NAVIGATION ====================
+    
+    function showSection(section, event) {
+      document.querySelectorAll('.admin-section').forEach(el => {
+        el.style.display = 'none';
+      });
+      
+      document.getElementById(`section-${section}`).style.display = 'block';
+      
+      document.querySelectorAll('.sidebar-menu a').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      event.target.closest('a').classList.add('active');
+      
+      // Mettre à jour le titre
+      const titles = {
+        'dashboard': 'Tableau de bord',
+        'commandes': 'Gestion des commandes',
+        'produits': 'Gestion des produits',
+        'factures': 'Gestion des factures',
+        'clients': 'Gestion des clients',
+        'services': 'Services',
+        'messages': 'Messages',
+        'temoignages': 'Témoignages',
+        'equipe': 'Équipe',
+        'liens': 'Liens & Pages',
+        'parametres': 'Paramètres',
+        'statistiques': 'Statistiques'
+      };
+      
+      document.getElementById('pageTitle').innerText = titles[section] || section;
+      
+      // Rafraîchir les données si nécessaire
+      if (section === 'commandes') updateOrdersTable();
+      if (section === 'produits') updateProductsTable();
+      if (section === 'factures') updateInvoicesTable();
+      if (section === 'clients') updateClientsTable();
+      if (section === 'dashboard') {
+        updateStats();
+        initCharts();
+      }
+    }
+    
+    // ==================== AUTHENTIFICATION ====================
+    
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      
+      if (username === 'admin' && password === 'admin123') {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('adminInterface').style.display = 'block';
+        
+        // Initialiser toutes les données
+        initProducts();
+        initOrders();
+        initInvoices();
+        
+        // Mettre à jour l'interface
+        updateStats();
+        updateOrdersTable();
+        updateRecentOrders();
+        updateProductsTable();
+        updateInvoicesTable();
+        updateClientsTable();
+        updateBadges();
+        initCharts();
+      } else {
+        alert('Identifiants incorrects. Utilisez admin / admin123');
+      }
+    });
+    
+    function handleLogout() {
+      document.getElementById('loginPage').style.display = 'flex';
+      document.getElementById('adminInterface').style.display = 'none';
+    }
+    
+    // ==================== SIMULATION DE NOUVELLES COMMANDES ====================
+    
+    function simulateNewOrder() {
+      const clients = [
+        { name: 'Aïssatou Niang', phone: '77 123 45 67', email: 'aissatou.n@email.com' },
+        { name: 'Moustapha Gueye', phone: '76 234 56 78', email: 'moustapha.g@email.com' },
+        { name: 'Fatimata Sarr', phone: '70 345 67 89', email: 'fatimata.s@email.com' }
+      ];
+      
+      const randomClient = clients[Math.floor(Math.random() * clients.length)];
+      const randomProducts = products.sort(() => 0.5 - Math.random()).slice(0, 2 + Math.floor(Math.random() * 3));
+      
+      const items = randomProducts.map(p => ({
+        productId: p.id,
+        name: p.name,
+        quantity: 1 + Math.floor(Math.random() * 3),
+        price: p.price,
+        image: p.image
+      }));
+      
+      const total = items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+      
+      receiveNewOrder({
+        client: randomClient.name,
+        phone: randomClient.phone,
+        email: randomClient.email,
+        total: total,
+        items: items
+      });
+    }
+    
+    // Simuler une nouvelle commande toutes les 30 secondes (pour la démo)
+    setInterval(simulateNewOrder, 30000);
+    
+    // ==================== RECHERCHE EN TEMPS RÉEL ====================
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('searchOrder')?.addEventListener('keyup', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('#ordersList tr');
+        
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+      });
+      
+      document.getElementById('searchProduct')?.addEventListener('keyup', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('#productsList tr');
+        
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+      });
+      
+      document.getElementById('searchClient')?.addEventListener('keyup', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('#clientsList tr');
+        
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+      });
+    });
+  </script>
+  
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
