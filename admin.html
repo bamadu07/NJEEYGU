@@ -354,6 +354,39 @@
       color: #856404;
     }
     
+    /* Badges de stock */
+    .badge-stock {
+      padding: 5px 12px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+    
+    .badge-stock-critical {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .badge-stock-low {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+    }
+    
+    .badge-stock-medium {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    
+    .badge-stock-high {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
     .action-btn {
       width: 32px;
       height: 32px;
@@ -384,6 +417,11 @@
     .action-btn.pdf:hover {
       background: #dc354520;
       color: #dc3545;
+    }
+    
+    .action-btn.add-stock:hover {
+      background: #d4edda;
+      color: #28a745;
     }
     
     /* Forms */
@@ -420,6 +458,69 @@
       box-shadow: 0 0 0 0.2rem rgba(212,175,55,0.25);
     }
     
+    /* Stock Input Group */
+    .stock-input-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .stock-input-group input {
+      width: 70px;
+      text-align: center;
+      padding: 5px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    
+    .stock-input-group button {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: none;
+      background: var(--or-eclatant);
+      color: var(--rouge-profond);
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .stock-input-group button:hover {
+      background: var(--rouge-profond);
+      color: white;
+    }
+    
+    /* Progress Bar Stock */
+    .stock-progress {
+      width: 100px;
+      height: 8px;
+      background: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    
+    .stock-progress-bar {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    
+    .stock-progress-bar.critical {
+      background: #dc3545;
+    }
+    
+    .stock-progress-bar.low {
+      background: #ffc107;
+    }
+    
+    .stock-progress-bar.medium {
+      background: #17a2b8;
+    }
+    
+    .stock-progress-bar.high {
+      background: #28a745;
+    }
+    
     /* Modal */
     .modal-content {
       border-radius: 25px;
@@ -446,7 +547,7 @@
       border-top: 1px solid rgba(212,175,55,0.1);
     }
     
-    /* Charts - Version réduite */
+    /* Charts */
     .chart-container {
       background: white;
       border-radius: 20px;
@@ -461,7 +562,7 @@
       margin-bottom: 15px !important;
     }
     
-    #salesChart, #ordersStatusChart, #categorySalesChart, #revenueChart {
+    #salesChart, #ordersStatusChart, #categorySalesChart, #revenueChart, #stockChart {
       max-height: 220px !important;
       width: 100% !important;
     }
@@ -813,6 +914,11 @@
             <span>Produits</span>
             <span class="notification-badge" id="lowStockBadge">0</span>
           </a>
+          <a href="#" onclick="showSection('stock', event)">
+            <i class="fas fa-warehouse"></i>
+            <span>Gestion Stock</span>
+            <span class="notification-badge" id="stockAlertBadge">0</span>
+          </a>
           <a href="#" onclick="showSection('factures', event)">
             <i class="fas fa-file-invoice"></i>
             <span>Factures</span>
@@ -987,8 +1093,8 @@
           <!-- Produits en rupture -->
           <div class="admin-table">
             <div class="table-header">
-              <h4>Produits en stock faible</h4>
-              <a href="#" onclick="showSection('produits', event)" class="btn btn-or btn-sm">Gérer</a>
+              <h4>Produits en stock critique</h4>
+              <a href="#" onclick="showSection('stock', event)" class="btn btn-or btn-sm">Gérer le stock</a>
             </div>
             <table id="lowStockTable" class="display nowrap" style="width:100%">
               <thead>
@@ -996,7 +1102,8 @@
                   <th>Image</th>
                   <th>Produit</th>
                   <th>Catégorie</th>
-                  <th>Stock</th>
+                  <th>Stock actuel</th>
+                  <th>Stock minimum</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -1126,17 +1233,32 @@
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label>Stock *</label>
+                      <label>Stock initial *</label>
                       <input type="number" class="form-control" id="productStock" required>
                     </div>
                   </div>
                   <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Stock minimum d'alerte</label>
+                      <input type="number" class="form-control" id="productMinStock" value="5">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
                     <div class="form-group">
                       <label>Statut</label>
                       <select class="form-select" id="productStatus">
                         <option value="active">Actif</option>
                         <option value="inactive">Inactif</option>
                       </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Emplacement/Rangement</label>
+                      <input type="text" class="form-control" id="productLocation" placeholder="Ex: Aisle 3, Rayon 2">
                     </div>
                   </div>
                 </div>
@@ -1179,6 +1301,7 @@
                   <tr>
                     <th>Nom</th>
                     <th>Nombre de produits</th>
+                    <th>Valeur totale du stock</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -1187,6 +1310,122 @@
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+        
+        <!-- ==================== GESTION DES STOCKS ==================== -->
+        <div id="section-stock" class="admin-section" style="display: none;">
+          <div class="admin-tabs">
+            <div class="admin-tab active" onclick="filterStock('all', event)">Tous les stocks</div>
+            <div class="admin-tab" onclick="filterStock('critical', event)">Stock critique</div>
+            <div class="admin-tab" onclick="filterStock('low', event)">Stock faible</div>
+            <div class="admin-tab" onclick="filterStock('medium', event)">Stock moyen</div>
+            <div class="admin-tab" onclick="filterStock('high', event)">Stock élevé</div>
+          </div>
+          
+          <div class="row g-4 mb-4">
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-boxes"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statTotalStock">0</h3>
+                  <p>Unités en stock</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statCriticalStock">0</h3>
+                  <p>Stock critique</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statStockValue">0</h3>
+                  <p>Valeur totale</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-truck"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statMouvements">0</h3>
+                  <p>Mouvements (30j)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="admin-table">
+            <div class="table-header">
+              <h4>Gestion des stocks</h4>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn btn-or btn-sm" onclick="exportStockReport()">
+                  <i class="fas fa-download me-1"></i> Exporter
+                </button>
+                <button class="btn btn-rouge btn-sm" onclick="showBulkStockModal()">
+                  <i class="fas fa-edit me-1"></i> Mise à jour groupée
+                </button>
+              </div>
+            </div>
+            <table id="stockTable" class="display nowrap" style="width:100%">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Produit</th>
+                  <th>Catégorie</th>
+                  <th>Prix</th>
+                  <th>Stock actuel</th>
+                  <th>Stock minimum</th>
+                  <th>Statut stock</th>
+                  <th>Emplacement</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="stockList">
+                <!-- Les produits seront insérés ici -->
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Historique des mouvements de stock -->
+          <div class="admin-table">
+            <div class="table-header">
+              <h4>Derniers mouvements de stock</h4>
+              <button class="btn btn-or btn-sm" onclick="showStockMovementModal()">
+                <i class="fas fa-plus me-1"></i> Nouveau mouvement
+              </button>
+            </div>
+            <table id="stockMovementsTable" class="display nowrap" style="width:100%">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Produit</th>
+                  <th>Type</th>
+                  <th>Quantité</th>
+                  <th>Stock après</th>
+                  <th>Raison</th>
+                  <th>Utilisateur</th>
+                </tr>
+              </thead>
+              <tbody id="stockMovementsList">
+                <!-- Les mouvements seront insérés ici -->
+              </tbody>
+            </table>
           </div>
         </div>
         
@@ -1694,6 +1933,11 @@
                 </select>
               </div>
               
+              <div class="form-group">
+                <label>Seuil d'alerte stock par défaut</label>
+                <input type="number" class="form-control" value="5">
+              </div>
+              
               <button type="submit" class="btn btn-rouge">Enregistrer les modifications</button>
             </form>
           </div>
@@ -1712,6 +1956,14 @@
               <div class="chart-container">
                 <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Évolution du chiffre d'affaires</h4>
                 <canvas id="revenueChart" style="width: 100%; height: 220px;"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="row g-4 mt-2">
+            <div class="col-md-6">
+              <div class="chart-container">
+                <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Distribution des stocks</h4>
+                <canvas id="stockChart" style="width: 100%; height: 220px;"></canvas>
               </div>
             </div>
           </div>
@@ -1784,6 +2036,70 @@
     </div>
   </div>
 
+  <!-- Modal Gestion Stock -->
+  <div class="modal fade" id="stockManagementModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Gérer le stock - <span id="stockModalProductName"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="stockModalProductId">
+          
+          <div class="form-group">
+            <label>Stock actuel</label>
+            <input type="number" class="form-control" id="stockModalCurrentStock" readonly>
+          </div>
+          
+          <div class="form-group">
+            <label>Stock minimum d'alerte</label>
+            <input type="number" class="form-control" id="stockModalMinStock">
+          </div>
+          
+          <div class="form-group">
+            <label>Type d'opération</label>
+            <select class="form-select" id="stockModalOperation" onchange="toggleStockOperationFields()">
+              <option value="add">Ajouter au stock</option>
+              <option value="remove">Retirer du stock</option>
+              <option value="set">Définir une nouvelle valeur</option>
+            </select>
+          </div>
+          
+          <div class="form-group" id="stockModalQuantityGroup">
+            <label>Quantité</label>
+            <input type="number" class="form-control" id="stockModalQuantity" min="1" value="1">
+          </div>
+          
+          <div class="form-group" id="stockModalNewValueGroup" style="display: none;">
+            <label>Nouvelle valeur du stock</label>
+            <input type="number" class="form-control" id="stockModalNewValue" min="0" value="0">
+          </div>
+          
+          <div class="form-group">
+            <label>Raison du mouvement</label>
+            <select class="form-select" id="stockModalReason">
+              <option value="commande">Commande client</option>
+              <option value="reception">Réception fournisseur</option>
+              <option value="ajustement">Ajustement inventaire</option>
+              <option value="retour">Retour client</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Commentaires</label>
+            <textarea class="form-control" id="stockModalComment" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-rouge" onclick="updateStock()">Mettre à jour</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal Facture -->
   <div class="modal fade" id="invoiceModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
@@ -1832,6 +2148,62 @@
     </div>
   </div>
 
+  <!-- Modal Mouvement de stock -->
+  <div class="modal fade" id="stockMovementModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nouveau mouvement de stock</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Produit</label>
+            <select class="form-select" id="movementProductId">
+              <option value="">Sélectionnez un produit</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Type de mouvement</label>
+            <select class="form-select" id="movementType">
+              <option value="entree">Entrée en stock</option>
+              <option value="sortie">Sortie de stock</option>
+              <option value="ajustement">Ajustement</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Quantité</label>
+            <input type="number" class="form-control" id="movementQuantity" min="1" value="1">
+          </div>
+          
+          <div class="form-group">
+            <label>Raison</label>
+            <select class="form-select" id="movementReason">
+              <option value="reception">Réception fournisseur</option>
+              <option value="commande">Commande client</option>
+              <option value="retour_fournisseur">Retour fournisseur</option>
+              <option value="retour_client">Retour client</option>
+              <option value="inventaire">Ajustement inventaire</option>
+              <option value="perte">Perte/Détérioration</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Commentaires</label>
+            <textarea class="form-control" id="movementComment" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-rouge" onclick="addStockMovement()">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ==================== DONNÉES ====================
     
@@ -1840,15 +2212,18 @@
     const PRODUCTS_KEY = 'njeeygu_products';
     const INVOICES_KEY = 'njeeygu_invoices';
     const CLIENTS_KEY = 'njeeygu_clients';
+    const STOCK_MOVEMENTS_KEY = 'njeeygu_stock_movements';
     
     // Données
     let orders = [];
     let products = [];
     let invoices = [];
     let clients = [];
+    let stockMovements = [];
     
     let currentOrderId = null;
     let currentInvoiceId = null;
+    let currentStockProductId = null;
     
     // ==================== PRODUITS (tous ceux de boutique.html) ====================
     
@@ -1857,52 +2232,225 @@
       if (stored) {
         products = JSON.parse(stored);
       } else {
-        // Tous les produits de boutique.html
+        // Tous les produits de boutique.html avec gestion de stock améliorée
         products = [
           // Ligne 1
-          { id: 1, name: 'Centre de table Royal', category: 'table', price: 45000, stock: 12, status: 'active', badge: 'Nouveau', desc: 'Collection Prestige - Composition florale dorée avec cristaux. Hauteur 45cm.', image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200' },
-          { id: 2, name: 'Guirlande Dorée', category: 'lumiere', price: 25000, stock: 8, status: 'active', badge: 'Promo', oldPrice: 32000, desc: '5 mètres de guirlande lumineuse LED, 100 ampoules chaudes.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200' },
-          { id: 3, name: 'Coffret Mariage', category: 'mariage', price: 15000, stock: 25, status: 'active', badge: '', desc: 'Lot de 10 boîtes cadeaux pour dragées, finition satinée.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200' },
-          { id: 4, name: 'Arche à Ballons', category: 'ballon', price: 35000, stock: 5, status: 'active', badge: 'Top', desc: 'Structure métallique 2.5m de hauteur, inclut 30 ballons.', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200' },
+          { id: 1, name: 'Centre de table Royal', category: 'table', price: 45000, stock: 12, minStock: 5, status: 'active', badge: 'Nouveau', desc: 'Collection Prestige - Composition florale dorée avec cristaux. Hauteur 45cm.', image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200', location: 'A1-R2' },
+          { id: 2, name: 'Guirlande Dorée', category: 'lumiere', price: 25000, stock: 8, minStock: 5, status: 'active', badge: 'Promo', oldPrice: 32000, desc: '5 mètres de guirlande lumineuse LED, 100 ampoules chaudes.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200', location: 'B3-R1' },
+          { id: 3, name: 'Coffret Mariage', category: 'mariage', price: 15000, stock: 25, minStock: 10, status: 'active', badge: '', desc: 'Lot de 10 boîtes cadeaux pour dragées, finition satinée.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200', location: 'C2-R3' },
+          { id: 4, name: 'Arche à Ballons', category: 'ballon', price: 35000, stock: 5, minStock: 3, status: 'active', badge: 'Top', desc: 'Structure métallique 2.5m de hauteur, inclut 30 ballons.', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200', location: 'D1-R1' },
           
           // Ligne 2
-          { id: 5, name: 'Vaisselle Émeraude', category: 'table', price: 12000, stock: 18, status: 'active', badge: '', desc: '12 pièces (assiettes, couverts, verres) couleur vert émeraude.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200' },
-          { id: 6, name: 'Photobooth LED', category: 'lumiere', price: 75000, stock: 3, status: 'active', badge: '', desc: 'Location à la journée avec fond lumineux et accessoires.', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200' },
-          { id: 7, name: 'Set Bougeoirs', category: 'deco', price: 22000, stock: 10, status: 'active', badge: 'Nouveau', desc: 'Pack de 6 bougeoirs en verre doré, bougies LED incluses.', image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=200' },
-          { id: 8, name: 'Nappage Or', category: 'table', price: 8500, stock: 30, status: 'active', badge: '', desc: 'Nappe en satin 160x220 cm, chemin de table assorti.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200' },
+          { id: 5, name: 'Vaisselle Émeraude', category: 'table', price: 12000, stock: 18, minStock: 8, status: 'active', badge: '', desc: '12 pièces (assiettes, couverts, verres) couleur vert émeraude.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200', location: 'A2-R2' },
+          { id: 6, name: 'Photobooth LED', category: 'lumiere', price: 75000, stock: 3, minStock: 2, status: 'active', badge: '', desc: 'Location à la journée avec fond lumineux et accessoires.', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200', location: 'B1-R3' },
+          { id: 7, name: 'Set Bougeoirs', category: 'deco', price: 22000, stock: 10, minStock: 4, status: 'active', badge: 'Nouveau', desc: 'Pack de 6 bougeoirs en verre doré, bougies LED incluses.', image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=200', location: 'E2-R1' },
+          { id: 8, name: 'Nappage Or', category: 'table', price: 8500, stock: 30, minStock: 10, status: 'active', badge: '', desc: 'Nappe en satin 160x220 cm, chemin de table assorti.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200', location: 'A3-R2' },
           
           // Ligne 3
-          { id: 9, name: 'Chemin de table', category: 'table', price: 18000, stock: 15, status: 'active', badge: '', desc: 'Rouge & Or, tissu brodé main, longueur 3m.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200' },
-          { id: 10, name: 'Marque-places', category: 'mariage', price: 9500, stock: 50, status: 'active', badge: '', desc: 'Lot de 50 cartons dorés avec porte-nom en métal.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200' },
-          { id: 11, name: 'Vase Crystal', category: 'deco', price: 28000, stock: 7, status: 'active', badge: '', desc: 'Hauteur 40cm, verre taillé, idéal pour centres de table.', image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200' },
-          { id: 12, name: 'Structure murale', category: 'ballon', price: 42000, stock: 4, status: 'active', badge: '', desc: 'Pour compositions de ballons, 2x2m démontable.', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200' },
+          { id: 9, name: 'Chemin de table', category: 'table', price: 18000, stock: 15, minStock: 5, status: 'active', badge: '', desc: 'Rouge & Or, tissu brodé main, longueur 3m.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200', location: 'A1-R3' },
+          { id: 10, name: 'Marque-places', category: 'mariage', price: 9500, stock: 50, minStock: 20, status: 'active', badge: '', desc: 'Lot de 50 cartons dorés avec porte-nom en métal.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200', location: 'C1-R2' },
+          { id: 11, name: 'Vase Crystal', category: 'deco', price: 28000, stock: 7, minStock: 4, status: 'active', badge: '', desc: 'Hauteur 40cm, verre taillé, idéal pour centres de table.', image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200', location: 'E1-R2' },
+          { id: 12, name: 'Structure murale', category: 'ballon', price: 42000, stock: 4, minStock: 2, status: 'active', badge: '', desc: 'Pour compositions de ballons, 2x2m démontable.', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200', location: 'D2-R1' },
           
           // Ligne 4
-          { id: 13, name: 'Guirlande LED', category: 'lumiere', price: 14500, stock: 20, status: 'active', badge: '', desc: '10m blanc chaud, avec télécommande, 8 modes.', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200' },
-          { id: 14, name: 'Bougies parfumées', category: 'deco', price: 11000, stock: 35, status: 'active', badge: '', desc: 'Set de 4, parfums vanille, cannelle, ambre.', image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=200' },
-          { id: 15, name: 'Rideau de fond', category: 'deco', price: 32000, stock: 6, status: 'active', badge: '', desc: '3x3m doré, parfait pour photobooth et scènes.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200' },
-          { id: 16, name: 'Boîtes cadeaux', category: 'mariage', price: 16000, stock: 22, status: 'active', badge: '', desc: 'Lot de 20, finition satin, rubans dorés assortis.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200' },
+          { id: 13, name: 'Guirlande LED', category: 'lumiere', price: 14500, stock: 20, minStock: 8, status: 'active', badge: '', desc: '10m blanc chaud, avec télécommande, 8 modes.', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200', location: 'B2-R2' },
+          { id: 14, name: 'Bougies parfumées', category: 'deco', price: 11000, stock: 35, minStock: 15, status: 'active', badge: '', desc: 'Set de 4, parfums vanille, cannelle, ambre.', image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=200', location: 'E3-R1' },
+          { id: 15, name: 'Rideau de fond', category: 'deco', price: 32000, stock: 6, minStock: 3, status: 'active', badge: '', desc: '3x3m doré, parfait pour photobooth et scènes.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200', location: 'E1-R3' },
+          { id: 16, name: 'Boîtes cadeaux', category: 'mariage', price: 16000, stock: 22, minStock: 10, status: 'active', badge: '', desc: 'Lot de 20, finition satin, rubans dorés assortis.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200', location: 'C3-R2' },
           
           // Ligne 5
-          { id: 17, name: 'Serviettes tissu', category: 'table', price: 13000, stock: 40, status: 'active', badge: '', desc: 'Lot de 50, coton de qualité, couleur ivoire.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200' },
-          { id: 18, name: 'Centre de table Or', category: 'table', price: 55000, stock: 5, status: 'active', badge: 'Luxe', desc: 'Collection Luxe, fleurs artificielles de qualité supérieure.', image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200' },
-          { id: 19, name: 'Projecteur LED', category: 'lumiere', price: 29000, stock: 8, status: 'active', badge: '', desc: 'RGB + télécommande, 20W, effet disco.', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200' },
-          { id: 20, name: 'Ballons métallisés', category: 'ballon', price: 19000, stock: 30, status: 'active', badge: '', desc: 'Lot de 30, assortis or, rose, argent.', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200' },
+          { id: 17, name: 'Serviettes tissu', category: 'table', price: 13000, stock: 40, minStock: 20, status: 'active', badge: '', desc: 'Lot de 50, coton de qualité, couleur ivoire.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200', location: 'A2-R1' },
+          { id: 18, name: 'Centre de table Or', category: 'table', price: 55000, stock: 5, minStock: 3, status: 'active', badge: 'Luxe', desc: 'Collection Luxe, fleurs artificielles de qualité supérieure.', image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200', location: 'A1-R1' },
+          { id: 19, name: 'Projecteur LED', category: 'lumiere', price: 29000, stock: 8, minStock: 4, status: 'active', badge: '', desc: 'RGB + télécommande, 20W, effet disco.', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200', location: 'B3-R2' },
+          { id: 20, name: 'Ballons métallisés', category: 'ballon', price: 19000, stock: 30, minStock: 15, status: 'active', badge: '', desc: 'Lot de 30, assortis or, rose, argent.', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200', location: 'D3-R1' },
           
           // Ligne 6
-          { id: 21, name: 'Chandelier doré', category: 'deco', price: 38000, stock: 4, status: 'active', badge: '', desc: '5 branches, hauteur 60cm, métal doré.', image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=200' },
-          { id: 22, name: 'Lampions chinois', category: 'lumiere', price: 9000, stock: 45, status: 'active', badge: '', desc: 'Lot de 20, coloris assortis, diamètre 25cm.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200' },
-          { id: 23, name: 'Dragées amandes', category: 'mariage', price: 7500, stock: 60, status: 'active', badge: '', desc: '1kg, enrobage doré, qualité supérieure.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200' },
-          { id: 24, name: 'Coussins mariage', category: 'mariage', price: 24000, stock: 12, status: 'active', badge: '', desc: 'Set de 4, satin, broderies dorées. Dimensions 40x40cm.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200' }
+          { id: 21, name: 'Chandelier doré', category: 'deco', price: 38000, stock: 4, minStock: 2, status: 'active', badge: '', desc: '5 branches, hauteur 60cm, métal doré.', image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=200', location: 'E2-R2' },
+          { id: 22, name: 'Lampions chinois', category: 'lumiere', price: 9000, stock: 45, minStock: 20, status: 'active', badge: '', desc: 'Lot de 20, coloris assortis, diamètre 25cm.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200', location: 'B1-R2' },
+          { id: 23, name: 'Dragées amandes', category: 'mariage', price: 7500, stock: 60, minStock: 30, status: 'active', badge: '', desc: '1kg, enrobage doré, qualité supérieure.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200', location: 'C3-R1' },
+          { id: 24, name: 'Coussins mariage', category: 'mariage', price: 24000, stock: 12, minStock: 6, status: 'active', badge: '', desc: 'Set de 4, satin, broderies dorées. Dimensions 40x40cm.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200', location: 'C1-R3' }
         ];
         localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
       }
     }
     
+    // ==================== MOUVEMENTS DE STOCK ====================
+    
+    function initStockMovements() {
+      const stored = localStorage.getItem(STOCK_MOVEMENTS_KEY);
+      if (stored) {
+        stockMovements = JSON.parse(stored);
+      } else {
+        // Créer quelques mouvements initiaux
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        stockMovements = [
+          {
+            id: 1,
+            date: today.toISOString(),
+            productId: 1,
+            productName: 'Centre de table Royal',
+            type: 'entree',
+            quantity: 10,
+            stockAfter: 12,
+            reason: 'reception',
+            comment: 'Réception fournisseur',
+            user: 'Admin'
+          },
+          {
+            id: 2,
+            date: yesterday.toISOString(),
+            productId: 2,
+            productName: 'Guirlande Dorée',
+            type: 'sortie',
+            quantity: 2,
+            stockAfter: 8,
+            reason: 'commande',
+            comment: 'Commande #CMD-2026-001',
+            user: 'Admin'
+          }
+        ];
+        localStorage.setItem(STOCK_MOVEMENTS_KEY, JSON.stringify(stockMovements));
+      }
+    }
+    
+    function addStockMovement(productId, type, quantity, reason, comment) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return null;
+      
+      const oldStock = product.stock;
+      let newStock = oldStock;
+      
+      if (type === 'entree') {
+        newStock = oldStock + quantity;
+        product.stock = newStock;
+      } else if (type === 'sortie') {
+        newStock = Math.max(0, oldStock - quantity);
+        product.stock = newStock;
+      }
+      
+      const movement = {
+        id: stockMovements.length + 1,
+        date: new Date().toISOString(),
+        productId: productId,
+        productName: product.name,
+        type: type,
+        quantity: quantity,
+        stockBefore: oldStock,
+        stockAfter: newStock,
+        reason: reason,
+        comment: comment,
+        user: 'Admin'
+      };
+      
+      stockMovements.unshift(movement);
+      
+      // Garder seulement les 100 derniers mouvements
+      if (stockMovements.length > 100) {
+        stockMovements = stockMovements.slice(0, 100);
+      }
+      
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+      localStorage.setItem(STOCK_MOVEMENTS_KEY, JSON.stringify(stockMovements));
+      
+      return movement;
+    }
+    
+    // ==================== VÉRIFICATION DES COMMANDES ====================
+    
+    function checkOrderStock(items) {
+      const insufficientStock = [];
+      
+      items.forEach(item => {
+        const product = products.find(p => p.id === item.productId);
+        if (product && product.stock < item.quantity) {
+          insufficientStock.push({
+            product: product.name,
+            requested: item.quantity,
+            available: product.stock
+          });
+        }
+      });
+      
+      return insufficientStock;
+    }
+    
+    function processOrderStock(orderId, items) {
+      items.forEach(item => {
+        const product = products.find(p => p.id === item.productId);
+        if (product) {
+          addStockMovement(
+            product.id,
+            'sortie',
+            item.quantity,
+            'commande',
+            `Commande ${orderId}`
+          );
+        }
+      });
+    }
+    
     // ==================== COMMANDES ====================
     
-    
+    function initOrders() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        orders = JSON.parse(stored);
+      } else {
+        // Commandes initiales
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const twoDaysAgo = new Date(today);
+        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
         
+        orders = [
+          {
+            id: 'CMD-2026-001',
+            client: 'Fatou Diop',
+            phone: '77 123 45 67',
+            email: 'fatou.diop@email.com',
+            total: 95000,
+            date: today.toISOString(),
+            status: 'pending',
+            paymentStatus: 'unpaid',
+            items: [
+              { productId: 1, name: 'Centre de table Royal', quantity: 2, price: 45000, image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200' },
+              { productId: 2, name: 'Guirlande Dorée', quantity: 1, price: 25000, image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200' }
+            ]
+          },
+          {
+            id: 'CMD-2026-002',
+            client: 'Amadou Fall',
+            phone: '76 234 56 78',
+            email: 'amadou.fall@email.com',
+            total: 75000,
+            date: yesterday.toISOString(),
+            status: 'confirmed',
+            paymentStatus: 'paid',
+            items: [
+              { productId: 3, name: 'Coffret Mariage', quantity: 5, price: 15000, image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200' }
+            ]
+          },
+          {
+            id: 'CMD-2026-003',
+            client: 'Aïssatou Niang',
+            phone: '70 345 67 89',
+            email: 'aissatou.niang@email.com',
+            total: 42000,
+            date: twoDaysAgo.toISOString(),
+            status: 'delivered',
+            paymentStatus: 'paid',
+            items: [
+              { productId: 12, name: 'Structure murale', quantity: 1, price: 42000, image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200' }
+            ]
+          }
+        ];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      }
+    }
     
     function saveOrders() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
@@ -1995,6 +2543,18 @@
     // ==================== RECEVOIR UNE NOUVELLE COMMANDE ====================
     
     function receiveNewOrder(orderData) {
+      // Vérifier le stock disponible
+      const insufficientStock = checkOrderStock(orderData.items);
+      
+      if (insufficientStock.length > 0) {
+        let message = "Stock insuffisant pour :\n";
+        insufficientStock.forEach(item => {
+          message += `${item.product}: demandé ${item.requested}, disponible ${item.available}\n`;
+        });
+        alert(message);
+        return null;
+      }
+      
       const newOrder = {
         id: 'CMD-' + new Date().getFullYear() + '-' + String(orders.length + 1).padStart(3, '0'),
         ...orderData,
@@ -2006,11 +2566,17 @@
       orders.push(newOrder);
       saveOrders();
       
+      // Traiter le stock
+      processOrderStock(newOrder.id, orderData.items);
+      
       // Générer la facture
       generateInvoiceForOrder(newOrder);
       
       // Afficher une notification
       showNotification('Nouvelle commande', `Commande de ${orderData.client} - ${orderData.total.toLocaleString()} FCFA`);
+      
+      // Mettre à jour les alertes de stock
+      updateStockAlerts();
       
       return newOrder.id;
     }
@@ -2051,15 +2617,55 @@
       document.getElementById('totalAnnualSales').innerText = totalAnnual.toLocaleString();
     }
     
+    function updateStockStats() {
+      const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
+      const criticalStock = products.filter(p => p.stock <= p.minStock * 0.5).length;
+      const totalValue = products.reduce((sum, p) => sum + (p.stock * p.price), 0);
+      
+      document.getElementById('statTotalStock').innerText = totalStock;
+      document.getElementById('statCriticalStock').innerText = criticalStock;
+      document.getElementById('statStockValue').innerText = totalValue.toLocaleString() + ' FCFA';
+      document.getElementById('statMouvements').innerText = stockMovements.filter(m => 
+        new Date(m.date) > new Date(Date.now() - 30 * 86400000)
+      ).length;
+    }
+    
     function updateBadges() {
       const pendingCount = orders.filter(o => o.status === 'pending').length;
       document.getElementById('pendingOrdersBadge').innerText = pendingCount;
       
-      const lowStock = products.filter(p => p.stock < 5).length;
+      const lowStock = products.filter(p => p.stock <= p.minStock).length;
       document.getElementById('lowStockBadge').innerText = lowStock;
+      document.getElementById('stockAlertBadge').innerText = lowStock;
       
       // Messages badge (simulé)
       document.getElementById('messagesBadge').innerText = '2';
+    }
+    
+    function updateStockAlerts() {
+      const lowStock = products.filter(p => p.stock <= p.minStock);
+      if (lowStock.length > 0) {
+        showNotification(
+          'Alerte stock', 
+          `${lowStock.length} produit(s) ont un stock faible ou critique`
+        );
+      }
+    }
+    
+    function getStockStatus(stock, minStock) {
+      if (stock <= 0) return { class: 'badge-stock-critical', label: 'Rupture' };
+      if (stock <= minStock * 0.5) return { class: 'badge-stock-critical', label: 'Critique' };
+      if (stock <= minStock) return { class: 'badge-stock-low', label: 'Faible' };
+      if (stock <= minStock * 2) return { class: 'badge-stock-medium', label: 'Moyen' };
+      return { class: 'badge-stock-high', label: 'Élevé' };
+    }
+    
+    function getStockProgressClass(stock, minStock) {
+      if (stock <= 0) return 'critical';
+      if (stock <= minStock * 0.5) return 'critical';
+      if (stock <= minStock) return 'low';
+      if (stock <= minStock * 2) return 'medium';
+      return 'high';
     }
     
     function updateOrdersTable(filter = 'all') {
@@ -2160,6 +2766,10 @@
       
       tbody.innerHTML = '';
       products.forEach(product => {
+        const stockStatus = getStockStatus(product.stock, product.minStock);
+        const progressClass = getStockProgressClass(product.stock, product.minStock);
+        const stockPercentage = Math.min(100, (product.stock / (product.minStock * 3)) * 100);
+        
         const row = document.createElement('tr');
         row.innerHTML = `
           <td><img src="${product.image}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;"></td>
@@ -2167,11 +2777,18 @@
           <td>${getCategoryLabel(product.category)}</td>
           <td>${product.price.toLocaleString()} FCFA</td>
           <td>
-            <span class="${product.stock < 5 ? 'text-danger fw-bold' : ''}">${product.stock}</span>
+            <div>
+              <span class="${product.stock <= product.minStock ? 'text-danger fw-bold' : ''}">${product.stock}</span>
+              <small class="text-muted">/ min ${product.minStock}</small>
+              <div class="stock-progress">
+                <div class="stock-progress-bar ${progressClass}" style="width: ${stockPercentage}%"></div>
+              </div>
+            </div>
           </td>
           <td><span class="badge-status ${product.status === 'active' ? 'badge-active' : 'badge-inactive'}">${product.status === 'active' ? 'Actif' : 'Inactif'}</span></td>
           <td>
             <button class="action-btn" onclick="editProduct(${product.id})"><i class="fas fa-edit"></i></button>
+            <button class="action-btn add-stock" onclick="openStockModal(${product.id})"><i class="fas fa-boxes"></i></button>
             <button class="action-btn delete" onclick="deleteProduct(${product.id})"><i class="fas fa-trash"></i></button>
           </td>
         `;
@@ -2189,26 +2806,132 @@
         }
       });
       
-      // Mise à jour des produits en stock faible
       updateLowStockTable();
+    }
+    
+    function updateStockTable(filter = 'all') {
+      const tbody = document.getElementById('stockList');
+      if (!tbody) return;
+      
+      let filteredProducts = products;
+      
+      if (filter === 'critical') {
+        filteredProducts = products.filter(p => p.stock <= p.minStock * 0.5);
+      } else if (filter === 'low') {
+        filteredProducts = products.filter(p => p.stock <= p.minStock && p.stock > p.minStock * 0.5);
+      } else if (filter === 'medium') {
+        filteredProducts = products.filter(p => p.stock > p.minStock && p.stock <= p.minStock * 2);
+      } else if (filter === 'high') {
+        filteredProducts = products.filter(p => p.stock > p.minStock * 2);
+      }
+      
+      tbody.innerHTML = '';
+      filteredProducts.forEach(product => {
+        const stockStatus = getStockStatus(product.stock, product.minStock);
+        const progressClass = getStockProgressClass(product.stock, product.minStock);
+        const stockPercentage = Math.min(100, (product.stock / (product.minStock * 3)) * 100);
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><img src="${product.image}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;"></td>
+          <td><strong>${product.name}</strong></td>
+          <td>${getCategoryLabel(product.category)}</td>
+          <td>${product.price.toLocaleString()} FCFA</td>
+          <td>
+            <div>
+              <span class="fw-bold">${product.stock}</span>
+              <div class="stock-progress">
+                <div class="stock-progress-bar ${progressClass}" style="width: ${stockPercentage}%"></div>
+              </div>
+            </div>
+          </td>
+          <td>${product.minStock}</td>
+          <td><span class="badge-stock ${stockStatus.class}">${stockStatus.label}</span></td>
+          <td>${product.location || 'Non défini'}</td>
+          <td>
+            <button class="action-btn" onclick="openStockModal(${product.id})"><i class="fas fa-edit"></i></button>
+            <button class="action-btn add-stock" onclick="quickAddStock(${product.id})"><i class="fas fa-plus"></i></button>
+            <button class="action-btn" onclick="showProductMovements(${product.id})"><i class="fas fa-history"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#stockTable')) {
+        $('#stockTable').DataTable().destroy();
+      }
+      
+      $('#stockTable').DataTable({
+        pageLength: 10,
+        order: [[4, 'asc']],
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+      
+      updateStockStats();
+    }
+    
+    function updateStockMovementsTable() {
+      const tbody = document.getElementById('stockMovementsList');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      stockMovements.slice(0, 10).forEach(movement => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${formatDate(movement.date)}</td>
+          <td>${movement.productName}</td>
+          <td>
+            <span class="badge-status ${movement.type === 'entree' ? 'badge-active' : movement.type === 'sortie' ? 'badge-pending' : 'badge-status'}">
+              ${movement.type === 'entree' ? 'Entrée' : movement.type === 'sortie' ? 'Sortie' : 'Ajustement'}
+            </span>
+          </td>
+          <td>${movement.quantity}</td>
+          <td>${movement.stockAfter}</td>
+          <td>${movement.reason}</td>
+          <td>${movement.user}</td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#stockMovementsTable')) {
+        $('#stockMovementsTable').DataTable().destroy();
+      }
+      
+      $('#stockMovementsTable').DataTable({
+        pageLength: 5,
+        order: [[0, 'desc']],
+        searching: false,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
     }
     
     function updateLowStockTable() {
       const tbody = document.getElementById('lowStockList');
       if (!tbody) return;
       
-      const lowStock = products.filter(p => p.stock < 5);
+      const lowStock = products.filter(p => p.stock <= p.minStock);
       
       tbody.innerHTML = '';
       lowStock.slice(0, 5).forEach(product => {
+        const stockStatus = getStockStatus(product.stock, product.minStock);
+        
         const row = document.createElement('tr');
         row.innerHTML = `
           <td><img src="${product.image}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;"></td>
           <td><strong>${product.name}</strong></td>
           <td>${getCategoryLabel(product.category)}</td>
-          <td class="text-danger fw-bold">${product.stock}</td>
           <td>
-            <button class="action-btn" onclick="editProduct(${product.id})"><i class="fas fa-edit"></i></button>
+            <span class="${stockStatus.class} fw-bold">${product.stock}</span>
+            <small class="text-muted">/ min ${product.minStock}</small>
+          </td>
+          <td>${product.minStock}</td>
+          <td>
+            <button class="action-btn" onclick="openStockModal(${product.id})"><i class="fas fa-edit"></i></button>
+            <button class="action-btn whatsapp" onclick="quickOrderStock(${product.id})"><i class="fas fa-truck"></i></button>
           </td>
         `;
         tbody.appendChild(row);
@@ -2295,6 +3018,48 @@
       });
     }
     
+    function updateCategoriesTable() {
+      const tbody = document.getElementById('categoriesList');
+      if (!tbody) return;
+      
+      const categories = [
+        { name: 'Art de la table', products: products.filter(p => p.category === 'table') },
+        { name: 'Lumières', products: products.filter(p => p.category === 'lumiere') },
+        { name: 'Mariage', products: products.filter(p => p.category === 'mariage') },
+        { name: 'Ballons', products: products.filter(p => p.category === 'ballon') },
+        { name: 'Décoration', products: products.filter(p => p.category === 'deco') }
+      ];
+      
+      tbody.innerHTML = '';
+      categories.forEach(cat => {
+        const stockValue = cat.products.reduce((sum, p) => sum + (p.stock * p.price), 0);
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${cat.name}</strong></td>
+          <td>${cat.products.length}</td>
+          <td>${stockValue.toLocaleString()} FCFA</td>
+          <td>
+            <button class="action-btn"><i class="fas fa-edit"></i></button>
+            <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#categoriesTable')) {
+        $('#categoriesTable').DataTable().destroy();
+      }
+      
+      $('#categoriesTable').DataTable({
+        pageLength: 10,
+        searching: false,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
     // ==================== ACTIONS SUR LES COMMANDES ====================
     
     function viewOrderDetails(orderId) {
@@ -2343,8 +3108,24 @@
       if (!currentOrderId) return;
       const order = orders.find(o => o.id === currentOrderId);
       if (order) {
+        const oldStatus = order.status;
         order.status = status;
         saveOrders();
+        
+        // Si la commande est annulée, remettre les produits en stock
+        if (status === 'cancelled' && oldStatus !== 'cancelled') {
+          order.items.forEach(item => {
+            addStockMovement(
+              item.productId,
+              'entree',
+              item.quantity,
+              'retour_client',
+              `Annulation commande ${order.id}`
+            );
+          });
+          showNotification('Stock mis à jour', 'Les produits ont été remis en stock');
+        }
+        
         document.getElementById('modalOrderStatus').innerHTML = `<span class="badge-status ${getStatusClass(status)}">${getStatusLabel(status)}</span>`;
         showNotification('Statut mis à jour', `La commande ${order.id} est maintenant ${getStatusLabel(status)}`);
       }
@@ -2386,6 +3167,12 @@
       document.querySelectorAll('#section-commandes .admin-tab').forEach(t => t.classList.remove('active'));
       event.target.classList.add('active');
       updateOrdersTable(filter);
+    }
+    
+    function filterStock(filter, event) {
+      document.querySelectorAll('#section-stock .admin-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      updateStockTable(filter);
     }
     
     function filterInvoices(filter, event) {
@@ -2433,6 +3220,217 @@
       });
     }
     
+    // ==================== ACTIONS SUR LE STOCK ====================
+    
+    function openStockModal(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      currentStockProductId = productId;
+      document.getElementById('stockModalProductName').innerText = product.name;
+      document.getElementById('stockModalProductId').value = productId;
+      document.getElementById('stockModalCurrentStock').value = product.stock;
+      document.getElementById('stockModalMinStock').value = product.minStock || 5;
+      document.getElementById('stockModalQuantity').value = 1;
+      document.getElementById('stockModalNewValue').value = product.stock;
+      document.getElementById('stockModalComment').value = '';
+      
+      toggleStockOperationFields();
+      
+      new bootstrap.Modal(document.getElementById('stockManagementModal')).show();
+    }
+    
+    function toggleStockOperationFields() {
+      const operation = document.getElementById('stockModalOperation').value;
+      const quantityGroup = document.getElementById('stockModalQuantityGroup');
+      const newValueGroup = document.getElementById('stockModalNewValueGroup');
+      
+      if (operation === 'set') {
+        quantityGroup.style.display = 'none';
+        newValueGroup.style.display = 'block';
+      } else {
+        quantityGroup.style.display = 'block';
+        newValueGroup.style.display = 'none';
+      }
+    }
+    
+    function updateStock() {
+      const productId = parseInt(document.getElementById('stockModalProductId').value);
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const operation = document.getElementById('stockModalOperation').value;
+      const reason = document.getElementById('stockModalReason').value;
+      const comment = document.getElementById('stockModalComment').value;
+      const oldStock = product.stock;
+      
+      let newStock = oldStock;
+      let quantity = 0;
+      let type = 'ajustement';
+      
+      if (operation === 'add') {
+        quantity = parseInt(document.getElementById('stockModalQuantity').value) || 0;
+        newStock = oldStock + quantity;
+        type = 'entree';
+      } else if (operation === 'remove') {
+        quantity = parseInt(document.getElementById('stockModalQuantity').value) || 0;
+        newStock = Math.max(0, oldStock - quantity);
+        type = 'sortie';
+      } else if (operation === 'set') {
+        newStock = parseInt(document.getElementById('stockModalNewValue').value) || 0;
+        quantity = Math.abs(newStock - oldStock);
+        type = newStock > oldStock ? 'entree' : 'sortie';
+      }
+      
+      // Mettre à jour le stock minimum
+      const minStock = parseInt(document.getElementById('stockModalMinStock').value) || 5;
+      product.minStock = minStock;
+      
+      // Enregistrer le mouvement
+      addStockMovement(productId, type, quantity, reason, comment);
+      
+      bootstrap.Modal.getInstance(document.getElementById('stockManagementModal')).hide();
+      
+      showNotification(
+        'Stock mis à jour',
+        `${product.name}: ${oldStock} → ${newStock} unités`
+      );
+      
+      // Mettre à jour les vues
+      updateProductsTable();
+      updateStockTable();
+      updateStockAlerts();
+    }
+    
+    function quickAddStock(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const quantity = prompt(`Ajouter au stock pour ${product.name}:`, "1");
+      if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
+        addStockMovement(
+          productId,
+          'entree',
+          parseInt(quantity),
+          'ajustement',
+          'Ajout rapide'
+        );
+        
+        showNotification(
+          'Stock ajouté',
+          `+${quantity} ${product.name}`
+        );
+        
+        updateProductsTable();
+        updateStockTable();
+      }
+    }
+    
+    function quickOrderStock(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const quantity = product.minStock * 2 - product.stock;
+      if (quantity > 0) {
+        if (confirm(`Commander ${quantity} unités de ${product.name} ?`)) {
+          // Simuler une commande fournisseur
+          addStockMovement(
+            productId,
+            'entree',
+            quantity,
+            'reception',
+            'Commande fournisseur'
+          );
+          
+          showNotification(
+            'Commande passée',
+            `${quantity} ${product.name} ajoutés au stock`
+          );
+          
+          updateProductsTable();
+          updateStockTable();
+        }
+      } else {
+        alert('Le stock est suffisant pour ce produit.');
+      }
+    }
+    
+    function showProductMovements(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const productMovements = stockMovements.filter(m => m.productId === productId);
+      
+      let message = `Mouvements pour ${product.name}:\n\n`;
+      productMovements.slice(0, 10).forEach(m => {
+        message += `${formatDate(m.date)} - ${m.type === 'entree' ? '+' : '-'}${m.quantity} (${m.reason})\n`;
+      });
+      
+      if (productMovements.length === 0) {
+        message += "Aucun mouvement enregistré.";
+      }
+      
+      alert(message);
+    }
+    
+    function showStockMovementModal() {
+      // Remplir la liste des produits
+      const select = document.getElementById('movementProductId');
+      select.innerHTML = '<option value="">Sélectionnez un produit</option>';
+      products.forEach(product => {
+        select.innerHTML += `<option value="${product.id}">${product.name} (Stock: ${product.stock})</option>`;
+      });
+      
+      new bootstrap.Modal(document.getElementById('stockMovementModal')).show();
+    }
+    
+    function addStockMovement() {
+      const productId = parseInt(document.getElementById('movementProductId').value);
+      const type = document.getElementById('movementType').value;
+      const quantity = parseInt(document.getElementById('movementQuantity').value);
+      const reason = document.getElementById('movementReason').value;
+      const comment = document.getElementById('movementComment').value;
+      
+      if (!productId || quantity <= 0) {
+        alert('Veuillez remplir tous les champs correctement.');
+        return;
+      }
+      
+      const movement = addStockMovement(productId, type, quantity, reason, comment);
+      
+      if (movement) {
+        bootstrap.Modal.getInstance(document.getElementById('stockMovementModal')).hide();
+        showNotification('Mouvement enregistré', `${quantity} unités ${type === 'entree' ? 'ajoutées' : 'retirées'}`);
+        updateStockTable();
+        updateStockMovementsTable();
+      }
+    }
+    
+    function showBulkStockModal() {
+      alert('Fonctionnalité de mise à jour groupée à implémenter');
+    }
+    
+    function exportStockReport() {
+      const data = products.map(p => ({
+        'Produit': p.name,
+        'Catégorie': getCategoryLabel(p.category),
+        'Prix': p.price,
+        'Stock actuel': p.stock,
+        'Stock minimum': p.minStock,
+        'Valeur stock': p.stock * p.price,
+        'Emplacement': p.location || 'Non défini'
+      }));
+      
+      const csv = convertToCSV(data);
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `stock_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      showNotification('Export réussi', 'Le rapport de stock a été généré');
+    }
+    
     // ==================== ACTIONS SUR LES PRODUITS ====================
     
     function addProduct(event) {
@@ -2444,14 +3442,25 @@
         category: document.getElementById('productCategory').value,
         price: parseInt(document.getElementById('productPrice').value),
         stock: parseInt(document.getElementById('productStock').value),
+        minStock: parseInt(document.getElementById('productMinStock').value) || 5,
         status: document.getElementById('productStatus').value,
         desc: document.getElementById('productDesc').value,
         image: document.getElementById('productImage').value || 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200',
-        badge: document.getElementById('productBadge').value
+        badge: document.getElementById('productBadge').value,
+        location: document.getElementById('productLocation').value || 'Non défini'
       };
       
       products.push(newProduct);
       localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+      
+      // Ajouter un mouvement initial
+      addStockMovement(
+        newProduct.id,
+        'entree',
+        newProduct.stock,
+        'reception',
+        'Stock initial'
+      );
       
       updateProductsTable();
       showProductsTab('list', event);
@@ -2492,45 +3501,6 @@
         t.classList.remove('active');
       });
       event.target.classList.add('active');
-    }
-    
-    function updateCategoriesTable() {
-      const tbody = document.getElementById('categoriesList');
-      if (!tbody) return;
-      
-      const categories = [
-        { name: 'Art de la table', count: products.filter(p => p.category === 'table').length },
-        { name: 'Lumières', count: products.filter(p => p.category === 'lumiere').length },
-        { name: 'Mariage', count: products.filter(p => p.category === 'mariage').length },
-        { name: 'Ballons', count: products.filter(p => p.category === 'ballon').length },
-        { name: 'Décoration', count: products.filter(p => p.category === 'deco').length }
-      ];
-      
-      tbody.innerHTML = '';
-      categories.forEach(cat => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><strong>${cat.name}</strong></td>
-          <td>${cat.count}</td>
-          <td>
-            <button class="action-btn"><i class="fas fa-edit"></i></button>
-            <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      
-      if ($.fn.DataTable.isDataTable('#categoriesTable')) {
-        $('#categoriesTable').DataTable().destroy();
-      }
-      
-      $('#categoriesTable').DataTable({
-        pageLength: 10,
-        searching: false,
-        language: {
-          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
-        }
-      });
     }
     
     function showAddCategoryModal() {
@@ -2912,6 +3882,7 @@
     }
     
     function convertToCSV(data) {
+      if (data.length === 0) return '';
       const headers = Object.keys(data[0]);
       const rows = data.map(obj => headers.map(header => obj[header]).join(','));
       return [headers.join(','), ...rows].join('\n');
@@ -2919,7 +3890,7 @@
     
     // ==================== GRAPHIQUES ====================
     
-    let salesChart, ordersChart, categoryChart;
+    let salesChart, ordersChart, categoryChart, stockChart;
     
     function initCharts() {
       // Ventes mensuelles
@@ -3080,6 +4051,38 @@
           }
         });
       }
+      
+      // Stock chart
+      const ctx5 = document.getElementById('stockChart')?.getContext('2d');
+      if (ctx5) {
+        const stockCategories = {
+          critical: products.filter(p => p.stock <= p.minStock * 0.5).length,
+          low: products.filter(p => p.stock <= p.minStock && p.stock > p.minStock * 0.5).length,
+          medium: products.filter(p => p.stock > p.minStock && p.stock <= p.minStock * 2).length,
+          high: products.filter(p => p.stock > p.minStock * 2).length
+        };
+        
+        stockChart = new Chart(ctx5, {
+          type: 'doughnut',
+          data: {
+            labels: ['Critique', 'Faible', 'Moyen', 'Élevé'],
+            datasets: [{
+              data: [stockCategories.critical, stockCategories.low, stockCategories.medium, stockCategories.high],
+              backgroundColor: ['#dc3545', '#ffc107', '#17a2b8', '#28a745'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }
+        });
+      }
     }
     
     // ==================== UTILITAIRES ====================
@@ -3146,6 +4149,7 @@
         'dashboard': 'Tableau de bord',
         'commandes': 'Gestion des commandes',
         'produits': 'Gestion des produits',
+        'stock': 'Gestion des stocks',
         'factures': 'Gestion des factures',
         'clients': 'Gestion des clients',
         'services': 'Services',
@@ -3162,6 +4166,10 @@
       // Rafraîchir les données si nécessaire
       if (section === 'commandes') updateOrdersTable();
       if (section === 'produits') updateProductsTable();
+      if (section === 'stock') {
+        updateStockTable();
+        updateStockMovementsTable();
+      }
       if (section === 'factures') updateInvoicesTable();
       if (section === 'clients') updateClientsTable();
       if (section === 'dashboard') {
@@ -3186,16 +4194,22 @@
         initProducts();
         initOrders();
         initInvoices();
+        initStockMovements();
         
         // Mettre à jour l'interface
         updateStats();
         updateOrdersTable();
         updateRecentOrders();
         updateProductsTable();
+        updateStockTable();
+        updateStockMovementsTable();
         updateInvoicesTable();
         updateClientsTable();
         updateBadges();
         initCharts();
+        
+        // Vérifier les alertes de stock
+        updateStockAlerts();
       } else {
         alert('Identifiants incorrects. Utilisez admin / admin123');
       }
