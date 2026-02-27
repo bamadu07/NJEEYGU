@@ -2227,52 +2227,8 @@
     
     // ==================== PRODUITS (tous ceux de boutique.html) ====================
     
-    function initProducts() {
-      const stored = localStorage.getItem(PRODUCTS_KEY);
-      if (stored) {
-        products = JSON.parse(stored);
-      } else {
-        // Tous les produits de boutique.html avec gestion de stock améliorée
-        products = [
-          // Ligne 1
-          { id: 1, name: 'Centre de table Royal', category: 'table', price: 45000, stock: 12, minStock: 5, status: 'active', badge: 'Nouveau', desc: 'Collection Prestige - Composition florale dorée avec cristaux. Hauteur 45cm.', image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200', location: 'A1-R2' },
-          { id: 2, name: 'Guirlande Dorée', category: 'lumiere', price: 25000, stock: 8, minStock: 5, status: 'active', badge: 'Promo', oldPrice: 32000, desc: '5 mètres de guirlande lumineuse LED, 100 ampoules chaudes.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200', location: 'B3-R1' },
-          { id: 3, name: 'Coffret Mariage', category: 'mariage', price: 15000, stock: 25, minStock: 10, status: 'active', badge: '', desc: 'Lot de 10 boîtes cadeaux pour dragées, finition satinée.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200', location: 'C2-R3' },
-          { id: 4, name: 'Arche à Ballons', category: 'ballon', price: 35000, stock: 5, minStock: 3, status: 'active', badge: 'Top', desc: 'Structure métallique 2.5m de hauteur, inclut 30 ballons.', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200', location: 'D1-R1' },
-          
-          // Ligne 2
-          { id: 5, name: 'Vaisselle Émeraude', category: 'table', price: 12000, stock: 18, minStock: 8, status: 'active', badge: '', desc: '12 pièces (assiettes, couverts, verres) couleur vert émeraude.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200', location: 'A2-R2' },
-          { id: 6, name: 'Photobooth LED', category: 'lumiere', price: 75000, stock: 3, minStock: 2, status: 'active', badge: '', desc: 'Location à la journée avec fond lumineux et accessoires.', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200', location: 'B1-R3' },
-          { id: 7, name: 'Set Bougeoirs', category: 'deco', price: 22000, stock: 10, minStock: 4, status: 'active', badge: 'Nouveau', desc: 'Pack de 6 bougeoirs en verre doré, bougies LED incluses.', image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=200', location: 'E2-R1' },
-          { id: 8, name: 'Nappage Or', category: 'table', price: 8500, stock: 30, minStock: 10, status: 'active', badge: '', desc: 'Nappe en satin 160x220 cm, chemin de table assorti.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200', location: 'A3-R2' },
-          
-          // Ligne 3
-          { id: 9, name: 'Chemin de table', category: 'table', price: 18000, stock: 15, minStock: 5, status: 'active', badge: '', desc: 'Rouge & Or, tissu brodé main, longueur 3m.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200', location: 'A1-R3' },
-          { id: 10, name: 'Marque-places', category: 'mariage', price: 9500, stock: 50, minStock: 20, status: 'active', badge: '', desc: 'Lot de 50 cartons dorés avec porte-nom en métal.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200', location: 'C1-R2' },
-          { id: 11, name: 'Vase Crystal', category: 'deco', price: 28000, stock: 7, minStock: 4, status: 'active', badge: '', desc: 'Hauteur 40cm, verre taillé, idéal pour centres de table.', image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200', location: 'E1-R2' },
-          { id: 12, name: 'Structure murale', category: 'ballon', price: 42000, stock: 4, minStock: 2, status: 'active', badge: '', desc: 'Pour compositions de ballons, 2x2m démontable.', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200', location: 'D2-R1' },
-          
-          // Ligne 4
-          { id: 13, name: 'Guirlande LED', category: 'lumiere', price: 14500, stock: 20, minStock: 8, status: 'active', badge: '', desc: '10m blanc chaud, avec télécommande, 8 modes.', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200', location: 'B2-R2' },
-          { id: 14, name: 'Bougies parfumées', category: 'deco', price: 11000, stock: 35, minStock: 15, status: 'active', badge: '', desc: 'Set de 4, parfums vanille, cannelle, ambre.', image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=200', location: 'E3-R1' },
-          { id: 15, name: 'Rideau de fond', category: 'deco', price: 32000, stock: 6, minStock: 3, status: 'active', badge: '', desc: '3x3m doré, parfait pour photobooth et scènes.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200', location: 'E1-R3' },
-          { id: 16, name: 'Boîtes cadeaux', category: 'mariage', price: 16000, stock: 22, minStock: 10, status: 'active', badge: '', desc: 'Lot de 20, finition satin, rubans dorés assortis.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200', location: 'C3-R2' },
-          
-          // Ligne 5
-          { id: 17, name: 'Serviettes tissu', category: 'table', price: 13000, stock: 40, minStock: 20, status: 'active', badge: '', desc: 'Lot de 50, coton de qualité, couleur ivoire.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200', location: 'A2-R1' },
-          { id: 18, name: 'Centre de table Or', category: 'table', price: 55000, stock: 5, minStock: 3, status: 'active', badge: 'Luxe', desc: 'Collection Luxe, fleurs artificielles de qualité supérieure.', image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200', location: 'A1-R1' },
-          { id: 19, name: 'Projecteur LED', category: 'lumiere', price: 29000, stock: 8, minStock: 4, status: 'active', badge: '', desc: 'RGB + télécommande, 20W, effet disco.', image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=200', location: 'B3-R2' },
-          { id: 20, name: 'Ballons métallisés', category: 'ballon', price: 19000, stock: 30, minStock: 15, status: 'active', badge: '', desc: 'Lot de 30, assortis or, rose, argent.', image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200', location: 'D3-R1' },
-          
-          // Ligne 6
-          { id: 21, name: 'Chandelier doré', category: 'deco', price: 38000, stock: 4, minStock: 2, status: 'active', badge: '', desc: '5 branches, hauteur 60cm, métal doré.', image: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=200', location: 'E2-R2' },
-          { id: 22, name: 'Lampions chinois', category: 'lumiere', price: 9000, stock: 45, minStock: 20, status: 'active', badge: '', desc: 'Lot de 20, coloris assortis, diamètre 25cm.', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200', location: 'B1-R2' },
-          { id: 23, name: 'Dragées amandes', category: 'mariage', price: 7500, stock: 60, minStock: 30, status: 'active', badge: '', desc: '1kg, enrobage doré, qualité supérieure.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200', location: 'C3-R1' },
-          { id: 24, name: 'Coussins mariage', category: 'mariage', price: 24000, stock: 12, minStock: 6, status: 'active', badge: '', desc: 'Set de 4, satin, broderies dorées. Dimensions 40x40cm.', image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=200', location: 'C1-R3' }
-        ];
-        localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
-      }
-    }
+    
+        
     
     // ==================== MOUVEMENTS DE STOCK ====================
     
@@ -2360,97 +2316,10 @@
     
     // ==================== VÉRIFICATION DES COMMANDES ====================
     
-    function checkOrderStock(items) {
-      const insufficientStock = [];
-      
-      items.forEach(item => {
-        const product = products.find(p => p.id === item.productId);
-        if (product && product.stock < item.quantity) {
-          insufficientStock.push({
-            product: product.name,
-            requested: item.quantity,
-            available: product.stock
-          });
-        }
-      });
-      
-      return insufficientStock;
-    }
-    
-    function processOrderStock(orderId, items) {
-      items.forEach(item => {
-        const product = products.find(p => p.id === item.productId);
-        if (product) {
-          addStockMovement(
-            product.id,
-            'sortie',
-            item.quantity,
-            'commande',
-            `Commande ${orderId}`
-          );
-        }
-      });
-    }
     
     // ==================== COMMANDES ====================
     
-    function initOrders() {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        orders = JSON.parse(stored);
-      } else {
-        // Commandes initiales
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-        const twoDaysAgo = new Date(today);
-        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-        
-        orders = [
-          {
-            id: 'CMD-2026-001',
-            client: 'Fatou Diop',
-            phone: '77 123 45 67',
-            email: 'fatou.diop@email.com',
-            total: 95000,
-            date: today.toISOString(),
-            status: 'pending',
-            paymentStatus: 'unpaid',
-            items: [
-              { productId: 1, name: 'Centre de table Royal', quantity: 2, price: 45000, image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200' },
-              { productId: 2, name: 'Guirlande Dorée', quantity: 1, price: 25000, image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200' }
-            ]
-          },
-          {
-            id: 'CMD-2026-002',
-            client: 'Amadou Fall',
-            phone: '76 234 56 78',
-            email: 'amadou.fall@email.com',
-            total: 75000,
-            date: yesterday.toISOString(),
-            status: 'confirmed',
-            paymentStatus: 'paid',
-            items: [
-              { productId: 3, name: 'Coffret Mariage', quantity: 5, price: 15000, image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=200' }
-            ]
-          },
-          {
-            id: 'CMD-2026-003',
-            client: 'Aïssatou Niang',
-            phone: '70 345 67 89',
-            email: 'aissatou.niang@email.com',
-            total: 42000,
-            date: twoDaysAgo.toISOString(),
-            status: 'delivered',
-            paymentStatus: 'paid',
-            items: [
-              { productId: 12, name: 'Structure murale', quantity: 1, price: 42000, image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=200' }
-            ]
-          }
-        ];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
-      }
-    }
+    
     
     function saveOrders() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
