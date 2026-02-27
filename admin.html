@@ -1263,25 +1263,7 @@
                   </div>
                 </div>
                 
-                <div class="form-group">
-                  <label>Description</label>
-                  <textarea class="form-control" id="productDesc" rows="3"></textarea>
-                </div>
-                
-                <div class="form-group">
-                  <label>URL de l'image</label>
-                  <input type="url" class="form-control" id="productImage" placeholder="https://...">
-                </div>
-                
-                <div class="form-group">
-                  <label>Badge spécial</label>
-                  <select class="form-select" id="productBadge">
-                    <option value="">Aucun</option>
-                    <option value="Nouveau">Nouveau</option>
-                    <option value="Top">Top vente</option>
-                    <option value="Promo">Promo -20%</option>
-                  </select>
-                </div>
+                <!-- Champs supprimés : Description, URL de l'image, Badge spécial -->
                 
                 <button type="submit" class="btn btn-rouge">Ajouter le produit</button>
               </form>
@@ -2225,10 +2207,14 @@
     let currentInvoiceId = null;
     let currentStockProductId = null;
     
-    // ==================== PRODUITS (tous ceux de boutique.html) ====================
+    // ==================== INITIALISATION DES PRODUITS ====================
     
     
-        
+        // Produits par défaut
+       
+    
+    // ==================== INITIALISATION DES COMMANDES ====================
+    
     
     // ==================== MOUVEMENTS DE STOCK ====================
     
@@ -2316,10 +2302,36 @@
     
     // ==================== VÉRIFICATION DES COMMANDES ====================
     
+    function checkOrderStock(items) {
+      const insufficientStock = [];
+      
+      items.forEach(item => {
+        const product = products.find(p => p.id === item.productId);
+        if (!product || product.stock < item.quantity) {
+          insufficientStock.push({
+            product: item.name,
+            requested: item.quantity,
+            available: product ? product.stock : 0
+          });
+        }
+      });
+      
+      return insufficientStock;
+    }
+    
+    function processOrderStock(orderId, items) {
+      items.forEach(item => {
+        addStockMovement(
+          item.productId,
+          'sortie',
+          item.quantity,
+          'commande',
+          `Commande ${orderId}`
+        );
+      });
+    }
     
     // ==================== COMMANDES ====================
-    
-    
     
     function saveOrders() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
@@ -3305,6 +3317,9 @@
     function addProduct(event) {
       event.preventDefault();
       
+      // Image par défaut (on peut en définir une automatiquement)
+      const defaultImage = 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200';
+      
       const newProduct = {
         id: products.length + 1,
         name: document.getElementById('productName').value,
@@ -3313,9 +3328,7 @@
         stock: parseInt(document.getElementById('productStock').value),
         minStock: parseInt(document.getElementById('productMinStock').value) || 5,
         status: document.getElementById('productStatus').value,
-        desc: document.getElementById('productDesc').value,
-        image: document.getElementById('productImage').value || 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200',
-        badge: document.getElementById('productBadge').value,
+        image: defaultImage, // Image par défaut
         location: document.getElementById('productLocation').value || 'Non défini'
       };
       
