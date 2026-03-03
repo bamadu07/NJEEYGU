@@ -134,13 +134,27 @@
     
     /* Hero Boutique */
     .hero-boutique {
-      background: url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop');
+      background: url('images/5.jpeg') no-repeat;
       background-size: cover;
       background-position: center;
       color: white;
       padding: 40px 0 50px;
       position: relative;
       text-align: center;
+      position: relative;
+    }
+    .hero-boutique::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+    }
+    .hero-boutique .container {
+      position: relative;
+      z-index: 2;
     }
     .hero-boutique h1 {
       font-size: 2.5rem;
@@ -154,6 +168,7 @@
       opacity: 0.95;
       margin-left: auto;
       margin-right: auto;
+      color: white;
     }
     .hero-badge {
       display: inline-block;
@@ -164,6 +179,7 @@
       font-size: 0.7rem;
       letter-spacing: 1px;
       margin-bottom: 1rem;
+      color: var(--or-eclatant);
     }
     .hero-boutique .d-flex {
       justify-content: center;
@@ -328,24 +344,6 @@
       color: #666;
       margin-bottom: 1.2rem;
       line-height: 1.5;
-    }
-    .product-price {
-      display: none; /* Cacher complètement les prix */
-    }
-    
-    /* Panier flottant - SUPPRIMÉ */
-    .cart-floating {
-      display: none; /* Désactiver le panier */
-    }
-    
-    /* Mini panier - SUPPRIMÉ */
-    .cart-preview {
-      display: none; /* Désactiver le mini panier */
-    }
-    
-    /* Checkout modal - SUPPRIMÉ */
-    #checkoutModal {
-      display: none !important;
     }
     
     /* Modal devis personnalisé */
@@ -594,8 +592,7 @@
         <div class="logo-njeeygu">
           <img src="images/log1.png" 
                alt="NJEEYGU Logo" 
-               class="logo-image"
-               onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
+               class="logo-image">
           <div class="logo-text">
             NJEEYGU
             <span class="le-grand-jour">LE GRAND JOUR</span>
@@ -661,7 +658,7 @@
           </div>
         </div>
         <div class="presentation-image">
-          <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop" alt="Décoration de table élégante">
+          <img src="images/22.jpeg" alt="Décoration de table élégante">
         </div>
       </div>
     </div>
@@ -735,6 +732,18 @@
     </div>
   </div>
 
+  <!-- Newsletter -->
+  <div class="newsletter-section">
+    <div class="container">
+      <h3 class="h4 mb-2">Restez informé</h3>
+      <p class="mb-3">Recevez nos dernières collections et offres exclusives</p>
+      <div class="newsletter-form">
+        <input type="email" id="newsletterEmail" placeholder="Votre adresse email">
+        <button onclick="subscribeNewsletter()">S'inscrire</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer>
     <div class="container">
@@ -743,8 +752,7 @@
           <div class="logo-njeeygu mb-2">
             <img src="images/log1.png" 
                  alt="NJEEYGU Logo" 
-                 style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--or-eclatant);"
-                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
+                 style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--or-eclatant);">
             <span style="color: var(--or-eclatant); font-weight: 600; margin-left: 8px;">NJEEYGU</span>
           </div>
           <p class="small opacity-75">Votre partenaire événementiel à Saint-Louis depuis 10 ans.</p>
@@ -784,79 +792,79 @@
     const productsData = [
       // Ballons
       { id: 1, category: 'ballons', name: 'Arche à Ballons Prestige', badge: 'Top', 
-        image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/1.jpeg',
         desc: 'Structure métallique 2.5m de hauteur, inclut 30 ballons de qualité supérieure.' },
       { id: 2, category: 'ballons', name: 'Ballons Métallisés Or', badge: '',
-        image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/2.jpeg',
         desc: 'Lot de 30 ballons, assortis or, rose, argent, avec supports.' },
       { id: 3, category: 'ballons', name: 'Structure Murale Ballons', badge: 'Nouveau',
-        image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/3.jpeg',
         desc: 'Pour compositions de ballons, 2x2m démontable et réutilisable.' },
       
       // Fleurs
       { id: 4, category: 'fleurs', name: 'Centre de table Fleurs', badge: 'Nouveau', 
-        image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/4.jpeg',
         desc: 'Composition florale de luxe avec roses, pivoines et eucalyptus.' },
       { id: 5, category: 'fleurs', name: 'Bouquet Mariée', badge: 'Sur commande',
-        image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/5.jpeg',
         desc: 'Bouquet personnalisé selon vos goûts et couleurs préférées.' },
       { id: 6, category: 'fleurs', name: 'Pétales de Roses', badge: '',
-        image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/6.jpeg',
         desc: 'Lot de 500 pétales de roses naturelles pour allée et décoration.' },
       
       // Chaises
       { id: 7, category: 'chaises', name: 'Chaise Tiffany Dorée', badge: 'Location',
-        image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/7.jpeg',
         desc: 'Chaise Tiffany avec housse dorée, location à l\'unité.' },
       { id: 8, category: 'chaises', name: 'Chaise Napoléon Rouge', badge: 'Location',
-        image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/8.jpeg',
         desc: 'Chaise Napoléon, finition rouge velours, location à l\'unité.' },
       { id: 9, category: 'chaises', name: 'Housse de Chaise', badge: '',
-        image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/9.jpeg',
         desc: 'Housse élastique pour chaise, plusieurs couleurs disponibles.' },
       
       // Bâches
       { id: 10, category: 'baches', name: 'Bâche Fond Scène', badge: 'Imprimable',
-        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/10.jpeg',
         desc: 'Bâche 3x3m avec œillets, personnalisable avec votre logo ou message.' },
       { id: 11, category: 'baches', name: 'Bâche Plastifiée', badge: '',
-        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/11.jpeg',
         desc: 'Bâche protection sol 4x5m, résistante pour extérieur.' },
       { id: 12, category: 'baches', name: 'Bâche Calendrier', badge: 'Collection',
-        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/12.jpeg',
         desc: 'Bâche avec motifs traditionnels sénégalais, 2x3m.' },
       
       // Vaisselle
       { id: 13, category: 'vaisselle', name: 'Vaisselle Émeraude', badge: 'Lot',
-        image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/13.jpeg',
         desc: 'Lot de 12 pièces (assiettes, couverts, verres) couleur vert émeraude.' },
       { id: 14, category: 'vaisselle', name: 'Vaisselle Dorée', badge: 'Prestige',
-        image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/14.jpeg',
         desc: 'Lot de 12 pièces, finition dorée, vaisselle de luxe.' },
       { id: 15, category: 'vaisselle', name: 'Verres à Pied', badge: '',
-        image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop',
+        image: 'images/15.jpeg',
         desc: 'Lot de 6 verres à pied en cristal, gravure possible.' },
       
       // Décoration traditionnelle
       { id: 16, category: 'traditionnelle', name: 'Parure Mariage Traditionnel', badge: 'Authentique',
-        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop',
+        image: 'images/16.jpeg',
         desc: 'Ensemble complet de décoration traditionnelle sénégalaise (bassin, boubous, accessoires).' },
       { id: 17, category: 'traditionnelle', name: 'Kora Décorative', badge: 'Artisanat',
-        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop',
+        image: 'images/17.jpeg',
         desc: 'Kora traditionnelle, pièce décorative pour ambiance authentique.' },
       { id: 18, category: 'traditionnelle', name: 'Tenture Wax', badge: '',
-        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop',
+        image: 'images/18.jpeg',
         desc: 'Tenture en wax 2x3m, motifs traditionnels, plusieurs modèles.' },
       
       // Lumières
       { id: 19, category: 'lumiere', name: 'Guirlande Lumineuse Dorée', badge: 'Nouveau',
-        image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop',
+        image: 'images/19.jpeg',
         desc: '5 mètres de guirlande lumineuse LED, 100 ampoules chaudes.' },
       { id: 20, category: 'lumiere', name: 'Photobooth LED', badge: 'Location',
-        image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop',
+        image: 'images/20.jpeg',
         desc: 'Location à la journée avec fond lumineux et accessoires.' },
       { id: 21, category: 'lumiere', name: 'Projecteur Ambiance', badge: '',
-        image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop',
+        image: 'images/21.jpeg',
         desc: 'Projecteur LED RGB avec télécommande, 20W, effet disco et ambiance.' }
     ];
 

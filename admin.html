@@ -944,6 +944,12 @@
             <i class="fas fa-user-tie"></i>
             <span>Équipe</span>
           </a>
+          <!-- NOUVEAU LIEN SALAIRES -->
+          <a href="#" onclick="showSection('salaires', event)">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Salaires</span>
+            <span class="notification-badge" id="salariesBadge">0</span>
+          </a>
           <a href="#" onclick="showSection('liens', event)">
             <i class="fas fa-link"></i>
             <span>Liens & Pages</span>
@@ -1262,8 +1268,6 @@
                     </div>
                   </div>
                 </div>
-                
-                <!-- Champs supprimés : Description, URL de l'image, Badge spécial -->
                 
                 <button type="submit" class="btn btn-rouge">Ajouter le produit</button>
               </form>
@@ -1638,6 +1642,268 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+        
+        <!-- ==================== NOUVELLE SECTION SALAIRES ==================== -->
+        <div id="section-salaires" class="admin-section" style="display: none;">
+          <!-- En-tête avec statistiques -->
+          <div class="row g-4 mb-4">
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statEmployes">0</h3>
+                  <p>Employés</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statMasseSalariale">0</h3>
+                  <p>Masse salariale</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statPaiementsMois">0</h3>
+                  <p>Paiements ce mois</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statProchainPaiement">0</h3>
+                  <p>Jours avant paie</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs de navigation -->
+          <div class="admin-tabs">
+            <div class="admin-tab active" onclick="showSalariesTab('liste', event)">Liste des employés</div>
+            <div class="admin-tab" onclick="showSalariesTab('paiements', event)">Historique des paiements</div>
+            <div class="admin-tab" onclick="showSalariesTab('ajouter', event)">Ajouter un employé</div>
+            <div class="admin-tab" onclick="showSalariesTab('bulletins', event)">Bulletins de salaire</div>
+          </div>
+
+          <!-- Onglet : Liste des employés -->
+          <div id="salaries-liste" class="salaries-tab-content">
+            <div class="admin-table">
+              <div class="table-header">
+                <h4>Gestion des employés et salaires</h4>
+                <div style="display: flex; gap: 10px;">
+                  <button class="btn btn-or btn-sm" onclick="exportSalaries()">
+                    <i class="fas fa-download me-1"></i> Exporter
+                  </button>
+                  <button class="btn btn-rouge btn-sm" onclick="generatePayroll()">
+                    <i class="fas fa-calculator me-1"></i> Générer la paie
+                  </button>
+                </div>
+              </div>
+              
+              <table id="salariesTable" class="display nowrap" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Photo</th>
+                    <th>Employé</th>
+                    <th>Poste</th>
+                    <th>Salaire de base</th>
+                    <th>Prime</th>
+                    <th>Salaire total</th>
+                    <th>Date d'embauche</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="salariesList">
+                  <!-- Les employés seront insérés ici dynamiquement -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Graphique de répartition des salaires -->
+            <div class="row g-4 mt-2">
+              <div class="col-md-6">
+                <div class="chart-container">
+                  <h4 style="color: var(--rouge-profond); margin-bottom: 15px;">Répartition des salaires</h4>
+                  <canvas id="salariesChart" style="width: 100%; height: 220px;"></canvas>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="chart-container">
+                  <h4 style="color: var(--rouge-profond); margin-bottom: 15px;">Évolution masse salariale</h4>
+                  <canvas id="payrollEvolutionChart" style="width: 100%; height: 220px;"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Onglet : Historique des paiements -->
+          <div id="salaires-paiements" class="salaries-tab-content" style="display: none;">
+            <div class="admin-table">
+              <div class="table-header">
+                <h4>Historique des paiements</h4>
+                <div class="d-flex gap-2">
+                  <select class="form-select form-select-sm" style="width: 150px;" id="paymentMonthFilter" onchange="filterPaymentsByMonth()">
+                    <option value="">Tous les mois</option>
+                    <option value="2026-01">Janvier 2026</option>
+                    <option value="2026-02">Février 2026</option>
+                    <option value="2026-03">Mars 2026</option>
+                  </select>
+                  <button class="btn btn-or btn-sm" onclick="exportPayments()">
+                    <i class="fas fa-download me-1"></i> Exporter
+                  </button>
+                </div>
+              </div>
+              
+              <table id="paymentsTable" class="display nowrap" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Employé</th>
+                    <th>Poste</th>
+                    <th>Période</th>
+                    <th>Salaire de base</th>
+                    <th>Prime</th>
+                    <th>Total</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="paymentsList">
+                  <!-- Les paiements seront insérés ici -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Onglet : Ajouter un employé -->
+          <div id="salaires-ajouter" class="salaries-tab-content" style="display: none;">
+            <div class="admin-form">
+              <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Ajouter un nouvel employé</h4>
+              <form id="addEmployeeForm" onsubmit="addEmployee(event)">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Nom complet *</label>
+                      <input type="text" class="form-control" id="employeeName" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Poste *</label>
+                      <input type="text" class="form-control" id="employeePosition" required>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Salaire de base (FCFA) *</label>
+                      <input type="number" class="form-control" id="employeeBaseSalary" required>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Prime par défaut (FCFA)</label>
+                      <input type="number" class="form-control" id="employeeDefaultBonus" value="0">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Date d'embauche *</label>
+                      <input type="date" class="form-control" id="employeeHireDate" required>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Téléphone</label>
+                      <input type="text" class="form-control" id="employeePhone" placeholder="77 123 45 67">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Email</label>
+                      <input type="email" class="form-control" id="employeeEmail" placeholder="employe@email.com">
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Numéro de compte bancaire</label>
+                      <input type="text" class="form-control" id="employeeBankAccount" placeholder="SN 12345 67890">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Statut</label>
+                      <select class="form-select" id="employeeStatus">
+                        <option value="actif">Actif</option>
+                        <option value="inactif">Inactif</option>
+                        <option value="conge">En congé</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label>Notes / Commentaires</label>
+                  <textarea class="form-control" id="employeeNotes" rows="2"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-rouge">Ajouter l'employé</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Onglet : Bulletins de salaire -->
+          <div id="salaires-bulletins" class="salaries-tab-content" style="display: none;">
+            <div class="admin-table">
+              <div class="table-header">
+                <h4>Génération des bulletins de salaire</h4>
+                <button class="btn btn-or btn-sm" onclick="generateAllPayslips()">
+                  <i class="fas fa-file-pdf me-1"></i> Générer tous les bulletins
+                </button>
+              </div>
+              
+              <table class="display nowrap" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Période</th>
+                    <th>Employé</th>
+                    <th>Salaire</th>
+                    <th>Date génération</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="payslipsList">
+                  <!-- Les bulletins seront insérés ici dynamiquement -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
         
@@ -2195,6 +2461,9 @@
     const INVOICES_KEY = 'njeeygu_invoices';
     const CLIENTS_KEY = 'njeeygu_clients';
     const STOCK_MOVEMENTS_KEY = 'njeeygu_stock_movements';
+    const EMPLOYEES_KEY = 'njeeygu_employees';
+    const PAYMENTS_KEY = 'njeeygu_payments';
+    const PAYSLIPS_KEY = 'njeeygu_payslips';
     
     // Données
     let orders = [];
@@ -2202,6 +2471,9 @@
     let invoices = [];
     let clients = [];
     let stockMovements = [];
+    let employees = [];
+    let payments = [];
+    let payslips = [];
     
     let currentOrderId = null;
     let currentInvoiceId = null;
@@ -2209,21 +2481,137 @@
     
     // ==================== INITIALISATION DES PRODUITS ====================
     
-    
-        // Produits par défaut
-       
+    function initProducts() {
+      const stored = localStorage.getItem(PRODUCTS_KEY);
+      if (stored) {
+        products = JSON.parse(stored);
+      } else {
+        // Créer des produits par défaut
+        
+        localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+      }
+    }
     
     // ==================== INITIALISATION DES COMMANDES ====================
     
     
-    // ==================== MOUVEMENTS DE STOCK ====================
+    // ==================== INITIALISATION DES EMPLOYÉS ====================
+    
+    function initEmployees() {
+      const stored = localStorage.getItem(EMPLOYEES_KEY);
+      if (stored) {
+        employees = JSON.parse(stored);
+      } else {
+        // Créer des employés par défaut
+        employees = [
+          {
+            id: 1,
+            name: 'Mariama Ndiaye',
+            position: 'Directrice Créative',
+            baseSalary: 350000,
+            defaultBonus: 50000,
+            hireDate: '2020-01-15',
+            phone: '77 123 45 67',
+            email: 'mariama.n@njeeygu.sn',
+            bankAccount: 'SN 12345 67890 12345 67890 12',
+            status: 'actif',
+            notes: 'Fondatrice',
+            image: 'https://randomuser.me/api/portraits/women/44.jpg'
+          },
+          {
+            id: 2,
+            name: 'Amadou Diallo',
+            position: 'Chef de projet',
+            baseSalary: 250000,
+            defaultBonus: 25000,
+            hireDate: '2021-03-10',
+            phone: '76 234 56 78',
+            email: 'amadou.d@njeeygu.sn',
+            bankAccount: 'SN 98765 43210 98765 43210 98',
+            status: 'actif',
+            notes: 'Responsable événements',
+            image: 'https://randomuser.me/api/portraits/men/32.jpg'
+          },
+          {
+            id: 3,
+            name: 'Fatou Sow',
+            position: 'Décoratrice',
+            baseSalary: 200000,
+            defaultBonus: 15000,
+            hireDate: '2022-06-20',
+            phone: '70 345 67 89',
+            email: 'fatou.s@njeeygu.sn',
+            bankAccount: 'SN 54321 09876 54321 09876 54',
+            status: 'actif',
+            notes: 'Spécialiste mariage',
+            image: 'https://randomuser.me/api/portraits/women/68.jpg'
+          },
+          {
+            id: 4,
+            name: 'Ibrahima Fall',
+            position: 'Assistant logistique',
+            baseSalary: 150000,
+            defaultBonus: 10000,
+            hireDate: '2023-09-05',
+            phone: '78 456 78 90',
+            email: 'ibrahima.f@njeeygu.sn',
+            bankAccount: 'SN 13579 24680 13579 24680 13',
+            status: 'actif',
+            notes: 'Gestion stock',
+            image: 'https://randomuser.me/api/portraits/men/75.jpg'
+          }
+        ];
+        localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(employees));
+      }
+    }
+    
+    // ==================== INITIALISATION DES PAIEMENTS ====================
+    
+    function initPayments() {
+      const stored = localStorage.getItem(PAYMENTS_KEY);
+      if (stored) {
+        payments = JSON.parse(stored);
+      } else {
+        // Créer des paiements des 3 derniers mois
+        const today = new Date();
+        payments = [];
+        
+        for (let i = 0; i < 3; i++) {
+          const month = today.getMonth() - i;
+          const year = today.getFullYear();
+          const paymentDate = new Date(year, month, 28);
+          
+          employees.forEach(emp => {
+            const bonus = i === 0 ? emp.defaultBonus * 1.2 : emp.defaultBonus;
+            
+            payments.push({
+              id: payments.length + 1,
+              employeeId: emp.id,
+              employeeName: emp.name,
+              position: emp.position,
+              paymentDate: paymentDate.toISOString(),
+              period: `${paymentDate.toLocaleString('fr-FR', { month: 'long' })} ${year}`,
+              baseSalary: emp.baseSalary,
+              bonus: bonus,
+              total: emp.baseSalary + bonus,
+              status: 'payé',
+              paymentMethod: 'virement',
+              notes: ''
+            });
+          });
+        }
+        
+        localStorage.setItem(PAYMENTS_KEY, JSON.stringify(payments));
+      }
+    }
+    
+    // ==================== INITIALISATION DES MOUVEMENTS DE STOCK ====================
     
     function initStockMovements() {
       const stored = localStorage.getItem(STOCK_MOVEMENTS_KEY);
       if (stored) {
         stockMovements = JSON.parse(stored);
       } else {
-        // Créer quelques mouvements initiaux
         const today = new Date();
         const yesterday = new Date(today);
         yesterday.setDate(yesterday.getDate() - 1);
@@ -2258,6 +2646,53 @@
       }
     }
     
+    // ==================== INITIALISATION DES FACTURES ====================
+    
+    function initInvoices() {
+      const stored = localStorage.getItem(INVOICES_KEY);
+      if (stored) {
+        invoices = JSON.parse(stored);
+      } else {
+        orders.forEach(order => {
+          if (order.status !== 'cancelled') {
+            generateInvoiceForOrder(order, true);
+          }
+        });
+      }
+    }
+    
+    // ==================== INITIALISATION DES CLIENTS ====================
+    
+    function updateClientsFromOrders() {
+      const clientMap = new Map();
+      
+      orders.forEach(order => {
+        const key = order.phone;
+        if (!clientMap.has(key)) {
+          clientMap.set(key, {
+            name: order.client,
+            phone: order.phone,
+            email: order.email,
+            orders: [],
+            totalSpent: 0,
+            lastOrder: order.date
+          });
+        }
+        
+        const client = clientMap.get(key);
+        client.orders.push(order.id);
+        client.totalSpent += order.total;
+        if (new Date(order.date) > new Date(client.lastOrder)) {
+          client.lastOrder = order.date;
+        }
+      });
+      
+      clients = Array.from(clientMap.values());
+      localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
+    }
+    
+    // ==================== FONCTIONS POUR LES STOCKS ====================
+    
     function addStockMovement(productId, type, quantity, reason, comment) {
       const product = products.find(p => p.id === productId);
       if (!product) return null;
@@ -2289,7 +2724,6 @@
       
       stockMovements.unshift(movement);
       
-      // Garder seulement les 100 derniers mouvements
       if (stockMovements.length > 100) {
         stockMovements = stockMovements.slice(0, 100);
       }
@@ -2345,24 +2779,9 @@
     
     // ==================== FACTURES ====================
     
-    function initInvoices() {
-      const stored = localStorage.getItem(INVOICES_KEY);
-      if (stored) {
-        invoices = JSON.parse(stored);
-      } else {
-        // Générer des factures pour les commandes existantes
-        orders.forEach(order => {
-          if (order.status !== 'cancelled') {
-            generateInvoiceForOrder(order, true);
-          }
-        });
-      }
-    }
-    
     function generateInvoiceForOrder(order, silent = false) {
       const invoiceId = 'INV-' + order.id.replace('CMD-', '');
       
-      // Vérifier si la facture existe déjà
       const existing = invoices.find(inv => inv.orderId === order.id);
       if (existing) return existing;
       
@@ -2391,40 +2810,9 @@
       return invoice;
     }
     
-    // ==================== CLIENTS ====================
-    
-    function updateClientsFromOrders() {
-      const clientMap = new Map();
-      
-      orders.forEach(order => {
-        const key = order.phone;
-        if (!clientMap.has(key)) {
-          clientMap.set(key, {
-            name: order.client,
-            phone: order.phone,
-            email: order.email,
-            orders: [],
-            totalSpent: 0,
-            lastOrder: order.date
-          });
-        }
-        
-        const client = clientMap.get(key);
-        client.orders.push(order.id);
-        client.totalSpent += order.total;
-        if (new Date(order.date) > new Date(client.lastOrder)) {
-          client.lastOrder = order.date;
-        }
-      });
-      
-      clients = Array.from(clientMap.values());
-      localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
-    }
-    
     // ==================== RECEVOIR UNE NOUVELLE COMMANDE ====================
     
     function receiveNewOrder(orderData) {
-      // Vérifier le stock disponible
       const insufficientStock = checkOrderStock(orderData.items);
       
       if (insufficientStock.length > 0) {
@@ -2447,16 +2835,11 @@
       orders.push(newOrder);
       saveOrders();
       
-      // Traiter le stock
       processOrderStock(newOrder.id, orderData.items);
-      
-      // Générer la facture
       generateInvoiceForOrder(newOrder);
       
-      // Afficher une notification
       showNotification('Nouvelle commande', `Commande de ${orderData.client} - ${orderData.total.toLocaleString()} FCFA`);
       
-      // Mettre à jour les alertes de stock
       updateStockAlerts();
       
       return newOrder.id;
@@ -2478,7 +2861,6 @@
       document.getElementById('statProduits').innerText = products.length;
       document.getElementById('statClients').innerText = uniqueClients;
       
-      // Mettre à jour les compteurs pour les filtres
       document.getElementById('countAll').innerText = totalOrders;
       document.getElementById('countPending').innerText = pendingOrders;
       document.getElementById('countConfirmed').innerText = confirmedOrders;
@@ -2486,14 +2868,12 @@
       document.getElementById('countDelivered').innerText = deliveredOrders;
       document.getElementById('countCancelled').innerText = cancelledOrders;
       
-      // Mettre à jour les stats du dashboard
       document.getElementById('statPendingCount').innerText = pendingOrders;
       document.getElementById('statConfirmedCount').innerText = confirmedOrders;
       document.getElementById('statShippedCount').innerText = shippedOrders;
       document.getElementById('statDeliveredCount').innerText = deliveredOrders;
       document.getElementById('statCancelledCount').innerText = cancelledOrders;
       
-      // Total annuel des ventes
       const totalAnnual = orders.reduce((sum, o) => sum + o.total, 0);
       document.getElementById('totalAnnualSales').innerText = totalAnnual.toLocaleString();
     }
@@ -2519,8 +2899,20 @@
       document.getElementById('lowStockBadge').innerText = lowStock;
       document.getElementById('stockAlertBadge').innerText = lowStock;
       
-      // Messages badge (simulé)
       document.getElementById('messagesBadge').innerText = '2';
+      
+      // Mise à jour du badge des salaires
+      const now = new Date();
+      const pendingPayments = employees.filter(emp => {
+        const paidThisMonth = payments.some(p => 
+          p.employeeId === emp.id && 
+          new Date(p.paymentDate).getMonth() === now.getMonth() &&
+          new Date(p.paymentDate).getFullYear() === now.getFullYear()
+        );
+        return !paidThisMonth && emp.status === 'actif';
+      }).length;
+      
+      document.getElementById('salariesBadge').innerText = pendingPayments;
     }
     
     function updateStockAlerts() {
@@ -2548,6 +2940,8 @@
       if (stock <= minStock * 2) return 'medium';
       return 'high';
     }
+    
+    // ==================== TABLEAUX ====================
     
     function updateOrdersTable(filter = 'all') {
       const tbody = document.getElementById('ordersList');
@@ -2588,7 +2982,6 @@
         tbody.appendChild(row);
       });
       
-      // Réinitialiser DataTables
       if ($.fn.DataTable.isDataTable('#ordersTable')) {
         $('#ordersTable').DataTable().destroy();
       }
@@ -2941,6 +3334,573 @@
       });
     }
     
+    // ==================== FONCTIONS POUR LES SALAIRES ====================
+    
+    function updateSalariesUI() {
+      updateSalariesStats();
+      updateEmployeesTable();
+      updatePaymentsTable();
+      updatePayslipsTable();
+      updateSalariesBadge();
+      initSalariesCharts();
+    }
+    
+    function updateSalariesStats() {
+      const totalEmployes = employees.filter(e => e.status === 'actif').length;
+      const masseSalariale = employees.filter(e => e.status === 'actif').reduce((sum, emp) => sum + emp.baseSalary + (emp.defaultBonus || 0), 0);
+      
+      const now = new Date();
+      const paiementsCeMois = payments.filter(p => {
+        const paymentDate = new Date(p.paymentDate);
+        return paymentDate.getMonth() === now.getMonth() && paymentDate.getFullYear() === now.getFullYear();
+      }).length;
+      
+      const nextPayday = new Date(now.getFullYear(), now.getMonth(), 28);
+      if (now.getDate() > 28) {
+        nextPayday.setMonth(nextPayday.getMonth() + 1);
+      }
+      const daysUntilPayday = Math.ceil((nextPayday - now) / (1000 * 60 * 60 * 24));
+      
+      document.getElementById('statEmployes').innerText = totalEmployes;
+      document.getElementById('statMasseSalariale').innerText = masseSalariale.toLocaleString() + ' FCFA';
+      document.getElementById('statPaiementsMois').innerText = paiementsCeMois;
+      document.getElementById('statProchainPaiement').innerText = daysUntilPayday;
+    }
+    
+    function updateEmployeesTable() {
+      const tbody = document.getElementById('salariesList');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      employees.forEach(emp => {
+        const totalSalary = emp.baseSalary + (emp.defaultBonus || 0);
+        const statusClass = emp.status === 'actif' ? 'badge-active' : emp.status === 'conge' ? 'badge-pending' : 'badge-inactive';
+        const statusLabel = emp.status === 'actif' ? 'Actif' : emp.status === 'conge' ? 'Congé' : 'Inactif';
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><img src="${emp.image || 'https://randomuser.me/api/portraits/lego/1.jpg'}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></td>
+          <td><strong>${emp.name}</strong></td>
+          <td>${emp.position}</td>
+          <td>${emp.baseSalary.toLocaleString()} FCFA</td>
+          <td>${(emp.defaultBonus || 0).toLocaleString()} FCFA</td>
+          <td><strong style="color: var(--rouge-profond);">${totalSalary.toLocaleString()} FCFA</strong></td>
+          <td>${new Date(emp.hireDate).toLocaleDateString('fr-FR')}</td>
+          <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
+          <td>
+            <button class="action-btn" onclick="editEmployee(${emp.id})" title="Modifier"><i class="fas fa-edit"></i></button>
+            <button class="action-btn" onclick="payEmployee(${emp.id})" title="Payer"><i class="fas fa-money-bill-wave"></i></button>
+            <button class="action-btn pdf" onclick="generatePayslip(${emp.id})" title="Bulletin"><i class="fas fa-file-pdf"></i></button>
+            <button class="action-btn delete" onclick="deleteEmployee(${emp.id})" title="Désactiver"><i class="fas fa-user-slash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#salariesTable')) {
+        $('#salariesTable').DataTable().destroy();
+      }
+      
+      $('#salariesTable').DataTable({
+        pageLength: 10,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    function updatePaymentsTable() {
+      const tbody = document.getElementById('paymentsList');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      payments.slice(0, 10).forEach(payment => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${new Date(payment.paymentDate).toLocaleDateString('fr-FR')}</td>
+          <td><strong>${payment.employeeName}</strong></td>
+          <td>${payment.position}</td>
+          <td>${payment.period}</td>
+          <td>${payment.baseSalary.toLocaleString()} FCFA</td>
+          <td>${(payment.bonus || 0).toLocaleString()} FCFA</td>
+          <td><strong style="color: var(--rouge-profond);">${payment.total.toLocaleString()} FCFA</strong></td>
+          <td><span class="badge-status badge-paid">Payé</span></td>
+          <td>
+            <button class="action-btn" onclick="viewPayment(${payment.id})"><i class="fas fa-eye"></i></button>
+            <button class="action-btn pdf" onclick="downloadPaymentReceipt(${payment.id})"><i class="fas fa-download"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#paymentsTable')) {
+        $('#paymentsTable').DataTable().destroy();
+      }
+      
+      $('#paymentsTable').DataTable({
+        pageLength: 10,
+        order: [[0, 'desc']],
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    function updatePayslipsTable() {
+      const tbody = document.getElementById('payslipsList');
+      if (!tbody) return;
+      
+      const recentPayslips = payments.slice(0, 10);
+      
+      tbody.innerHTML = '';
+      recentPayslips.forEach(payment => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${payment.period}</td>
+          <td><strong>${payment.employeeName}</strong></td>
+          <td>${payment.total.toLocaleString()} FCFA</td>
+          <td>${new Date(payment.paymentDate).toLocaleDateString('fr-FR')}</td>
+          <td>
+            <button class="action-btn" onclick="viewPayslip(${payment.id})"><i class="fas fa-eye"></i></button>
+            <button class="action-btn pdf" onclick="downloadPayslip(${payment.id})"><i class="fas fa-download"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+    
+    function updateSalariesBadge() {
+      const now = new Date();
+      const pendingPayments = employees.filter(emp => {
+        if (emp.status !== 'actif') return false;
+        const paidThisMonth = payments.some(p => 
+          p.employeeId === emp.id && 
+          new Date(p.paymentDate).getMonth() === now.getMonth() &&
+          new Date(p.paymentDate).getFullYear() === now.getFullYear()
+        );
+        return !paidThisMonth;
+      }).length;
+      
+      document.getElementById('salariesBadge').innerText = pendingPayments;
+    }
+    
+    function initSalariesCharts() {
+      const ctx1 = document.getElementById('salariesChart')?.getContext('2d');
+      if (ctx1) {
+        if (window.salariesChart) window.salariesChart.destroy();
+        
+        const activeEmployees = employees.filter(e => e.status === 'actif');
+        const employeeNames = activeEmployees.map(emp => emp.name.split(' ')[0]);
+        const employeeSalaries = activeEmployees.map(emp => emp.baseSalary + (emp.defaultBonus || 0));
+        
+        window.salariesChart = new Chart(ctx1, {
+          type: 'bar',
+          data: {
+            labels: employeeNames,
+            datasets: [{
+              label: 'Salaire total (FCFA)',
+              data: employeeSalaries,
+              backgroundColor: '#D4AF37',
+              borderRadius: 5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: function(value) {
+                    return value / 1000 + 'k';
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+      
+      const ctx2 = document.getElementById('payrollEvolutionChart')?.getContext('2d');
+      if (ctx2) {
+        if (window.payrollChart) window.payrollChart.destroy();
+        
+        const monthlyTotals = {};
+        payments.forEach(p => {
+          const date = new Date(p.paymentDate);
+          const key = `${date.getMonth()+1}/${date.getFullYear()}`;
+          monthlyTotals[key] = (monthlyTotals[key] || 0) + p.total;
+        });
+        
+        const sortedMonths = Object.keys(monthlyTotals).sort((a, b) => {
+          const [mA, yA] = a.split('/');
+          const [mB, yB] = b.split('/');
+          return new Date(yA, mA-1) - new Date(yB, mB-1);
+        });
+        
+        window.payrollChart = new Chart(ctx2, {
+          type: 'line',
+          data: {
+            labels: sortedMonths,
+            datasets: [{
+              label: 'Masse salariale',
+              data: sortedMonths.map(m => monthlyTotals[m]),
+              borderColor: '#8B0000',
+              backgroundColor: 'rgba(139, 0, 0, 0.1)',
+              tension: 0.4,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                ticks: {
+                  callback: function(value) {
+                    return value / 1000 + 'k';
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+    
+    function addEmployee(event) {
+      event.preventDefault();
+      
+      const hireDate = document.getElementById('employeeHireDate').value;
+      
+      const newEmployee = {
+        id: employees.length + 1,
+        name: document.getElementById('employeeName').value,
+        position: document.getElementById('employeePosition').value,
+        baseSalary: parseInt(document.getElementById('employeeBaseSalary').value),
+        defaultBonus: parseInt(document.getElementById('employeeDefaultBonus').value) || 0,
+        hireDate: hireDate,
+        phone: document.getElementById('employeePhone').value,
+        email: document.getElementById('employeeEmail').value,
+        bankAccount: document.getElementById('employeeBankAccount').value,
+        status: document.getElementById('employeeStatus').value,
+        notes: document.getElementById('employeeNotes').value,
+        image: 'https://randomuser.me/api/portraits/lego/' + (Math.floor(Math.random() * 10) + 1) + '.jpg'
+      };
+      
+      employees.push(newEmployee);
+      localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(employees));
+      
+      showSalariesTab('liste', event);
+      showNotification('Employé ajouté', `${newEmployee.name} a été ajouté avec succès`);
+      
+      document.getElementById('addEmployeeForm').reset();
+      updateSalariesUI();
+    }
+    
+    function editEmployee(employeeId) {
+      const employee = employees.find(e => e.id === employeeId);
+      if (!employee) return;
+      
+      const newSalary = prompt(`Nouveau salaire de base pour ${employee.name} (FCFA):`, employee.baseSalary);
+      if (newSalary && !isNaN(newSalary) && parseInt(newSalary) > 0) {
+        employee.baseSalary = parseInt(newSalary);
+        localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(employees));
+        updateSalariesUI();
+        showNotification('Salaire modifié', `Le salaire de ${employee.name} a été mis à jour`);
+      }
+    }
+    
+    function payEmployee(employeeId) {
+      const employee = employees.find(e => e.id === employeeId);
+      if (!employee) return;
+      
+      const now = new Date();
+      const alreadyPaid = payments.some(p => 
+        p.employeeId === employeeId && 
+        new Date(p.paymentDate).getMonth() === now.getMonth() &&
+        new Date(p.paymentDate).getFullYear() === now.getFullYear()
+      );
+      
+      if (alreadyPaid) {
+        if (!confirm(`${employee.name} a déjà été payé ce mois-ci. Voulez-vous ajouter un paiement supplémentaire ?`)) {
+          return;
+        }
+      }
+      
+      const bonus = prompt(`Prime pour ${employee.name} (FCFA):`, employee.defaultBonus || 0);
+      const payment = {
+        id: payments.length + 1,
+        employeeId: employee.id,
+        employeeName: employee.name,
+        position: employee.position,
+        paymentDate: new Date().toISOString(),
+        period: `${now.toLocaleString('fr-FR', { month: 'long' })} ${now.getFullYear()}`,
+        baseSalary: employee.baseSalary,
+        bonus: parseInt(bonus) || 0,
+        total: employee.baseSalary + (parseInt(bonus) || 0),
+        status: 'payé',
+        paymentMethod: 'virement',
+        notes: ''
+      };
+      
+      payments.push(payment);
+      localStorage.setItem(PAYMENTS_KEY, JSON.stringify(payments));
+      
+      updateSalariesUI();
+      showNotification('Paiement effectué', `${payment.total.toLocaleString()} FCFA versés à ${employee.name}`);
+    }
+    
+    function deleteEmployee(employeeId) {
+      const employee = employees.find(e => e.id === employeeId);
+      if (!employee) return;
+      
+      if (confirm(`Voulez-vous désactiver ${employee.name} ?`)) {
+        employee.status = 'inactif';
+        localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(employees));
+        updateSalariesUI();
+        showNotification('Employé désactivé', `${employee.name} a été désactivé`);
+      }
+    }
+    
+    function generatePayroll() {
+      const now = new Date();
+      const activeEmployees = employees.filter(e => e.status === 'actif');
+      let count = 0;
+      
+      activeEmployees.forEach(employee => {
+        const alreadyPaid = payments.some(p => 
+          p.employeeId === employee.id && 
+          new Date(p.paymentDate).getMonth() === now.getMonth() &&
+          new Date(p.paymentDate).getFullYear() === now.getFullYear()
+        );
+        
+        if (!alreadyPaid) {
+          const payment = {
+            id: payments.length + 1,
+            employeeId: employee.id,
+            employeeName: employee.name,
+            position: employee.position,
+            paymentDate: new Date().toISOString(),
+            period: `${now.toLocaleString('fr-FR', { month: 'long' })} ${now.getFullYear()}`,
+            baseSalary: employee.baseSalary,
+            bonus: employee.defaultBonus || 0,
+            total: employee.baseSalary + (employee.defaultBonus || 0),
+            status: 'payé',
+            paymentMethod: 'virement',
+            notes: 'Paie automatique'
+          };
+          
+          payments.push(payment);
+          count++;
+        }
+      });
+      
+      localStorage.setItem(PAYMENTS_KEY, JSON.stringify(payments));
+      updateSalariesUI();
+      showNotification('Paie générée', `${count} employé(s) ont été payés`);
+    }
+    
+    function generatePayslip(employeeId) {
+      const employee = employees.find(e => e.id === employeeId);
+      if (!employee) return;
+      
+      const now = new Date();
+      const payment = payments.find(p => 
+        p.employeeId === employeeId && 
+        new Date(p.paymentDate).getMonth() === now.getMonth() &&
+        new Date(p.paymentDate).getFullYear() === now.getFullYear()
+      );
+      
+      if (!payment) {
+        alert('Aucun paiement trouvé pour ce mois-ci. Veuillez d\'abord effectuer le paiement.');
+        return;
+      }
+      
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      const rougeProfond = [139, 0, 0];
+      const orEclatant = [212, 175, 55];
+      
+      doc.setFillColor(...rougeProfond);
+      doc.rect(0, 0, 210, 30, 'F');
+      
+      doc.setFontSize(20);
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.text('NJEEYGU', 105, 15, { align: 'center' });
+      
+      doc.setFontSize(10);
+      doc.setTextColor(...orEclatant);
+      doc.text('Le Grand Jour', 105, 22, { align: 'center' });
+      
+      doc.setFontSize(16);
+      doc.setTextColor(...rougeProfond);
+      doc.setFont('helvetica', 'bold');
+      doc.text('BULLETIN DE SALAIRE', 20, 45);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Période: ${payment.period}`, 20, 52);
+      
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Employé:', 20, 70);
+      doc.text('Poste:', 20, 78);
+      doc.text('Date d\'embauche:', 20, 86);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.text(employee.name, 60, 70);
+      doc.text(employee.position, 60, 78);
+      doc.text(new Date(employee.hireDate).toLocaleDateString('fr-FR'), 60, 86);
+      
+      const startY = 105;
+      
+      doc.setFillColor(...orEclatant);
+      doc.rect(20, startY - 5, 170, 8, 'F');
+      
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(0, 0, 0);
+      doc.text('Libellé', 25, startY);
+      doc.text('Montant', 150, startY);
+      
+      let y = startY + 8;
+      
+      doc.setFont('helvetica', 'normal');
+      doc.text('Salaire de base', 25, y);
+      doc.text(`${employee.baseSalary.toLocaleString()} FCFA`, 150, y);
+      
+      y += 6;
+      doc.text('Prime', 25, y);
+      doc.text(`${(payment.bonus || 0).toLocaleString()} FCFA`, 150, y);
+      
+      y += 6;
+      doc.setDrawColor(...orEclatant);
+      doc.line(20, y + 2, 190, y + 2);
+      
+      y += 8;
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...rougeProfond);
+      doc.text('TOTAL', 25, y);
+      doc.text(`${payment.total.toLocaleString()} FCFA`, 150, y);
+      
+      y += 15;
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Bulletin généré automatiquement', 105, y, { align: 'center' });
+      
+      doc.save(`bulletin-${employee.name}-${payment.period}.pdf`);
+      showNotification('Bulletin généré', `Bulletin de ${employee.name} téléchargé`);
+    }
+    
+    function generateAllPayslips() {
+      alert('Génération de tous les bulletins (simulation)');
+    }
+    
+    function exportSalaries() {
+      const data = employees.map(emp => ({
+        'Employé': emp.name,
+        'Poste': emp.position,
+        'Salaire de base': emp.baseSalary,
+        'Prime': emp.defaultBonus || 0,
+        'Total': emp.baseSalary + (emp.defaultBonus || 0),
+        'Statut': emp.status
+      }));
+      
+      const csv = convertToCSV(data);
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `employes_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      showNotification('Export réussi', 'La liste des employés a été exportée');
+    }
+    
+    function exportPayments() {
+      const data = payments.map(p => ({
+        'Date': new Date(p.paymentDate).toLocaleDateString('fr-FR'),
+        'Employé': p.employeeName,
+        'Période': p.period,
+        'Salaire': p.baseSalary,
+        'Prime': p.bonus || 0,
+        'Total': p.total
+      }));
+      
+      const csv = convertToCSV(data);
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `paiements_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      showNotification('Export réussi', 'L\'historique des paiements a été exporté');
+    }
+    
+    function filterPaymentsByMonth() {
+      const filter = document.getElementById('paymentMonthFilter').value;
+      // Logique de filtrage à implémenter
+      updatePaymentsTable();
+    }
+    
+    function viewPayment(paymentId) {
+      const payment = payments.find(p => p.id === paymentId);
+      if (payment) {
+        alert(`Paiement de ${payment.employeeName}\nMontant: ${payment.total.toLocaleString()} FCFA\nDate: ${new Date(payment.paymentDate).toLocaleDateString('fr-FR')}`);
+      }
+    }
+    
+    function downloadPaymentReceipt(paymentId) {
+      const payment = payments.find(p => p.id === paymentId);
+      if (payment) {
+        generatePayslip(payment.employeeId);
+      }
+    }
+    
+    function viewPayslip(paymentId) {
+      viewPayment(paymentId);
+    }
+    
+    function downloadPayslip(paymentId) {
+      const payment = payments.find(p => p.id === paymentId);
+      if (payment) {
+        generatePayslip(payment.employeeId);
+      }
+    }
+    
+    function showSalariesTab(tab, event) {
+      document.querySelectorAll('#section-salaires .salaries-tab-content').forEach(el => {
+        el.style.display = 'none';
+      });
+      
+      document.getElementById(`salaires-${tab}`).style.display = 'block';
+      
+      document.querySelectorAll('#section-salaires .admin-tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      if (tab === 'liste') {
+        updateEmployeesTable();
+        initSalariesCharts();
+      } else if (tab === 'paiements') {
+        updatePaymentsTable();
+      }
+    }
+    
     // ==================== ACTIONS SUR LES COMMANDES ====================
     
     function viewOrderDetails(orderId) {
@@ -2961,7 +3921,6 @@
       const paymentClass = order.paymentStatus === 'paid' ? 'badge-paid' : order.paymentStatus === 'partial' ? 'badge-pending' : 'badge-unpaid';
       document.getElementById('modalPaymentStatus').innerHTML = `<span class="badge-status ${paymentClass}">${paymentLabel}</span>`;
       
-      // Produits
       const itemsDiv = document.getElementById('modalOrderItems');
       itemsDiv.innerHTML = '';
       order.items.forEach(item => {
@@ -2978,7 +3937,6 @@
         itemsDiv.appendChild(itemDiv);
       });
       
-      // Statuts
       document.getElementById('modalStatusSelect').value = order.status;
       document.getElementById('modalPaymentSelect').value = order.paymentStatus || 'unpaid';
       
@@ -2993,7 +3951,6 @@
         order.status = status;
         saveOrders();
         
-        // Si la commande est annulée, remettre les produits en stock
         if (status === 'cancelled' && oldStatus !== 'cancelled') {
           order.items.forEach(item => {
             addStockMovement(
@@ -3019,7 +3976,6 @@
         order.paymentStatus = status;
         saveOrders();
         
-        // Mettre à jour la facture associée
         const invoice = invoices.find(inv => inv.orderId === order.id);
         if (invoice) {
           invoice.status = status === 'paid' ? 'paid' : 'unpaid';
@@ -3163,11 +4119,9 @@
         type = newStock > oldStock ? 'entree' : 'sortie';
       }
       
-      // Mettre à jour le stock minimum
       const minStock = parseInt(document.getElementById('stockModalMinStock').value) || 5;
       product.minStock = minStock;
       
-      // Enregistrer le mouvement
       addStockMovement(productId, type, quantity, reason, comment);
       
       bootstrap.Modal.getInstance(document.getElementById('stockManagementModal')).hide();
@@ -3177,7 +4131,6 @@
         `${product.name}: ${oldStock} → ${newStock} unités`
       );
       
-      // Mettre à jour les vues
       updateProductsTable();
       updateStockTable();
       updateStockAlerts();
@@ -3214,7 +4167,6 @@
       const quantity = product.minStock * 2 - product.stock;
       if (quantity > 0) {
         if (confirm(`Commander ${quantity} unités de ${product.name} ?`)) {
-          // Simuler une commande fournisseur
           addStockMovement(
             productId,
             'entree',
@@ -3255,7 +4207,6 @@
     }
     
     function showStockMovementModal() {
-      // Remplir la liste des produits
       const select = document.getElementById('movementProductId');
       select.innerHTML = '<option value="">Sélectionnez un produit</option>';
       products.forEach(product => {
@@ -3265,7 +4216,7 @@
       new bootstrap.Modal(document.getElementById('stockMovementModal')).show();
     }
     
-    function addStockMovement() {
+    function addStockMovementFromModal() {
       const productId = parseInt(document.getElementById('movementProductId').value);
       const type = document.getElementById('movementType').value;
       const quantity = parseInt(document.getElementById('movementQuantity').value);
@@ -3317,7 +4268,6 @@
     function addProduct(event) {
       event.preventDefault();
       
-      // Image par défaut (on peut en définir une automatiquement)
       const defaultImage = 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200';
       
       const newProduct = {
@@ -3328,14 +4278,13 @@
         stock: parseInt(document.getElementById('productStock').value),
         minStock: parseInt(document.getElementById('productMinStock').value) || 5,
         status: document.getElementById('productStatus').value,
-        image: defaultImage, // Image par défaut
+        image: defaultImage,
         location: document.getElementById('productLocation').value || 'Non défini'
       };
       
       products.push(newProduct);
       localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
       
-      // Ajouter un mouvement initial
       addStockMovement(
         newProduct.id,
         'entree',
@@ -3547,11 +4496,9 @@
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
       
-      // Configuration des couleurs
       const rougeProfond = [139, 0, 0];
       const orEclatant = [212, 175, 55];
       
-      // En-tête avec logo et titre
       doc.setFillColor(...rougeProfond);
       doc.rect(0, 0, 210, 40, 'F');
       
@@ -3565,7 +4512,6 @@
       doc.setFont('helvetica', 'normal');
       doc.text('Le Grand Jour', 105, 30, { align: 'center' });
       
-      // Titre FACTURE
       doc.setFontSize(20);
       doc.setTextColor(...rougeProfond);
       doc.setFont('helvetica', 'bold');
@@ -3576,7 +4522,6 @@
       doc.setFont('helvetica', 'normal');
       doc.text(`N° ${invoice.id}`, 20, 62);
       
-      // Informations client et détails
       doc.setFontSize(11);
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
@@ -3593,10 +4538,8 @@
       doc.text(`Date d'échéance: ${formatDate(invoice.dueDate)}`, 120, 95);
       doc.text(`Commande: ${invoice.orderId}`, 120, 102);
       
-      // Tableau des produits
       const startY = 120;
       
-      // En-tête du tableau
       doc.setFillColor(...rougeProfond);
       doc.rect(20, startY - 5, 170, 8, 'F');
       
@@ -3608,13 +4551,11 @@
       doc.text('Prix unitaire', 120, startY);
       doc.text('Total', 160, startY);
       
-      // Lignes du tableau
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
       let y = startY + 8;
       
       invoice.items.forEach((item, index) => {
-        // Alterner les couleurs de fond
         if (index % 2 === 0) {
           doc.setFillColor(245, 245, 245);
           doc.rect(20, y - 4, 170, 8, 'F');
@@ -3627,12 +4568,10 @@
         y += 8;
       });
       
-      // Ligne de séparation
       doc.setDrawColor(...orEclatant);
       doc.line(20, y, 190, y);
       y += 6;
       
-      // Totaux
       doc.setFont('helvetica', 'bold');
       doc.text('Sous-total', 130, y);
       doc.text(`${invoice.subtotal.toLocaleString()} FCFA`, 180, y, { align: 'right' });
@@ -3647,7 +4586,6 @@
       doc.text('TOTAL', 130, y);
       doc.text(`${invoice.total.toLocaleString()} FCFA`, 180, y, { align: 'right' });
       
-      // Pied de page
       y += 20;
       doc.setFontSize(9);
       doc.setTextColor(100, 100, 100);
@@ -3775,12 +4713,11 @@
     let salesChart, ordersChart, categoryChart, stockChart;
     
     function initCharts() {
-      // Ventes mensuelles
       const monthlySales = Array(12).fill(0);
       orders.forEach(order => {
         const date = new Date(order.date);
         const month = date.getMonth();
-        monthlySales[month] += order.total / 1000; // en milliers
+        monthlySales[month] += order.total / 1000;
       });
       
       const ctx = document.getElementById('salesChart')?.getContext('2d');
@@ -3829,7 +4766,6 @@
         });
       }
       
-      // Statut des commandes
       const statusCounts = [
         orders.filter(o => o.status === 'pending').length,
         orders.filter(o => o.status === 'confirmed').length,
@@ -3863,7 +4799,6 @@
         });
       }
       
-      // Ventes par catégorie
       const categorySales = {};
       orders.forEach(order => {
         order.items.forEach(item => {
@@ -3906,7 +4841,6 @@
         });
       }
       
-      // Revenue chart
       const ctx4 = document.getElementById('revenueChart')?.getContext('2d');
       if (ctx4) {
         new Chart(ctx4, {
@@ -3934,7 +4868,6 @@
         });
       }
       
-      // Stock chart
       const ctx5 = document.getElementById('stockChart')?.getContext('2d');
       if (ctx5) {
         const stockCategories = {
@@ -4026,7 +4959,6 @@
       
       event.target.closest('a').classList.add('active');
       
-      // Mettre à jour le titre
       const titles = {
         'dashboard': 'Tableau de bord',
         'commandes': 'Gestion des commandes',
@@ -4038,6 +4970,7 @@
         'messages': 'Messages',
         'temoignages': 'Témoignages',
         'equipe': 'Équipe',
+        'salaires': 'Gestion des salaires',
         'liens': 'Liens & Pages',
         'parametres': 'Paramètres',
         'statistiques': 'Statistiques'
@@ -4045,7 +4978,6 @@
       
       document.getElementById('pageTitle').innerText = titles[section] || section;
       
-      // Rafraîchir les données si nécessaire
       if (section === 'commandes') updateOrdersTable();
       if (section === 'produits') updateProductsTable();
       if (section === 'stock') {
@@ -4054,6 +4986,9 @@
       }
       if (section === 'factures') updateInvoicesTable();
       if (section === 'clients') updateClientsTable();
+      if (section === 'salaires') {
+        updateSalariesUI();
+      }
       if (section === 'dashboard') {
         updateStats();
         initCharts();
@@ -4072,13 +5007,14 @@
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('adminInterface').style.display = 'block';
         
-        // Initialiser toutes les données
         initProducts();
         initOrders();
-        initInvoices();
+        initEmployees();
+        initPayments();
         initStockMovements();
+        initInvoices();
         
-        // Mettre à jour l'interface
+        updateClientsFromOrders();
         updateStats();
         updateOrdersTable();
         updateRecentOrders();
@@ -4087,10 +5023,10 @@
         updateStockMovementsTable();
         updateInvoicesTable();
         updateClientsTable();
+        updateSalariesUI();
         updateBadges();
         initCharts();
         
-        // Vérifier les alertes de stock
         updateStockAlerts();
       } else {
         alert('Identifiants incorrects. Utilisez admin / admin123');
@@ -4133,7 +5069,6 @@
       });
     }
     
-    // Simuler une nouvelle commande toutes les 30 secondes (pour la démo)
     setInterval(simulateNewOrder, 30000);
     
     // ==================== RECHERCHE EN TEMPS RÉEL ====================
