@@ -861,6 +861,30 @@
       color: var(--rouge-profond);
       transform: translateY(-2px);
     }
+    
+    /* TVA Badge */
+    .tva-badge {
+      background: var(--vert-emeraude);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+    
+    .price-without-tva {
+      color: #666;
+      font-size: 0.8rem;
+      text-decoration: line-through;
+      margin-right: 5px;
+    }
+    
+    .price-with-tva {
+      color: var(--rouge-profond);
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
   </style>
 </head>
 <body>
@@ -1154,7 +1178,9 @@
                   <th>Client</th>
                   <th>Téléphone</th>
                   <th>Email</th>
-                  <th>Total</th>
+                  <th>Total HT</th>
+                  <th>TVA (18%)</th>
+                  <th>Total TTC</th>
                   <th>Date</th>
                   <th>Statut</th>
                   <th>Paiement</th>
@@ -1179,7 +1205,7 @@
           <div id="products-list" class="products-tab-content">
             <div class="admin-table">
               <div class="table-header">
-                <h4>Tous les produits (<span id="totalProducts">0</span>)</h4>
+                <h4>Tous les produits (<span id="totalProducts">0</span>) <span class="tva-badge">TVA 18% incluse</span></h4>
                 <div class="search-box">
                   <i class="fas fa-search"></i>
                   <input type="text" id="searchProduct" class="form-control" placeholder="Rechercher un produit..." style="width: 250px;">
@@ -1191,7 +1217,9 @@
                     <th>Image</th>
                     <th>Produit</th>
                     <th>Catégorie</th>
-                    <th>Prix</th>
+                    <th>Prix HT</th>
+                    <th>TVA (18%)</th>
+                    <th>Prix TTC</th>
                     <th>Stock</th>
                     <th>Statut</th>
                     <th>Actions</th>
@@ -1206,7 +1234,7 @@
           
           <div id="products-add" class="products-tab-content" style="display: none;">
             <div class="admin-form">
-              <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Ajouter un nouveau produit</h4>
+              <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Ajouter un nouveau produit <span class="tva-badge">TVA 18%</span></h4>
               <form id="addProductForm" onsubmit="addProduct(event)">
                 <div class="row">
                   <div class="col-md-6">
@@ -1233,10 +1261,25 @@
                 <div class="row">
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label>Prix (FCFA) *</label>
-                      <input type="number" class="form-control" id="productPrice" required>
+                      <label>Prix HT (FCFA) *</label>
+                      <input type="number" class="form-control" id="productPriceHT" required onchange="updatePriceTTC()">
                     </div>
                   </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>TVA (18%)</label>
+                      <input type="text" class="form-control" id="productTVA" value="18%" readonly>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Prix TTC (FCFA)</label>
+                      <input type="text" class="form-control" id="productPriceTTC" readonly>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
                   <div class="col-md-4">
                     <div class="form-group">
                       <label>Stock initial *</label>
@@ -1249,6 +1292,12 @@
                       <input type="number" class="form-control" id="productMinStock" value="5">
                     </div>
                   </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Emplacement/Rangement</label>
+                      <input type="text" class="form-control" id="productLocation" placeholder="Ex: Aisle 3, Rayon 2">
+                    </div>
+                  </div>
                 </div>
                 
                 <div class="row">
@@ -1259,12 +1308,6 @@
                         <option value="active">Actif</option>
                         <option value="inactive">Inactif</option>
                       </select>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Emplacement/Rangement</label>
-                      <input type="text" class="form-control" id="productLocation" placeholder="Ex: Aisle 3, Rayon 2">
                     </div>
                   </div>
                 </div>
@@ -1358,7 +1401,7 @@
           
           <div class="admin-table">
             <div class="table-header">
-              <h4>Gestion des stocks</h4>
+              <h4>Gestion des stocks <span class="tva-badge">TVA 18% incluse</span></h4>
               <div style="display: flex; gap: 10px;">
                 <button class="btn btn-or btn-sm" onclick="exportStockReport()">
                   <i class="fas fa-download me-1"></i> Exporter
@@ -1374,7 +1417,8 @@
                   <th>Image</th>
                   <th>Produit</th>
                   <th>Catégorie</th>
-                  <th>Prix</th>
+                  <th>Prix HT</th>
+                  <th>Prix TTC</th>
                   <th>Stock actuel</th>
                   <th>Stock minimum</th>
                   <th>Statut stock</th>
@@ -1425,7 +1469,7 @@
           
           <div class="admin-table">
             <div class="table-header">
-              <h4>Gestion des factures</h4>
+              <h4>Gestion des factures <span class="tva-badge">TVA 18%</span></h4>
               <div style="display: flex; gap: 10px;">
                 <button class="btn btn-or btn-sm" onclick="generateInvoiceReport()">
                   <i class="fas fa-file-pdf me-1"></i> Rapport
@@ -1438,7 +1482,9 @@
                   <th>N° Facture</th>
                   <th>N° Commande</th>
                   <th>Client</th>
-                  <th>Montant</th>
+                  <th>Montant HT</th>
+                  <th>TVA (18%)</th>
+                  <th>Montant TTC</th>
                   <th>Date</th>
                   <th>Statut</th>
                   <th>Actions</th>
@@ -2182,6 +2228,12 @@
               </div>
               
               <div class="form-group">
+                <label>Taux de TVA (%)</label>
+                <input type="number" class="form-control" value="18" readonly>
+                <small class="text-muted">Taux fixe à 18%</small>
+              </div>
+              
+              <div class="form-group">
                 <label>Seuil d'alerte stock par défaut</label>
                 <input type="number" class="form-control" value="5">
               </div>
@@ -2239,7 +2291,9 @@
             <div class="col-md-6">
               <h6 style="color: var(--rouge-profond);">Informations commande</h6>
               <p><strong>Date :</strong> <span id="modalOrderDate"></span></p>
-              <p><strong>Total :</strong> <span id="modalOrderTotal"></span></p>
+              <p><strong>Total HT :</strong> <span id="modalOrderTotalHT"></span></p>
+              <p><strong>TVA (18%) :</strong> <span id="modalOrderTVA"></span></p>
+              <p><strong>Total TTC :</strong> <span id="modalOrderTotalTTC"></span></p>
               <p><strong>Statut :</strong> <span id="modalOrderStatus"></span></p>
               <p><strong>Paiement :</strong> <span id="modalPaymentStatus"></span></p>
             </div>
@@ -2446,13 +2500,16 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-          <button type="button" class="btn btn-rouge" onclick="addStockMovement()">Enregistrer</button>
+          <button type="button" class="btn btn-rouge" onclick="addStockMovementFromModal()">Enregistrer</button>
         </div>
       </div>
     </div>
   </div>
 
   <script>
+    // ==================== CONSTANTES ====================
+    const TVA_RATE = 0.18; // 18%
+    
     // ==================== DONNÉES ====================
     
     // Clés pour le stockage localStorage
@@ -2479,6 +2536,22 @@
     let currentInvoiceId = null;
     let currentStockProductId = null;
     
+    // ==================== FONCTIONS TVA ====================
+    
+    function calculateTTC(priceHT) {
+      return priceHT * (1 + TVA_RATE);
+    }
+    
+    function calculateTVA(priceHT) {
+      return priceHT * TVA_RATE;
+    }
+    
+    function updatePriceTTC() {
+      const priceHT = parseFloat(document.getElementById('productPriceHT').value) || 0;
+      const priceTTC = calculateTTC(priceHT);
+      document.getElementById('productPriceTTC').value = Math.round(priceTTC).toLocaleString();
+    }
+    
     // ==================== INITIALISATION DES PRODUITS ====================
     
     function initProducts() {
@@ -2486,14 +2559,85 @@
       if (stored) {
         products = JSON.parse(stored);
       } else {
-        // Créer des produits par défaut
-        
+        // Créer des produits par défaut avec TVA incluse
+        products = [
+          {
+            id: 1,
+            name: 'Centre de table Royal',
+            category: 'table',
+            priceHT: 25000,
+            priceTTC: calculateTTC(25000),
+            stock: 15,
+            minStock: 5,
+            status: 'active',
+            image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200',
+            location: 'A1-R2'
+          },
+          {
+            id: 2,
+            name: 'Guirlande Dorée',
+            category: 'lumiere',
+            priceHT: 12000,
+            priceTTC: calculateTTC(12000),
+            stock: 8,
+            minStock: 5,
+            status: 'active',
+            image: 'https://images.unsplash.com/photo-1517292987719-0369a794ec0f?w=200',
+            location: 'B3-R1'
+          },
+          {
+            id: 3,
+            name: 'Bouquet de Mariée Prestige',
+            category: 'mariage',
+            priceHT: 45000,
+            priceTTC: calculateTTC(45000),
+            stock: 3,
+            minStock: 3,
+            status: 'active',
+            image: 'https://images.unsplash.com/photo-1591886960571-74d43a9d4166?w=200',
+            location: 'C2-R4'
+          },
+          {
+            id: 4,
+            name: 'Ballons Arc-en-ciel (lot de 10)',
+            category: 'ballon',
+            priceHT: 8500,
+            priceTTC: calculateTTC(8500),
+            stock: 25,
+            minStock: 10,
+            status: 'active',
+            image: 'https://images.unsplash.com/photo-1530103043960-721387b916e6?w=200',
+            location: 'D1-R3'
+          },
+          {
+            id: 5,
+            name: 'Nappe Satinée Luxe',
+            category: 'deco',
+            priceHT: 18500,
+            priceTTC: calculateTTC(18500),
+            stock: 12,
+            minStock: 5,
+            status: 'active',
+            image: 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=200',
+            location: 'A2-R1'
+          }
+        ];
         localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
       }
     }
     
     // ==================== INITIALISATION DES COMMANDES ====================
     
+    function initOrders() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        orders = JSON.parse(stored);
+      } else {
+        // Aucune commande par défaut (supprimées)
+        orders = [];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      }
+    }
     
     // ==================== INITIALISATION DES EMPLOYÉS ====================
     
@@ -2653,11 +2797,9 @@
       if (stored) {
         invoices = JSON.parse(stored);
       } else {
-        orders.forEach(order => {
-          if (order.status !== 'cancelled') {
-            generateInvoiceForOrder(order, true);
-          }
-        });
+        // Pas de factures sans commandes
+        invoices = [];
+        localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
       }
     }
     
@@ -2681,7 +2823,7 @@
         
         const client = clientMap.get(key);
         client.orders.push(order.id);
-        client.totalSpent += order.total;
+        client.totalSpent += order.totalTTC;
         if (new Date(order.date) > new Date(client.lastOrder)) {
           client.lastOrder = order.date;
         }
@@ -2794,9 +2936,9 @@
         date: new Date().toISOString(),
         dueDate: new Date(Date.now() + 15 * 86400000).toISOString(),
         items: order.items,
-        subtotal: order.total,
-        tax: 0,
-        total: order.total,
+        subtotalHT: order.totalHT,
+        tva: order.totalTVA,
+        totalTTC: order.totalTTC,
         status: order.paymentStatus === 'paid' ? 'paid' : 'unpaid'
       };
       
@@ -2824,9 +2966,16 @@
         return null;
       }
       
+      const totalHT = orderData.items.reduce((sum, item) => sum + (item.quantity * item.priceHT), 0);
+      const totalTVA = calculateTVA(totalHT);
+      const totalTTC = calculateTTC(totalHT);
+      
       const newOrder = {
         id: 'CMD-' + new Date().getFullYear() + '-' + String(orders.length + 1).padStart(3, '0'),
         ...orderData,
+        totalHT: totalHT,
+        totalTVA: totalTVA,
+        totalTTC: totalTTC,
         date: new Date().toISOString(),
         status: 'pending',
         paymentStatus: 'unpaid'
@@ -2838,7 +2987,7 @@
       processOrderStock(newOrder.id, orderData.items);
       generateInvoiceForOrder(newOrder);
       
-      showNotification('Nouvelle commande', `Commande de ${orderData.client} - ${orderData.total.toLocaleString()} FCFA`);
+      showNotification('Nouvelle commande', `Commande de ${orderData.client} - ${totalTTC.toLocaleString()} FCFA TTC`);
       
       updateStockAlerts();
       
@@ -2874,14 +3023,14 @@
       document.getElementById('statDeliveredCount').innerText = deliveredOrders;
       document.getElementById('statCancelledCount').innerText = cancelledOrders;
       
-      const totalAnnual = orders.reduce((sum, o) => sum + o.total, 0);
+      const totalAnnual = orders.reduce((sum, o) => sum + o.totalTTC, 0);
       document.getElementById('totalAnnualSales').innerText = totalAnnual.toLocaleString();
     }
     
     function updateStockStats() {
       const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
       const criticalStock = products.filter(p => p.stock <= p.minStock * 0.5).length;
-      const totalValue = products.reduce((sum, p) => sum + (p.stock * p.price), 0);
+      const totalValue = products.reduce((sum, p) => sum + (p.stock * p.priceTTC), 0);
       
       document.getElementById('statTotalStock').innerText = totalStock;
       document.getElementById('statCriticalStock').innerText = criticalStock;
@@ -2962,7 +3111,9 @@
           <td>${order.client}</td>
           <td>${order.phone}</td>
           <td>${order.email}</td>
-          <td>${order.total.toLocaleString()} FCFA</td>
+          <td>${order.totalHT.toLocaleString()} FCFA</td>
+          <td>${order.totalTVA.toLocaleString()} FCFA</td>
+          <td><strong>${order.totalTTC.toLocaleString()} FCFA</strong></td>
           <td>${formatDate(order.date)}</td>
           <td>
             <span class="badge-status ${getStatusClass(order.status)}">${getStatusLabel(order.status)}</span>
@@ -2988,7 +3139,7 @@
       
       $('#ordersTable').DataTable({
         pageLength: 10,
-        order: [[5, 'desc']],
+        order: [[7, 'desc']],
         language: {
           url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
         }
@@ -3007,7 +3158,7 @@
         row.innerHTML = `
           <td><strong>${order.id}</strong></td>
           <td>${order.client}</td>
-          <td>${order.total.toLocaleString()} FCFA</td>
+          <td>${order.totalTTC.toLocaleString()} FCFA</td>
           <td>${formatDate(order.date)}</td>
           <td><span class="badge-status ${getStatusClass(order.status)}">${getStatusLabel(order.status)}</span></td>
           <td>
@@ -3049,7 +3200,9 @@
           <td><img src="${product.image}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;"></td>
           <td><strong>${product.name}</strong></td>
           <td>${getCategoryLabel(product.category)}</td>
-          <td>${product.price.toLocaleString()} FCFA</td>
+          <td>${product.priceHT.toLocaleString()} FCFA</td>
+          <td>${calculateTVA(product.priceHT).toLocaleString()} FCFA</td>
+          <td><strong>${Math.round(product.priceTTC).toLocaleString()} FCFA</strong></td>
           <td>
             <div>
               <span class="${product.stock <= product.minStock ? 'text-danger fw-bold' : ''}">${product.stock}</span>
@@ -3110,7 +3263,8 @@
           <td><img src="${product.image}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;"></td>
           <td><strong>${product.name}</strong></td>
           <td>${getCategoryLabel(product.category)}</td>
-          <td>${product.price.toLocaleString()} FCFA</td>
+          <td>${product.priceHT.toLocaleString()} FCFA</td>
+          <td><strong>${Math.round(product.priceTTC).toLocaleString()} FCFA</strong></td>
           <td>
             <div>
               <span class="fw-bold">${product.stock}</span>
@@ -3137,7 +3291,7 @@
       
       $('#stockTable').DataTable({
         pageLength: 10,
-        order: [[4, 'asc']],
+        order: [[5, 'asc']],
         language: {
           url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
         }
@@ -3235,7 +3389,9 @@
           <td><strong>${invoice.id}</strong></td>
           <td>${invoice.orderId}</td>
           <td>${invoice.client}</td>
-          <td>${invoice.total.toLocaleString()} FCFA</td>
+          <td>${invoice.subtotalHT.toLocaleString()} FCFA</td>
+          <td>${invoice.tva.toLocaleString()} FCFA</td>
+          <td><strong>${invoice.totalTTC.toLocaleString()} FCFA</strong></td>
           <td>${formatDate(invoice.date)}</td>
           <td><span class="badge-status ${invoice.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${invoice.status === 'paid' ? 'Payée' : 'Impayée'}</span></td>
           <td>
@@ -3252,7 +3408,7 @@
       
       $('#invoicesTable').DataTable({
         pageLength: 10,
-        order: [[4, 'desc']],
+        order: [[6, 'desc']],
         language: {
           url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
         }
@@ -3306,7 +3462,7 @@
       
       tbody.innerHTML = '';
       categories.forEach(cat => {
-        const stockValue = cat.products.reduce((sum, p) => sum + (p.stock * p.price), 0);
+        const stockValue = cat.products.reduce((sum, p) => sum + (p.stock * p.priceTTC), 0);
         
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -3914,7 +4070,9 @@
       document.getElementById('modalClientPhone').innerText = order.phone;
       document.getElementById('modalClientEmail').innerText = order.email;
       document.getElementById('modalOrderDate').innerText = formatDate(order.date);
-      document.getElementById('modalOrderTotal').innerText = order.total.toLocaleString() + ' FCFA';
+      document.getElementById('modalOrderTotalHT').innerText = order.totalHT.toLocaleString() + ' FCFA';
+      document.getElementById('modalOrderTVA').innerText = order.totalTVA.toLocaleString() + ' FCFA';
+      document.getElementById('modalOrderTotalTTC').innerText = order.totalTTC.toLocaleString() + ' FCFA';
       document.getElementById('modalOrderStatus').innerHTML = `<span class="badge-status ${getStatusClass(order.status)}">${getStatusLabel(order.status)}</span>`;
       
       const paymentLabel = order.paymentStatus === 'paid' ? 'Payé' : order.paymentStatus === 'partial' ? 'Paiement partiel' : 'Impayé';
@@ -3930,9 +4088,13 @@
           <img src="${item.image}" class="order-product-img">
           <div style="flex: 1;">
             <strong>${item.name}</strong><br>
-            <small>Quantité: ${item.quantity} - Prix unitaire: ${item.price.toLocaleString()} FCFA</small>
+            <small>Quantité: ${item.quantity} - Prix unitaire HT: ${item.priceHT.toLocaleString()} FCFA</small><br>
+            <small class="text-muted">TVA 18%: ${(item.priceHT * TVA_RATE).toLocaleString()} FCFA</small>
           </div>
-          <strong>${(item.quantity * item.price).toLocaleString()} FCFA</strong>
+          <div>
+            <div>${(item.quantity * item.priceHT).toLocaleString()} FCFA HT</div>
+            <small class="text-success">TTC: ${(item.quantity * item.priceHT * (1 + TVA_RATE)).toLocaleString()} FCFA</small>
+          </div>
         `;
         itemsDiv.appendChild(itemDiv);
       });
@@ -4033,7 +4195,9 @@
           <td><strong>${invoice.id}</strong></td>
           <td>${invoice.orderId}</td>
           <td>${invoice.client}</td>
-          <td>${invoice.total.toLocaleString()} FCFA</td>
+          <td>${invoice.subtotalHT.toLocaleString()} FCFA</td>
+          <td>${invoice.tva.toLocaleString()} FCFA</td>
+          <td><strong>${invoice.totalTTC.toLocaleString()} FCFA</strong></td>
           <td>${formatDate(invoice.date)}</td>
           <td><span class="badge-status ${invoice.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${invoice.status === 'paid' ? 'Payée' : 'Impayée'}</span></td>
           <td>
@@ -4050,7 +4214,7 @@
       
       $('#invoicesTable').DataTable({
         pageLength: 10,
-        order: [[4, 'desc']],
+        order: [[6, 'desc']],
         language: {
           url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
         }
@@ -4246,10 +4410,12 @@
       const data = products.map(p => ({
         'Produit': p.name,
         'Catégorie': getCategoryLabel(p.category),
-        'Prix': p.price,
+        'Prix HT': p.priceHT,
+        'TVA 18%': calculateTVA(p.priceHT),
+        'Prix TTC': p.priceTTC,
         'Stock actuel': p.stock,
         'Stock minimum': p.minStock,
-        'Valeur stock': p.stock * p.price,
+        'Valeur stock TTC': p.stock * p.priceTTC,
         'Emplacement': p.location || 'Non défini'
       }));
       
@@ -4269,12 +4435,15 @@
       event.preventDefault();
       
       const defaultImage = 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200';
+      const priceHT = parseInt(document.getElementById('productPriceHT').value);
+      const priceTTC = calculateTTC(priceHT);
       
       const newProduct = {
         id: products.length + 1,
         name: document.getElementById('productName').value,
         category: document.getElementById('productCategory').value,
-        price: parseInt(document.getElementById('productPrice').value),
+        priceHT: priceHT,
+        priceTTC: priceTTC,
         stock: parseInt(document.getElementById('productStock').value),
         minStock: parseInt(document.getElementById('productMinStock').value) || 5,
         status: document.getElementById('productStatus').value,
@@ -4295,7 +4464,7 @@
       
       updateProductsTable();
       showProductsTab('list', event);
-      showNotification('Produit ajouté', `${newProduct.name} a été ajouté avec succès`);
+      showNotification('Produit ajouté', `${newProduct.name} a été ajouté avec succès (TVA 18% incluse)`);
       
       document.getElementById('addProductForm').reset();
     }
@@ -4410,19 +4579,18 @@
     function generateInvoiceHTML(invoice) {
       let itemsHTML = '';
       invoice.items.forEach(item => {
+        const totalHT = item.quantity * item.priceHT;
+        const totalTTC = totalHT * (1 + TVA_RATE);
         itemsHTML += `
           <tr>
             <td>${item.name}</td>
             <td class="text-center">${item.quantity}</td>
-            <td class="text-end">${item.price.toLocaleString()} FCFA</td>
-            <td class="text-end">${(item.quantity * item.price).toLocaleString()} FCFA</td>
+            <td class="text-end">${item.priceHT.toLocaleString()} FCFA</td>
+            <td class="text-end">${(item.priceHT * TVA_RATE).toLocaleString()} FCFA</td>
+            <td class="text-end">${totalHT.toLocaleString()} FCFA</td>
           </tr>
         `;
       });
-      
-      const totalHT = invoice.subtotal;
-      const tva = 0;
-      const totalTTC = invoice.total;
       
       return `
         <div class="invoice-header">
@@ -4459,8 +4627,9 @@
             <tr>
               <th>Produit</th>
               <th class="text-center">Qté</th>
-              <th class="text-end">Prix unitaire</th>
-              <th class="text-end">Total</th>
+              <th class="text-end">Prix unitaire HT</th>
+              <th class="text-end">TVA 18%</th>
+              <th class="text-end">Total HT</th>
             </tr>
           </thead>
           <tbody>
@@ -4468,22 +4637,22 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="3" class="text-end"><strong>Sous-total</strong></td>
-              <td class="text-end">${totalHT.toLocaleString()} FCFA</td>
+              <td colspan="4" class="text-end"><strong>Sous-total HT</strong></td>
+              <td class="text-end">${invoice.subtotalHT.toLocaleString()} FCFA</td>
             </tr>
             <tr>
-              <td colspan="3" class="text-end"><strong>TVA (0%)</strong></td>
-              <td class="text-end">${tva.toLocaleString()} FCFA</td>
+              <td colspan="4" class="text-end"><strong>TVA (18%)</strong></td>
+              <td class="text-end">${invoice.tva.toLocaleString()} FCFA</td>
             </tr>
             <tr>
-              <td colspan="3" class="text-end"><strong style="color: var(--rouge-profond);">TOTAL</strong></td>
-              <td class="text-end"><strong style="color: var(--rouge-profond);">${totalTTC.toLocaleString()} FCFA</strong></td>
+              <td colspan="4" class="text-end"><strong style="color: var(--rouge-profond);">TOTAL TTC</strong></td>
+              <td class="text-end"><strong style="color: var(--rouge-profond);">${invoice.totalTTC.toLocaleString()} FCFA</strong></td>
             </tr>
           </tfoot>
         </table>
         
         <div class="invoice-footer">
-          <p>Merci de votre confiance ! Pour toute question, contactez-nous au +221 77 544 97 95</p>
+          <p>Merci de votre confiance ! TVA 18% incluse. Pour toute question, contactez-nous au +221 77 544 97 95</p>
           <p style="font-size: 0.8rem;">NJEEYGU - Le Grand Jour - 123 Rue Principale, Saint-Louis</p>
         </div>
       `;
@@ -4545,14 +4714,16 @@
       
       doc.setTextColor(255, 255, 255);
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
+      doc.setFontSize(8);
       doc.text('Produit', 22, startY);
-      doc.text('Qté', 100, startY);
-      doc.text('Prix unitaire', 120, startY);
-      doc.text('Total', 160, startY);
+      doc.text('Qté', 85, startY);
+      doc.text('Prix HT', 105, startY);
+      doc.text('TVA', 130, startY);
+      doc.text('Total HT', 155, startY);
       
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
       let y = startY + 8;
       
       invoice.items.forEach((item, index) => {
@@ -4561,10 +4732,14 @@
           doc.rect(20, y - 4, 170, 8, 'F');
         }
         
-        doc.text(item.name.substring(0, 25), 22, y);
-        doc.text(item.quantity.toString(), 105, y, { align: 'center' });
-        doc.text(`${item.price.toLocaleString()} FCFA`, 140, y, { align: 'right' });
-        doc.text(`${(item.quantity * item.price).toLocaleString()} FCFA`, 180, y, { align: 'right' });
+        const totalHT = item.quantity * item.priceHT;
+        const tva = item.priceHT * TVA_RATE;
+        
+        doc.text(item.name.substring(0, 15), 22, y);
+        doc.text(item.quantity.toString(), 90, y, { align: 'center' });
+        doc.text(`${item.priceHT.toLocaleString()}`, 110, y, { align: 'right' });
+        doc.text(`${tva.toLocaleString()}`, 135, y, { align: 'right' });
+        doc.text(`${totalHT.toLocaleString()}`, 165, y, { align: 'right' });
         y += 8;
       });
       
@@ -4573,24 +4748,25 @@
       y += 6;
       
       doc.setFont('helvetica', 'bold');
-      doc.text('Sous-total', 130, y);
-      doc.text(`${invoice.subtotal.toLocaleString()} FCFA`, 180, y, { align: 'right' });
+      doc.setFontSize(9);
+      doc.text('Sous-total HT', 125, y);
+      doc.text(`${invoice.subtotalHT.toLocaleString()} FCFA`, 180, y, { align: 'right' });
       y += 6;
       
-      doc.text('TVA (0%)', 130, y);
-      doc.text('0 FCFA', 180, y, { align: 'right' });
+      doc.text('TVA 18%', 125, y);
+      doc.text(`${invoice.tva.toLocaleString()} FCFA`, 180, y, { align: 'right' });
       y += 8;
       
-      doc.setFontSize(12);
+      doc.setFontSize(11);
       doc.setTextColor(...rougeProfond);
-      doc.text('TOTAL', 130, y);
-      doc.text(`${invoice.total.toLocaleString()} FCFA`, 180, y, { align: 'right' });
+      doc.text('TOTAL TTC', 125, y);
+      doc.text(`${invoice.totalTTC.toLocaleString()} FCFA`, 180, y, { align: 'right' });
       
       y += 20;
       doc.setFontSize(9);
       doc.setTextColor(100, 100, 100);
       doc.setFont('helvetica', 'normal');
-      doc.text('Merci de votre confiance ! Pour toute question, contactez-nous au +221 77 544 97 95', 105, y, { align: 'center' });
+      doc.text('Merci de votre confiance ! TVA 18% incluse. Pour toute question, contactez-nous au +221 77 544 97 95', 105, y, { align: 'center' });
       
       y += 6;
       doc.setFontSize(8);
@@ -4650,7 +4826,9 @@
         'Client': o.client,
         'Téléphone': o.phone,
         'Email': o.email,
-        'Total': o.total,
+        'Total HT': o.totalHT,
+        'TVA 18%': o.totalTVA,
+        'Total TTC': o.totalTTC,
         'Date': formatDate(o.date),
         'Statut': getStatusLabel(o.status),
         'Paiement': o.paymentStatus
@@ -4667,7 +4845,9 @@
     }
     
     function generateReport() {
-      const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
+      const totalRevenueHT = orders.reduce((sum, o) => sum + o.totalHT, 0);
+      const totalRevenueTTC = orders.reduce((sum, o) => sum + o.totalTTC, 0);
+      const totalTVA = orders.reduce((sum, o) => sum + o.totalTVA, 0);
       const pendingCount = orders.filter(o => o.status === 'pending').length;
       
       const report = `
@@ -4676,7 +4856,12 @@
         
         Date: ${new Date().toLocaleDateString()}
         Total commandes: ${orders.length}
-        Chiffre d'affaires: ${totalRevenue.toLocaleString()} FCFA
+        
+        Chiffre d'affaires:
+        - HT: ${totalRevenueHT.toLocaleString()} FCFA
+        - TVA 18%: ${totalTVA.toLocaleString()} FCFA
+        - TTC: ${totalRevenueTTC.toLocaleString()} FCFA
+        
         Commandes en attente: ${pendingCount}
         Commandes livrées: ${orders.filter(o => o.status === 'delivered').length}
         Commandes annulées: ${orders.filter(o => o.status === 'cancelled').length}
@@ -4688,7 +4873,9 @@
     function generateInvoiceReport() {
       const paidInvoices = invoices.filter(i => i.status === 'paid').length;
       const unpaidInvoices = invoices.filter(i => i.status === 'unpaid').length;
-      const totalAmount = invoices.reduce((sum, i) => sum + i.total, 0);
+      const totalHT = invoices.reduce((sum, i) => sum + i.subtotalHT, 0);
+      const totalTVA = invoices.reduce((sum, i) => sum + i.tva, 0);
+      const totalTTC = invoices.reduce((sum, i) => sum + i.totalTTC, 0);
       
       alert(`
         RAPPORT DES FACTURES
@@ -4697,7 +4884,11 @@
         Total factures: ${invoices.length}
         Factures payées: ${paidInvoices}
         Factures impayées: ${unpaidInvoices}
-        Montant total: ${totalAmount.toLocaleString()} FCFA
+        
+        Montants:
+        - Total HT: ${totalHT.toLocaleString()} FCFA
+        - TVA 18%: ${totalTVA.toLocaleString()} FCFA
+        - Total TTC: ${totalTTC.toLocaleString()} FCFA
       `);
     }
     
@@ -4713,11 +4904,14 @@
     let salesChart, ordersChart, categoryChart, stockChart;
     
     function initCharts() {
-      const monthlySales = Array(12).fill(0);
+      const monthlySalesHT = Array(12).fill(0);
+      const monthlySalesTTC = Array(12).fill(0);
+      
       orders.forEach(order => {
         const date = new Date(order.date);
         const month = date.getMonth();
-        monthlySales[month] += order.total / 1000;
+        monthlySalesHT[month] += order.totalHT / 1000;
+        monthlySalesTTC[month] += order.totalTTC / 1000;
       });
       
       const ctx = document.getElementById('salesChart')?.getContext('2d');
@@ -4727,14 +4921,25 @@
           type: 'line',
           data: {
             labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
-            datasets: [{
-              label: 'Ventes (milliers FCFA)',
-              data: monthlySales,
-              borderColor: '#8B0000',
-              backgroundColor: 'rgba(139, 0, 0, 0.1)',
-              tension: 0.4,
-              fill: true
-            }]
+            datasets: [
+              {
+                label: 'Ventes HT (milliers FCFA)',
+                data: monthlySalesHT,
+                borderColor: '#8B0000',
+                backgroundColor: 'rgba(139, 0, 0, 0.1)',
+                tension: 0.4,
+                fill: true
+              },
+              {
+                label: 'Ventes TTC (milliers FCFA)',
+                data: monthlySalesTTC,
+                borderColor: '#D4AF37',
+                backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                tension: 0.4,
+                fill: true,
+                borderDash: [5, 5]
+              }
+            ]
           },
           options: {
             responsive: true,
@@ -4799,13 +5004,13 @@
         });
       }
       
-      const categorySales = {};
+      const categorySalesHT = {};
       orders.forEach(order => {
         order.items.forEach(item => {
           const product = products.find(p => p.id === item.productId);
           if (product) {
             const cat = product.category;
-            categorySales[cat] = (categorySales[cat] || 0) + (item.quantity * item.price);
+            categorySalesHT[cat] = (categorySalesHT[cat] || 0) + (item.quantity * item.priceHT);
           }
         });
       });
@@ -4817,17 +5022,19 @@
           type: 'bar',
           data: {
             labels: ['Table', 'Lumières', 'Mariage', 'Ballons', 'Déco'],
-            datasets: [{
-              label: 'Ventes (FCFA)',
-              data: [
-                categorySales['table'] || 0,
-                categorySales['lumiere'] || 0,
-                categorySales['mariage'] || 0,
-                categorySales['ballon'] || 0,
-                categorySales['deco'] || 0
-              ],
-              backgroundColor: '#D4AF37'
-            }]
+            datasets: [
+              {
+                label: 'Ventes HT (FCFA)',
+                data: [
+                  categorySalesHT['table'] || 0,
+                  categorySalesHT['lumiere'] || 0,
+                  categorySalesHT['mariage'] || 0,
+                  categorySalesHT['ballon'] || 0,
+                  categorySalesHT['deco'] || 0
+                ],
+                backgroundColor: '#8B0000'
+              }
+            ]
           },
           options: {
             responsive: true,
@@ -4848,8 +5055,8 @@
           data: {
             labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
             datasets: [{
-              label: 'Chiffre d\'affaires',
-              data: monthlySales.map(v => v * 1000),
+              label: 'Chiffre d\'affaires TTC',
+              data: monthlySalesTTC.map(v => v * 1000),
               borderColor: '#D4AF37',
               backgroundColor: 'rgba(212, 175, 55, 0.1)',
               tension: 0.4,
@@ -5008,13 +5215,13 @@
         document.getElementById('adminInterface').style.display = 'block';
         
         initProducts();
-        initOrders();
+        initOrders(); // Commandes vides
         initEmployees();
         initPayments();
         initStockMovements();
-        initInvoices();
+        initInvoices(); // Factures vides
         
-        updateClientsFromOrders();
+        updateClientsFromOrders(); // Clients vides
         updateStats();
         updateOrdersTable();
         updateRecentOrders();
@@ -5037,39 +5244,6 @@
       document.getElementById('loginPage').style.display = 'flex';
       document.getElementById('adminInterface').style.display = 'none';
     }
-    
-    // ==================== SIMULATION DE NOUVELLES COMMANDES ====================
-    
-    function simulateNewOrder() {
-      const clients = [
-        { name: 'Aïssatou Niang', phone: '77 123 45 67', email: 'aissatou.n@email.com' },
-        { name: 'Moustapha Gueye', phone: '76 234 56 78', email: 'moustapha.g@email.com' },
-        { name: 'Fatimata Sarr', phone: '70 345 67 89', email: 'fatimata.s@email.com' }
-      ];
-      
-      const randomClient = clients[Math.floor(Math.random() * clients.length)];
-      const randomProducts = products.sort(() => 0.5 - Math.random()).slice(0, 2 + Math.floor(Math.random() * 3));
-      
-      const items = randomProducts.map(p => ({
-        productId: p.id,
-        name: p.name,
-        quantity: 1 + Math.floor(Math.random() * 3),
-        price: p.price,
-        image: p.image
-      }));
-      
-      const total = items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
-      
-      receiveNewOrder({
-        client: randomClient.name,
-        phone: randomClient.phone,
-        email: randomClient.email,
-        total: total,
-        items: items
-      });
-    }
-    
-    setInterval(simulateNewOrder, 30000);
     
     // ==================== RECHERCHE EN TEMPS RÉEL ====================
     
