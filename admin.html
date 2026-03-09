@@ -354,6 +354,31 @@
       color: #856404;
     }
     
+    .badge-devis {
+      background: #cce5ff;
+      color: #004085;
+    }
+    
+    .badge-devis-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .badge-devis-sent {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .badge-devis-cancelled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    .badge-devis-converted {
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+    
     /* Badges de stock */
     .badge-stock {
       padding: 5px 12px;
@@ -422,6 +447,16 @@
     .action-btn.add-stock:hover {
       background: #d4edda;
       color: #28a745;
+    }
+    
+    .action-btn.convert:hover {
+      background: #d4edda;
+      color: #28a745;
+    }
+    
+    .action-btn.invoice:hover {
+      background: #cce5ff;
+      color: #004085;
     }
     
     /* Forms */
@@ -545,26 +580,6 @@
     .modal-footer {
       padding: 20px 25px;
       border-top: 1px solid rgba(212,175,55,0.1);
-    }
-    
-    /* Charts */
-    .chart-container {
-      background: white;
-      border-radius: 20px;
-      padding: 15px;
-      box-shadow: 0 5px 15px var(--ombre-legere);
-      height: auto;
-      min-height: 280px;
-    }
-    
-    .chart-container h4 {
-      font-size: 1rem;
-      margin-bottom: 15px !important;
-    }
-    
-    #salesChart, #ordersStatusChart, #categorySalesChart, #revenueChart, #stockChart {
-      max-height: 220px !important;
-      width: 100% !important;
     }
     
     /* Tabs */
@@ -862,6 +877,21 @@
       transform: translateY(-2px);
     }
     
+    .btn-emeraude {
+      background: var(--vert-emeraude);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 10px;
+      transition: all 0.3s;
+    }
+    
+    .btn-emeraude:hover {
+      background: #004c3a;
+      color: white;
+      transform: translateY(-2px);
+    }
+    
     /* TVA Badge */
     .tva-badge {
       background: var(--vert-emeraude);
@@ -928,10 +958,10 @@
             <i class="fas fa-tachometer-alt"></i>
             <span>Tableau de bord</span>
           </a>
-          <a href="#" onclick="showSection('commandes', event)">
-            <i class="fas fa-shopping-cart"></i>
-            <span>Commandes</span>
-            <span class="notification-badge" id="pendingOrdersBadge">0</span>
+          <a href="#" onclick="showSection('devis', event)">
+            <i class="fas fa-file-invoice"></i>
+            <span>Demandes de devis</span>
+            <span class="notification-badge" id="devisPendingBadge">0</span>
           </a>
           <a href="#" onclick="showSection('produits', event)">
             <i class="fas fa-box"></i>
@@ -944,7 +974,7 @@
             <span class="notification-badge" id="stockAlertBadge">0</span>
           </a>
           <a href="#" onclick="showSection('factures', event)">
-            <i class="fas fa-file-invoice"></i>
+            <i class="fas fa-file-invoice-dollar"></i>
             <span>Factures</span>
           </a>
           <a href="#" onclick="showSection('clients', event)">
@@ -955,28 +985,14 @@
             <i class="fas fa-crown"></i>
             <span>Services</span>
           </a>
-          <a href="#" onclick="showSection('messages', event)">
-            <i class="fas fa-envelope"></i>
-            <span>Messages</span>
-            <span class="notification-badge" id="messagesBadge">0</span>
-          </a>
-          <a href="#" onclick="showSection('temoignages', event)">
-            <i class="fas fa-star"></i>
-            <span>Témoignages</span>
-          </a>
           <a href="#" onclick="showSection('equipe', event)">
             <i class="fas fa-user-tie"></i>
             <span>Équipe</span>
           </a>
-          <!-- NOUVEAU LIEN SALAIRES -->
           <a href="#" onclick="showSection('salaires', event)">
             <i class="fas fa-money-bill-wave"></i>
             <span>Salaires</span>
             <span class="notification-badge" id="salariesBadge">0</span>
-          </a>
-          <a href="#" onclick="showSection('liens', event)">
-            <i class="fas fa-link"></i>
-            <span>Liens & Pages</span>
           </a>
           
           <div class="menu-divider"></div>
@@ -984,10 +1000,6 @@
           <a href="#" onclick="showSection('parametres', event)">
             <i class="fas fa-cog"></i>
             <span>Paramètres</span>
-          </a>
-          <a href="#" onclick="showSection('statistiques', event)">
-            <i class="fas fa-chart-bar"></i>
-            <span>Statistiques</span>
           </a>
           <a href="#" onclick="handleLogout()">
             <i class="fas fa-sign-out-alt"></i>
@@ -1015,8 +1027,8 @@
           <div class="d-flex align-items-center">
             <i class="fas fa-shopping-cart me-2" style="color: var(--or-eclatant);"></i>
             <div>
-              <strong id="notificationTitle">Nouvelle commande</strong>
-              <p id="notificationMessage" class="small mb-0">Une nouvelle commande a été reçue</p>
+              <strong id="notificationTitle">Nouvelle demande</strong>
+              <p id="notificationMessage" class="small mb-0">Une nouvelle demande a été reçue</p>
             </div>
             <button class="btn-close ms-3" onclick="closeNotification()"></button>
           </div>
@@ -1026,6 +1038,17 @@
         <div id="section-dashboard" class="admin-section">
           <!-- Stats Cards -->
           <div class="row g-4 mb-4">
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statDevis">0</h3>
+                  <p>Demandes de devis</p>
+                </div>
+              </div>
+            </div>
             <div class="col-md-3">
               <div class="stat-card">
                 <div class="stat-icon">
@@ -1040,22 +1063,11 @@
             <div class="col-md-3">
               <div class="stat-card">
                 <div class="stat-icon">
-                  <i class="fas fa-shopping-cart"></i>
+                  <i class="fas fa-file-invoice-dollar"></i>
                 </div>
                 <div class="stat-info">
-                  <h3 id="statCommandes">0</h3>
-                  <p>Commandes totales</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="stat-card">
-                <div class="stat-icon">
-                  <i class="fas fa-clock"></i>
-                </div>
-                <div class="stat-info">
-                  <h3 id="statEnAttente">0</h3>
-                  <p>En attente</p>
+                  <h3 id="statFactures">0</h3>
+                  <p>Factures</p>
                 </div>
               </div>
             </div>
@@ -1072,123 +1084,145 @@
             </div>
           </div>
           
-          <div class="row g-4 mb-4">
-            <div class="col-lg-8">
-              <div class="chart-container">
-                <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Ventes mensuelles (en milliers FCFA)</h4>
-                <canvas id="salesChart" style="width: 100%; height: 220px;"></canvas>
-                <div class="mt-3 text-center" id="salesTotal">
-                  <strong>Total annuel: </strong> <span id="totalAnnualSales">0</span> FCFA
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4">
-              <div class="chart-container">
-                <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Statut des commandes</h4>
-                <canvas id="ordersStatusChart" style="width: 100%; height: 220px;"></canvas>
-                <div class="mt-3 text-center">
-                  <div><span class="badge-status badge-pending">En attente: <span id="statPendingCount">0</span></span></div>
-                  <div><span class="badge-status badge-confirmed">Confirmées: <span id="statConfirmedCount">0</span></span></div>
-                  <div><span class="badge-status badge-shipped">Expédiées: <span id="statShippedCount">0</span></span></div>
-                  <div><span class="badge-status badge-delivered">Livrées: <span id="statDeliveredCount">0</span></span></div>
-                  <div><span class="badge-status badge-cancelled">Annulées: <span id="statCancelledCount">0</span></span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Dernières commandes -->
+          <!-- Dernières demandes de devis -->
           <div class="admin-table">
             <div class="table-header">
-              <h4>Dernières commandes</h4>
-              <a href="#" onclick="showSection('commandes', event)" class="btn btn-or btn-sm">Voir tout</a>
+              <h4>Dernières demandes de devis</h4>
+              <a href="#" onclick="showSection('devis', event)" class="btn btn-or btn-sm">Voir tout</a>
             </div>
-            <table id="recentOrdersTable" class="display nowrap" style="width:100%">
+            <table id="recentDevisTable" class="display nowrap" style="width:100%">
               <thead>
                 <tr>
-                  <th>N° Commande</th>
+                  <th>Référence</th>
                   <th>Client</th>
-                  <th>Total</th>
+                  <th>Produit</th>
+                  <th>Téléphone</th>
                   <th>Date</th>
                   <th>Statut</th>
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody id="recentOrdersList">
-                <!-- Les commandes seront insérées ici dynamiquement -->
+              <tbody id="recentDevisList">
+                <!-- Les devis seront insérés ici dynamiquement -->
               </tbody>
             </table>
           </div>
           
-          <!-- Produits en rupture -->
+          <!-- Dernières factures -->
           <div class="admin-table">
             <div class="table-header">
-              <h4>Produits en stock critique</h4>
-              <a href="#" onclick="showSection('stock', event)" class="btn btn-or btn-sm">Gérer le stock</a>
+              <h4>Dernières factures</h4>
+              <a href="#" onclick="showSection('factures', event)" class="btn btn-or btn-sm">Voir tout</a>
             </div>
-            <table id="lowStockTable" class="display nowrap" style="width:100%">
+            <table id="recentInvoicesTable" class="display nowrap" style="width:100%">
               <thead>
                 <tr>
-                  <th>Image</th>
-                  <th>Produit</th>
-                  <th>Catégorie</th>
-                  <th>Stock actuel</th>
-                  <th>Stock minimum</th>
+                  <th>N° Facture</th>
+                  <th>Client</th>
+                  <th>Montant</th>
+                  <th>Date</th>
+                  <th>Statut</th>
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody id="lowStockList">
-                <!-- Les produits seront insérés ici -->
+              <tbody id="recentInvoicesList">
+                <!-- Les factures seront insérées ici -->
               </tbody>
             </table>
           </div>
         </div>
         
-        <!-- ==================== COMMANDES ==================== -->
-        <div id="section-commandes" class="admin-section" style="display: none;">
+        <!-- ==================== DEMANDES DE DEVIS ==================== -->
+        <div id="section-devis" class="admin-section" style="display: none;">
           <div class="admin-tabs">
-            <div class="admin-tab active" onclick="filterOrders('all', event)">Toutes (<span id="countAll">0</span>)</div>
-            <div class="admin-tab" onclick="filterOrders('pending', event)">En attente (<span id="countPending">0</span>)</div>
-            <div class="admin-tab" onclick="filterOrders('confirmed', event)">Confirmées (<span id="countConfirmed">0</span>)</div>
-            <div class="admin-tab" onclick="filterOrders('shipped', event)">Expédiées (<span id="countShipped">0</span>)</div>
-            <div class="admin-tab" onclick="filterOrders('delivered', event)">Livrées (<span id="countDelivered">0</span>)</div>
-            <div class="admin-tab" onclick="filterOrders('cancelled', event)">Annulées (<span id="countCancelled">0</span>)</div>
+            <div class="admin-tab active" onclick="filterDevis('all', event)">Toutes (<span id="devisCountAll">0</span>)</div>
+            <div class="admin-tab" onclick="filterDevis('pending', event)">En attente (<span id="devisCountPending">0</span>)</div>
+            <div class="admin-tab" onclick="filterDevis('sent', event)">Devis envoyés (<span id="devisCountSent">0</span>)</div>
+            <div class="admin-tab" onclick="filterDevis('converted', event)">Converties (<span id="devisCountConverted">0</span>)</div>
+            <div class="admin-tab" onclick="filterDevis('cancelled', event)">Annulées (<span id="devisCountCancelled">0</span>)</div>
+          </div>
+          
+          <div class="row g-4 mb-4">
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statTotalDevis">0</h3>
+                  <p>Total demandes</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-clock" style="color: #ffc107;"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statPendingDevis">0</h3>
+                  <p>En attente</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statSentDevis">0</h3>
+                  <p>Devis envoyés</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statConversionRate">0%</h3>
+                  <p>Taux de conversion</p>
+                </div>
+              </div>
+            </div>
           </div>
           
           <div class="admin-table">
             <div class="table-header">
-              <h4>Gestion des commandes</h4>
+              <h4>Gestion des demandes de devis</h4>
               <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <div class="search-box">
                   <i class="fas fa-search"></i>
-                  <input type="text" id="searchOrder" class="form-control" placeholder="Rechercher..." style="width: 250px;">
+                  <input type="text" id="searchDevis" class="form-control" placeholder="Rechercher..." style="width: 250px;">
                 </div>
-                <button class="btn btn-or btn-sm" onclick="exportOrders()">
+                <button class="btn btn-or btn-sm" onclick="exportDevis()">
                   <i class="fas fa-download me-1"></i> Exporter
                 </button>
-                <button class="btn btn-rouge btn-sm" onclick="generateReport()">
+                <button class="btn btn-rouge btn-sm" onclick="generateDevisReport()">
                   <i class="fas fa-file-pdf me-1"></i> Rapport
                 </button>
               </div>
             </div>
-            <table id="ordersTable" class="display nowrap" style="width:100%">
+            <table id="devisTable" class="display nowrap" style="width:100%">
               <thead>
                 <tr>
-                  <th>N° Commande</th>
+                  <th>Référence</th>
+                  <th>Date</th>
                   <th>Client</th>
                   <th>Téléphone</th>
                   <th>Email</th>
-                  <th>Total HT</th>
-                  <th>TVA (18%)</th>
-                  <th>Total TTC</th>
-                  <th>Date</th>
+                  <th>Produit</th>
+                  <th>Quantité</th>
+                  <th>Date événement</th>
+                  <th>Budget</th>
                   <th>Statut</th>
-                  <th>Paiement</th>
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody id="ordersList">
-                <!-- Les commandes seront insérées ici dynamiquement -->
+              <tbody id="devisList">
+                <!-- Les demandes de devis seront insérées ici -->
               </tbody>
             </table>
           </div>
@@ -1403,6 +1437,9 @@
             <div class="table-header">
               <h4>Gestion des stocks <span class="tva-badge">TVA 18% incluse</span></h4>
               <div style="display: flex; gap: 10px;">
+                <button class="btn btn-emeraude btn-sm" onclick="showAddStockModal()">
+                  <i class="fas fa-plus me-1"></i> Nouveau stock
+                </button>
                 <button class="btn btn-or btn-sm" onclick="exportStockReport()">
                   <i class="fas fa-download me-1"></i> Exporter
                 </button>
@@ -1462,16 +1499,70 @@
         <!-- ==================== FACTURES ==================== -->
         <div id="section-factures" class="admin-section" style="display: none;">
           <div class="admin-tabs">
-            <div class="admin-tab active" onclick="filterInvoices('all', event)">Toutes les factures</div>
-            <div class="admin-tab" onclick="filterInvoices('paid', event)">Payées</div>
-            <div class="admin-tab" onclick="filterInvoices('unpaid', event)">Impayées</div>
+            <div class="admin-tab active" onclick="filterInvoices('all', event)">Toutes les factures (<span id="invoicesCountAll">0</span>)</div>
+            <div class="admin-tab" onclick="filterInvoices('paid', event)">Payées (<span id="invoicesCountPaid">0</span>)</div>
+            <div class="admin-tab" onclick="filterInvoices('unpaid', event)">Impayées (<span id="invoicesCountUnpaid">0</span>)</div>
+          </div>
+          
+          <div class="row g-4 mb-4">
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statTotalInvoices">0</h3>
+                  <p>Total factures</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statPaidInvoices">0</h3>
+                  <p>Payées</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-clock" style="color: #ffc107;"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statUnpaidInvoices">0</h3>
+                  <p>Impayées</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statTotalAmount">0</h3>
+                  <p>Montant total TTC</p>
+                </div>
+              </div>
+            </div>
           </div>
           
           <div class="admin-table">
             <div class="table-header">
               <h4>Gestion des factures <span class="tva-badge">TVA 18%</span></h4>
-              <div style="display: flex; gap: 10px;">
-                <button class="btn btn-or btn-sm" onclick="generateInvoiceReport()">
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div class="search-box">
+                  <i class="fas fa-search"></i>
+                  <input type="text" id="searchInvoice" class="form-control" placeholder="Rechercher..." style="width: 250px;">
+                </div>
+                <button class="btn btn-or btn-sm" onclick="showAddInvoiceModal()">
+                  <i class="fas fa-plus me-1"></i> Nouvelle facture
+                </button>
+                <button class="btn btn-rouge btn-sm" onclick="generateInvoiceReport()">
                   <i class="fas fa-file-pdf me-1"></i> Rapport
                 </button>
               </div>
@@ -1480,8 +1571,9 @@
               <thead>
                 <tr>
                   <th>N° Facture</th>
-                  <th>N° Commande</th>
                   <th>Client</th>
+                  <th>Téléphone</th>
+                  <th>Email</th>
                   <th>Montant HT</th>
                   <th>TVA (18%)</th>
                   <th>Montant TTC</th>
@@ -1499,12 +1591,67 @@
         
         <!-- ==================== CLIENTS ==================== -->
         <div id="section-clients" class="admin-section" style="display: none;">
+          <div class="row g-4 mb-4">
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statTotalClients">0</h3>
+                  <p>Total clients</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statClientsWithDevis">0</h3>
+                  <p>Avec demandes</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statClientsWithInvoices">0</h3>
+                  <p>Avec factures</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-info">
+                  <h3 id="statTotalSpent">0</h3>
+                  <p>Total dépensé</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <div class="admin-table">
             <div class="table-header">
               <h4>Liste des clients</h4>
-              <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchClient" class="form-control" placeholder="Rechercher un client..." style="width: 250px;">
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div class="search-box">
+                  <i class="fas fa-search"></i>
+                  <input type="text" id="searchClient" class="form-control" placeholder="Rechercher un client..." style="width: 250px;">
+                </div>
+                <button class="btn btn-or btn-sm" onclick="showAddClientModal()">
+                  <i class="fas fa-user-plus me-1"></i> Nouveau client
+                </button>
+                <button class="btn btn-rouge btn-sm" onclick="exportClients()">
+                  <i class="fas fa-download me-1"></i> Exporter
+                </button>
               </div>
             </div>
             <table id="clientsTable" class="display nowrap" style="width:100%">
@@ -1513,9 +1660,10 @@
                   <th>Nom</th>
                   <th>Téléphone</th>
                   <th>Email</th>
-                  <th>Commandes</th>
+                  <th>Demandes devis</th>
+                  <th>Factures</th>
                   <th>Total dépensé</th>
-                  <th>Dernière commande</th>
+                  <th>Dernière activité</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -1576,96 +1724,21 @@
           </div>
         </div>
         
-        <!-- ==================== MESSAGES ==================== -->
-        <div id="section-messages" class="admin-section" style="display: none;">
+        <!-- ==================== ÉQUIPE ==================== -->
+        <div id="section-equipe" class="admin-section" style="display: none;">
           <div class="admin-tabs">
-            <div class="admin-tab active">Tous les messages</div>
-            <div class="admin-tab">Non lus</div>
+            <div class="admin-tab active">Membres de l'équipe</div>
+            <div class="admin-tab">Ajouter un membre</div>
           </div>
           
           <div class="admin-table">
-            <table class="display nowrap" style="width:100%">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Nom</th>
-                  <th>Email</th>
-                  <th>Sujet</th>
-                  <th>Statut</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>23/02/2026</td>
-                  <td>Fatou Diop</td>
-                  <td>fatou.diop@email.com</td>
-                  <td>Question sur la livraison</td>
-                  <td><span class="badge-status badge-pending">Non lu</span></td>
-                  <td>
-                    <button class="action-btn"><i class="fas fa-eye"></i></button>
-                    <button class="action-btn"><i class="fas fa-reply"></i></button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>22/02/2026</td>
-                  <td>Amadou Fall</td>
-                  <td>amadou.fall@email.com</td>
-                  <td>Demande de devis</td>
-                  <td><span class="badge-status badge-active">Lu</span></td>
-                  <td>
-                    <button class="action-btn"><i class="fas fa-eye"></i></button>
-                    <button class="action-btn"><i class="fas fa-reply"></i></button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        
-        <!-- ==================== TÉMOIGNAGES ==================== -->
-        <div id="section-temoignages" class="admin-section" style="display: none;">
-          <div class="admin-table">
-            <div class="table-header">
-              <h4>Témoignages clients</h4>
-              <button class="btn btn-or btn-sm">Ajouter</button>
-            </div>
-            <table class="display nowrap" style="width:100%">
-              <thead>
-                <tr>
-                  <th>Client</th>
-                  <th>Note</th>
-                  <th>Témoignage</th>
-                  <th>Date</th>
-                  <th>Statut</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Mariama Ndiaye</td>
-                  <td>5 ★</td>
-                  <td>Excellent service, décoration magnifique !</td>
-                  <td>15/02/2026</td>
-                  <td><span class="badge-status badge-active">Publié</span></td>
-                  <td>
-                    <button class="action-btn"><i class="fas fa-edit"></i></button>
-                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        
-        <!-- ==================== ÉQUIPE ==================== -->
-        <div id="section-equipe" class="admin-section" style="display: none;">
-          <div class="admin-table">
             <div class="table-header">
               <h4>Membres de l'équipe</h4>
-              <button class="btn btn-or btn-sm">Ajouter</button>
+              <button class="btn btn-or btn-sm" onclick="showAddTeamMemberModal()">
+                <i class="fas fa-user-plus me-1"></i> Ajouter un membre
+              </button>
             </div>
-            <table class="display nowrap" style="width:100%">
+            <table id="teamTable" class="display nowrap" style="width:100%">
               <thead>
                 <tr>
                   <th>Photo</th>
@@ -1675,23 +1748,14 @@
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td><img src="https://randomuser.me/api/portraits/women/44.jpg" style="width: 40px; height: 40px; border-radius: 50%;"></td>
-                  <td>Mariama Ndiaye</td>
-                  <td>Directrice Créative</td>
-                  <td>10 ans d'expérience en décoration</td>
-                  <td>
-                    <button class="action-btn"><i class="fas fa-edit"></i></button>
-                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                  </td>
-                </tr>
+              <tbody id="teamList">
+                <!-- Les membres de l'équipe seront insérés ici -->
               </tbody>
             </table>
           </div>
         </div>
         
-        <!-- ==================== NOUVELLE SECTION SALAIRES ==================== -->
+        <!-- ==================== SALAIRES ==================== -->
         <div id="section-salaires" class="admin-section" style="display: none;">
           <!-- En-tête avec statistiques -->
           <div class="row g-4 mb-4">
@@ -1953,234 +2017,6 @@
           </div>
         </div>
         
-        <!-- ==================== LIENS & PAGES ==================== -->
-        <div id="section-liens" class="admin-section" style="display: none;">
-          <div class="admin-tabs">
-            <div class="admin-tab active" onclick="showLinksTab('menu', event)">Menu principal</div>
-            <div class="admin-tab" onclick="showLinksTab('footer', event)">Footer</div>
-            <div class="admin-tab" onclick="showLinksTab('social', event)">Réseaux sociaux</div>
-            <div class="admin-tab" onclick="showLinksTab('pages', event)">Pages du site</div>
-          </div>
-          
-          <!-- Menu principal -->
-          <div id="links-menu" class="links-tab-content">
-            <div class="admin-table">
-              <div class="table-header">
-                <h4>Liens du menu principal</h4>
-                <button class="btn btn-or btn-sm" onclick="addMenuItem()">
-                  <i class="fas fa-plus me-1"></i> Ajouter un lien
-                </button>
-              </div>
-              <table class="display nowrap" style="width:100%">
-                <thead>
-                  <tr>
-                    <th>Ordre</th>
-                    <th>Titre</th>
-                    <th>Lien</th>
-                    <th>Page</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="menuLinksList">
-                  <tr>
-                    <td>1</td>
-                    <td>Accueil</td>
-                    <td>index.html</td>
-                    <td><span class="badge-status badge-active">Active</span></td>
-                    <td>
-                      <button class="action-btn"><i class="fas fa-edit"></i></button>
-                      <button class="action-btn"><i class="fas fa-arrow-up"></i></button>
-                      <button class="action-btn"><i class="fas fa-arrow-down"></i></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Boutique</td>
-                    <td>boutique.html</td>
-                    <td><span class="badge-status badge-active">Active</span></td>
-                    <td>
-                      <button class="action-btn"><i class="fas fa-edit"></i></button>
-                      <button class="action-btn"><i class="fas fa-arrow-up"></i></button>
-                      <button class="action-btn"><i class="fas fa-arrow-down"></i></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Services</td>
-                    <td>services.html</td>
-                    <td><span class="badge-status badge-active">Active</span></td>
-                    <td>
-                      <button class="action-btn"><i class="fas fa-edit"></i></button>
-                      <button class="action-btn"><i class="fas fa-arrow-up"></i></button>
-                      <button class="action-btn"><i class="fas fa-arrow-down"></i></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>À propos</td>
-                    <td>apropos.html</td>
-                    <td><span class="badge-status badge-active">Active</span></td>
-                    <td>
-                      <button class="action-btn"><i class="fas fa-edit"></i></button>
-                      <button class="action-btn"><i class="fas fa-arrow-up"></i></button>
-                      <button class="action-btn"><i class="fas fa-arrow-down"></i></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>5</td>
-                    <td>Contact</td>
-                    <td>contact.html</td>
-                    <td><span class="badge-status badge-active">Active</span></td>
-                    <td>
-                      <button class="action-btn"><i class="fas fa-edit"></i></button>
-                      <button class="action-btn"><i class="fas fa-arrow-up"></i></button>
-                      <button class="action-btn"><i class="fas fa-arrow-down"></i></button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          
-          <!-- Footer -->
-          <div id="links-footer" class="links-tab-content" style="display: none;">
-            <div class="admin-table">
-              <div class="table-header">
-                <h4>Liens du footer</h4>
-                <button class="btn btn-or btn-sm" onclick="addFooterLink()">
-                  <i class="fas fa-plus me-1"></i> Ajouter un lien
-                </button>
-              </div>
-              <table class="display nowrap" style="width:100%">
-                <thead>
-                  <tr>
-                    <th>Colonne</th>
-                    <th>Titre</th>
-                    <th>Lien</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Colonne 1</td>
-                    <td>Accueil</td>
-                    <td>index.html</td>
-                    <td>
-                      <button class="action-btn"><i class="fas fa-edit"></i></button>
-                      <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Colonne 1</td>
-                    <td>Boutique</td>
-                    <td>boutique.html</td>
-                    <td>
-                      <button class="action-btn"><i class="fas fa-edit"></i></button>
-                      <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Colonne 2</td>
-                    <td>Contact</td>
-                    <td>contact.html</td>
-                    <td>
-                      <button class="action-btn"><i class="fas fa-edit"></i></button>
-                      <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          
-          <!-- Réseaux sociaux -->
-          <div id="links-social" class="links-tab-content" style="display: none;">
-            <div class="admin-table">
-              <div class="table-header">
-                <h4>Réseaux sociaux</h4>
-                <button class="btn btn-or btn-sm" onclick="addSocialLink()">
-                  <i class="fas fa-plus me-1"></i> Ajouter
-                </button>
-              </div>
-              <table class="display nowrap" style="width:100%">
-                <thead>
-                  <tr>
-                    <th>Réseau</th>
-                    <th>URL</th>
-                    <th>Icône</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><i class="fab fa-facebook-f me-2"></i> Facebook</td>
-                    <td>https://facebook.com/njeeygu</td>
-                    <td><i class="fab fa-facebook-f"></i></td>
-                    <td>
-                      <button class="action-btn"><i class="fas fa-edit"></i></button>
-                      <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><i class="fab fa-instagram me-2"></i> Instagram</td>
-                    <td>https://instagram.com/njeeygu</td>
-                    <td><i class="fab fa-instagram"></i></td>
-                    <td>
-                      <button class="action-btn"><i class="fas fa-edit"></i></button>
-                      <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          
-          <!-- Pages du site -->
-          <div id="links-pages" class="links-tab-content" style="display: none;">
-            <div class="admin-table">
-              <div class="table-header">
-                <h4>Pages du site</h4>
-                <button class="btn btn-or btn-sm" onclick="addPage()">
-                  <i class="fas fa-plus me-1"></i> Nouvelle page
-                </button>
-              </div>
-              <table class="display nowrap" style="width:100%">
-                <thead>
-                  <tr>
-                    <th>Titre</th>
-                    <th>URL</th>
-                    <th>Statut</th>
-                    <th>Dernière modification</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Accueil</td>
-                    <td>/index.html</td>
-                    <td><span class="badge-status badge-active">Publiée</span></td>
-                    <td>23/02/2026</td>
-                    <td>
-                      <button class="action-btn"><i class="fas fa-edit"></i></button>
-                      <button class="action-btn"><i class="fas fa-eye"></i></button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Boutique</td>
-                    <td>/boutique.html</td>
-                    <td><span class="badge-status badge-active">Publiée</span></td>
-                    <td>23/02/2026</td>
-                    <td>
-                      <button class="action-btn"><i class="fas fa-edit"></i></button>
-                      <button class="action-btn"><i class="fas fa-eye"></i></button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        
         <!-- ==================== PARAMÈTRES ==================== -->
         <div id="section-parametres" class="admin-section" style="display: none;">
           <div class="admin-tabs">
@@ -2242,97 +2078,269 @@
             </form>
           </div>
         </div>
-        
-        <!-- ==================== STATISTIQUES ==================== -->
-        <div id="section-statistiques" class="admin-section" style="display: none;">
-          <div class="row g-4">
-            <div class="col-md-6">
-              <div class="chart-container">
-                <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Ventes par catégorie</h4>
-                <canvas id="categorySalesChart" style="width: 100%; height: 220px;"></canvas>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="chart-container">
-                <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Évolution du chiffre d'affaires</h4>
-                <canvas id="revenueChart" style="width: 100%; height: 220px;"></canvas>
-              </div>
-            </div>
-          </div>
-          <div class="row g-4 mt-2">
-            <div class="col-md-6">
-              <div class="chart-container">
-                <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Distribution des stocks</h4>
-                <canvas id="stockChart" style="width: 100%; height: 220px;"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal Détails Commande -->
-  <div class="modal fade" id="orderDetailsModal" tabindex="-1">
+  <!-- Modal Détails Devis -->
+  <div class="modal fade" id="devisDetailsModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Détails de la commande <span id="modalOrderId"></span></h5>
+          <h5 class="modal-title">Détails de la demande de devis <span id="modalDevisId"></span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="row">
             <div class="col-md-6">
               <h6 style="color: var(--rouge-profond);">Informations client</h6>
-              <p><strong>Nom :</strong> <span id="modalClientName"></span></p>
-              <p><strong>Téléphone :</strong> <span id="modalClientPhone"></span></p>
-              <p><strong>Email :</strong> <span id="modalClientEmail"></span></p>
+              <p><strong>Nom :</strong> <span id="modalDevisName"></span></p>
+              <p><strong>Téléphone :</strong> <span id="modalDevisPhone"></span></p>
+              <p><strong>Email :</strong> <span id="modalDevisEmail"></span></p>
             </div>
             <div class="col-md-6">
-              <h6 style="color: var(--rouge-profond);">Informations commande</h6>
-              <p><strong>Date :</strong> <span id="modalOrderDate"></span></p>
-              <p><strong>Total HT :</strong> <span id="modalOrderTotalHT"></span></p>
-              <p><strong>TVA (18%) :</strong> <span id="modalOrderTVA"></span></p>
-              <p><strong>Total TTC :</strong> <span id="modalOrderTotalTTC"></span></p>
-              <p><strong>Statut :</strong> <span id="modalOrderStatus"></span></p>
-              <p><strong>Paiement :</strong> <span id="modalPaymentStatus"></span></p>
+              <h6 style="color: var(--rouge-profond);">Détails de la demande</h6>
+              <p><strong>Date demande :</strong> <span id="modalDevisDate"></span></p>
+              <p><strong>Quantité :</strong> <span id="modalDevisQuantity"></span></p>
+              <p><strong>Date événement :</strong> <span id="modalDevisEventDate"></span></p>
+              <p><strong>Budget :</strong> <span id="modalDevisBudget"></span></p>
             </div>
           </div>
           
-          <h6 style="color: var(--rouge-profond); margin-top: 20px;">Produits commandés</h6>
-          <div id="modalOrderItems" class="order-details">
-            <!-- Les produits seront insérés ici -->
+          <div class="row mt-3">
+            <div class="col-12">
+              <h6 style="color: var(--rouge-profond);">Produit concerné</h6>
+              <div id="modalDevisProduct" class="p-3" style="background: #f8f1e0; border-radius: 10px;">
+                <!-- Informations produit -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="row mt-3">
+            <div class="col-12">
+              <h6 style="color: var(--rouge-profond);">Message du client</h6>
+              <p id="modalDevisMessage" class="p-3" style="background: #f9f9f9; border-radius: 10px;"></p>
+            </div>
           </div>
           
           <div class="row mt-3">
             <div class="col-md-6">
-              <label><strong>Modifier le statut :</strong></label>
-              <select id="modalStatusSelect" class="form-select" onchange="updateOrderStatus(this.value)">
+              <label><strong>Statut du devis :</strong></label>
+              <select id="modalDevisStatusSelect" class="form-select" onchange="updateDevisStatus(this.value)">
                 <option value="pending">En attente</option>
-                <option value="confirmed">Confirmée</option>
-                <option value="shipped">Expédiée</option>
-                <option value="delivered">Livrée</option>
+                <option value="sent">Devis envoyé</option>
+                <option value="converted">Convertie en facture</option>
                 <option value="cancelled">Annulée</option>
               </select>
             </div>
             <div class="col-md-6">
-              <label><strong>Statut de paiement :</strong></label>
-              <select id="modalPaymentSelect" class="form-select" onchange="updatePaymentStatus(this.value)">
-                <option value="unpaid">Impayé</option>
-                <option value="paid">Payé</option>
-                <option value="partial">Paiement partiel</option>
-              </select>
+              <label><strong>Notes internes :</strong></label>
+              <textarea id="modalDevisNotes" class="form-control" rows="2" placeholder="Ajouter une note..."></textarea>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-or" onclick="generateInvoice()">
-            <i class="fas fa-file-invoice me-2"></i>Générer facture
+          <button type="button" class="btn btn-emeraude" onclick="convertDevisToInvoice()">
+            <i class="fas fa-file-invoice-dollar me-2"></i>Générer facture
           </button>
-          <button type="button" class="btn btn-or" onclick="contactCustomerFromModal()">
-            <i class="fab fa-whatsapp me-2"></i>Contacter
+          <button type="button" class="btn btn-or" onclick="sendDevisQuote()">
+            <i class="fab fa-whatsapp me-2"></i>Envoyer devis
           </button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Ajouter Facture -->
+  <div class="modal fade" id="addInvoiceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Créer une nouvelle facture</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addInvoiceForm" onsubmit="addInvoice(event)">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Client *</label>
+                  <select class="form-select" id="invoiceClient" required onchange="updateClientInfo()">
+                    <option value="">Sélectionnez un client</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Nouveau client ?</label>
+                  <button type="button" class="btn btn-or btn-sm" onclick="showAddClientModal()">
+                    <i class="fas fa-user-plus me-1"></i> Ajouter
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Téléphone</label>
+                  <input type="text" class="form-control" id="invoicePhone" readonly>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Email</label>
+                  <input type="email" class="form-control" id="invoiceEmail" readonly>
+                </div>
+              </div>
+            </div>
+            
+            <h5 class="mt-4" style="color: var(--rouge-profond);">Articles</h5>
+            <div id="invoiceItems">
+              <div class="row mb-3 invoice-item">
+                <div class="col-md-5">
+                  <select class="form-select" name="productId" required onchange="updateItemPrice(this)">
+                    <option value="">Sélectionnez un produit</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <input type="number" class="form-control" name="quantity" placeholder="Quantité" min="1" value="1" required>
+                </div>
+                <div class="col-md-3">
+                  <input type="text" class="form-control" name="price" placeholder="Prix HT" readonly>
+                </div>
+                <div class="col-md-1">
+                  <button type="button" class="action-btn delete" onclick="removeInvoiceItem(this)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <button type="button" class="btn btn-or btn-sm mb-4" onclick="addInvoiceItem()">
+              <i class="fas fa-plus me-1"></i> Ajouter un article
+            </button>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Date de facture</label>
+                  <input type="date" class="form-control" id="invoiceDate">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Date d'échéance</label>
+                  <input type="date" class="form-control" id="invoiceDueDate">
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Statut de paiement</label>
+                  <select class="form-select" id="invoicePaymentStatus">
+                    <option value="unpaid">Impayée</option>
+                    <option value="paid">Payée</option>
+                    <option value="partial">Paiement partiel</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Mode de paiement</label>
+                  <select class="form-select" id="invoicePaymentMethod">
+                    <option value="especes">Espèces</option>
+                    <option value="carte">Carte bancaire</option>
+                    <option value="virement">Virement</option>
+                    <option value="wave">Wave</option>
+                    <option value="orange_money">Orange Money</option>
+                    <option value="free_money">Free Money</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="text-end mt-4">
+              <button type="submit" class="btn btn-rouge">Créer la facture</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Ajouter Client -->
+  <div class="modal fade" id="addClientModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Ajouter un nouveau client</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addClientForm" onsubmit="addClient(event)">
+            <div class="form-group">
+              <label>Nom complet *</label>
+              <input type="text" class="form-control" id="clientName" required>
+            </div>
+            
+            <div class="form-group">
+              <label>Téléphone *</label>
+              <input type="text" class="form-control" id="clientPhone" placeholder="77 123 45 67" required>
+            </div>
+            
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" class="form-control" id="clientEmail" placeholder="client@email.com">
+            </div>
+            
+            <div class="form-group">
+              <label>Adresse</label>
+              <textarea class="form-control" id="clientAddress" rows="2"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-rouge">Ajouter le client</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Ajouter Membre Équipe -->
+  <div class="modal fade" id="addTeamMemberModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Ajouter un membre à l'équipe</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addTeamMemberForm" onsubmit="addTeamMember(event)">
+            <div class="form-group">
+              <label>Nom complet *</label>
+              <input type="text" class="form-control" id="memberName" required>
+            </div>
+            
+            <div class="form-group">
+              <label>Poste *</label>
+              <input type="text" class="form-control" id="memberPosition" required>
+            </div>
+            
+            <div class="form-group">
+              <label>Bio / Description</label>
+              <textarea class="form-control" id="memberBio" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label>Photo URL</label>
+              <input type="url" class="form-control" id="memberPhoto" placeholder="https://...">
+            </div>
+            
+            <button type="submit" class="btn btn-rouge">Ajouter le membre</button>
+          </form>
         </div>
       </div>
     </div>
@@ -2381,10 +2389,9 @@
           <div class="form-group">
             <label>Raison du mouvement</label>
             <select class="form-select" id="stockModalReason">
-              <option value="commande">Commande client</option>
               <option value="reception">Réception fournisseur</option>
               <option value="ajustement">Ajustement inventaire</option>
-              <option value="retour">Retour client</option>
+              <option value="retour">Retour</option>
               <option value="autre">Autre</option>
             </select>
           </div>
@@ -2397,54 +2404,6 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
           <button type="button" class="btn btn-rouge" onclick="updateStock()">Mettre à jour</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Facture -->
-  <div class="modal fade" id="invoiceModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Facture <span id="invoiceModalId"></span></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div id="invoiceContent" class="invoice-box">
-            <!-- La facture sera générée ici dynamiquement -->
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-or" onclick="downloadInvoicePDF()">
-            <i class="fas fa-download me-2"></i>Télécharger PDF
-          </button>
-          <button type="button" class="btn btn-or" onclick="printInvoice()">
-            <i class="fas fa-print me-2"></i>Imprimer
-          </button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Ajouter Catégorie -->
-  <div class="modal fade" id="addCategoryModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Ajouter une catégorie</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label>Nom de la catégorie</label>
-            <input type="text" class="form-control" id="newCategoryName" placeholder="Ex: Nouveautés">
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-          <button type="button" class="btn btn-rouge" onclick="addCategory()">Ajouter</button>
         </div>
       </div>
     </div>
@@ -2484,9 +2443,7 @@
             <label>Raison</label>
             <select class="form-select" id="movementReason">
               <option value="reception">Réception fournisseur</option>
-              <option value="commande">Commande client</option>
               <option value="retour_fournisseur">Retour fournisseur</option>
-              <option value="retour_client">Retour client</option>
               <option value="inventaire">Ajustement inventaire</option>
               <option value="perte">Perte/Détérioration</option>
               <option value="autre">Autre</option>
@@ -2506,33 +2463,52 @@
     </div>
   </div>
 
+  <!-- Modal Visualisation Facture -->
+  <div class="modal fade" id="invoiceModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Facture <span id="invoiceModalId"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="invoiceContent" class="invoice-box">
+            <!-- Le contenu de la facture sera généré ici -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-or" onclick="downloadInvoicePDF()">
+            <i class="fas fa-download me-2"></i> Télécharger PDF
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ==================== CONSTANTES ====================
     const TVA_RATE = 0.18; // 18%
-    
-    // ==================== DONNÉES ====================
-    
-    // Clés pour le stockage localStorage
-    const STORAGE_KEY = 'njeeygu_orders';
+    const DEVIS_KEY = 'njeeygu_devis';
     const PRODUCTS_KEY = 'njeeygu_products';
     const INVOICES_KEY = 'njeeygu_invoices';
     const CLIENTS_KEY = 'njeeygu_clients';
     const STOCK_MOVEMENTS_KEY = 'njeeygu_stock_movements';
     const EMPLOYEES_KEY = 'njeeygu_employees';
     const PAYMENTS_KEY = 'njeeygu_payments';
-    const PAYSLIPS_KEY = 'njeeygu_payslips';
+    const TEAM_KEY = 'njeeygu_team';
     
     // Données
-    let orders = [];
+    let devis = [];
     let products = [];
     let invoices = [];
     let clients = [];
     let stockMovements = [];
     let employees = [];
     let payments = [];
-    let payslips = [];
+    let team = [];
     
-    let currentOrderId = null;
+    let currentDevisId = null;
     let currentInvoiceId = null;
     let currentStockProductId = null;
     
@@ -2552,6 +2528,94 @@
       document.getElementById('productPriceTTC').value = Math.round(priceTTC).toLocaleString();
     }
     
+    // ==================== INITIALISATION DES DEVIS ====================
+    
+    function initDevis() {
+      const stored = localStorage.getItem(DEVIS_KEY);
+      if (stored) {
+        try {
+          devis = JSON.parse(stored);
+          devis.forEach(d => {
+            if (!d.status) d.status = 'pending';
+            if (!d.notes) d.notes = '';
+          });
+        } catch (e) {
+          console.error('Erreur parsing devis:', e);
+          devis = [];
+        }
+      } else {
+        devis = [
+          {
+            id: 'DEV-2026-001',
+            date: new Date(2026, 1, 15).toISOString(),
+            type: 'Devis personnalisé',
+            product: {
+              id: 1,
+              name: 'Centre de table Royal',
+              category: 'table'
+            },
+            customerInfo: {
+              name: 'Aïssatou Dieng',
+              phone: '77 123 45 67',
+              email: 'aissatou.d@email.com',
+              quantity: 10,
+              eventDate: '2026-04-20',
+              budget: '250000',
+              message: 'Je souhaiterais un devis pour 10 centres de table pour un mariage en avril.'
+            },
+            status: 'pending',
+            notes: '',
+            timestamp: new Date(2026, 1, 15).toISOString()
+          },
+          {
+            id: 'DEV-2026-002',
+            date: new Date(2026, 1, 18).toISOString(),
+            type: 'Devis personnalisé',
+            product: {
+              id: 2,
+              name: 'Guirlande Dorée',
+              category: 'lumiere'
+            },
+            customerInfo: {
+              name: 'Mamadou Diallo',
+              phone: '78 987 65 43',
+              email: 'mamadou.d@email.com',
+              quantity: 5,
+              eventDate: '2026-05-05',
+              budget: '100000',
+              message: 'Besoin de guirlandes pour une soirée d\'entreprise.'
+            },
+            status: 'pending',
+            notes: '',
+            timestamp: new Date(2026, 1, 18).toISOString()
+          },
+          {
+            id: 'DEV-2026-003',
+            date: new Date(2026, 1, 20).toISOString(),
+            type: 'Devis personnalisé',
+            product: {
+              id: 3,
+              name: 'Bouquet de Mariée Prestige',
+              category: 'mariage'
+            },
+            customerInfo: {
+              name: 'Fatou Sow',
+              phone: '70 456 78 90',
+              email: 'fatou.s@email.com',
+              quantity: 1,
+              eventDate: '2026-06-10',
+              budget: '50000',
+              message: 'Je voudrais un bouquet de mariée avec des roses blanches.'
+            },
+            status: 'sent',
+            notes: 'Devis envoyé le 21/02',
+            timestamp: new Date(2026, 1, 20).toISOString()
+          }
+        ];
+        localStorage.setItem(DEVIS_KEY, JSON.stringify(devis));
+      }
+    }
+    
     // ==================== INITIALISATION DES PRODUITS ====================
     
     function initProducts() {
@@ -2559,7 +2623,6 @@
       if (stored) {
         products = JSON.parse(stored);
       } else {
-        // Créer des produits par défaut avec TVA incluse
         products = [
           {
             id: 1,
@@ -2626,17 +2689,88 @@
       }
     }
     
-    // ==================== INITIALISATION DES COMMANDES ====================
+    // ==================== INITIALISATION DES FACTURES ====================
     
-    function initOrders() {
-      const stored = localStorage.getItem(STORAGE_KEY);
+    function initInvoices() {
+      const stored = localStorage.getItem(INVOICES_KEY);
       if (stored) {
-        orders = JSON.parse(stored);
+        invoices = JSON.parse(stored);
       } else {
-        // Aucune commande par défaut (supprimées)
-        orders = [];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+        invoices = [];
+        localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
       }
+    }
+    
+    // ==================== INITIALISATION DES CLIENTS ====================
+    
+    function initClients() {
+      const stored = localStorage.getItem(CLIENTS_KEY);
+      if (stored) {
+        clients = JSON.parse(stored);
+      } else {
+        clients = [];
+        localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
+      }
+      updateClientsFromDevisAndInvoices();
+    }
+    
+    function updateClientsFromDevisAndInvoices() {
+      const clientMap = new Map();
+      
+      // Ajouter les clients existants
+      clients.forEach(client => {
+        clientMap.set(client.phone, client);
+      });
+      
+      // Traiter les demandes de devis
+      devis.forEach(d => {
+        const key = d.customerInfo.phone;
+        if (!clientMap.has(key)) {
+          clientMap.set(key, {
+            name: d.customerInfo.name,
+            phone: d.customerInfo.phone,
+            email: d.customerInfo.email || '',
+            address: '',
+            devisCount: 0,
+            invoicesCount: 0,
+            totalSpent: 0,
+            lastActivity: d.date
+          });
+        }
+        
+        const client = clientMap.get(key);
+        client.devisCount = (client.devisCount || 0) + 1;
+        if (new Date(d.date) > new Date(client.lastActivity)) {
+          client.lastActivity = d.date;
+        }
+      });
+      
+      // Traiter les factures
+      invoices.forEach(inv => {
+        const key = inv.phone;
+        if (!clientMap.has(key)) {
+          clientMap.set(key, {
+            name: inv.client,
+            phone: inv.phone,
+            email: inv.email || '',
+            address: '',
+            devisCount: 0,
+            invoicesCount: 0,
+            totalSpent: 0,
+            lastActivity: inv.date
+          });
+        }
+        
+        const client = clientMap.get(key);
+        client.invoicesCount = (client.invoicesCount || 0) + 1;
+        client.totalSpent = (client.totalSpent || 0) + inv.totalTTC;
+        if (new Date(inv.date) > new Date(client.lastActivity)) {
+          client.lastActivity = inv.date;
+        }
+      });
+      
+      clients = Array.from(clientMap.values());
+      localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
     }
     
     // ==================== INITIALISATION DES EMPLOYÉS ====================
@@ -2646,7 +2780,6 @@
       if (stored) {
         employees = JSON.parse(stored);
       } else {
-        // Créer des employés par défaut
         employees = [
           {
             id: 1,
@@ -2716,7 +2849,6 @@
       if (stored) {
         payments = JSON.parse(stored);
       } else {
-        // Créer des paiements des 3 derniers mois
         const today = new Date();
         payments = [];
         
@@ -2746,6 +2878,40 @@
         }
         
         localStorage.setItem(PAYMENTS_KEY, JSON.stringify(payments));
+      }
+    }
+    
+    // ==================== INITIALISATION DE L'ÉQUIPE ====================
+    
+    function initTeam() {
+      const stored = localStorage.getItem(TEAM_KEY);
+      if (stored) {
+        team = JSON.parse(stored);
+      } else {
+        team = [
+          {
+            id: 1,
+            name: 'Mariama Ndiaye',
+            position: 'Directrice Créative',
+            bio: '10 ans d\'expérience en décoration d\'événements',
+            image: 'https://randomuser.me/api/portraits/women/44.jpg'
+          },
+          {
+            id: 2,
+            name: 'Amadou Diallo',
+            position: 'Chef de projet',
+            bio: 'Spécialiste en organisation d\'événements',
+            image: 'https://randomuser.me/api/portraits/men/32.jpg'
+          },
+          {
+            id: 3,
+            name: 'Fatou Sow',
+            position: 'Décoratrice',
+            bio: 'Expert en décoration florale',
+            image: 'https://randomuser.me/api/portraits/women/68.jpg'
+          }
+        ];
+        localStorage.setItem(TEAM_KEY, JSON.stringify(team));
       }
     }
     
@@ -2788,49 +2954,6 @@
         ];
         localStorage.setItem(STOCK_MOVEMENTS_KEY, JSON.stringify(stockMovements));
       }
-    }
-    
-    // ==================== INITIALISATION DES FACTURES ====================
-    
-    function initInvoices() {
-      const stored = localStorage.getItem(INVOICES_KEY);
-      if (stored) {
-        invoices = JSON.parse(stored);
-      } else {
-        // Pas de factures sans commandes
-        invoices = [];
-        localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
-      }
-    }
-    
-    // ==================== INITIALISATION DES CLIENTS ====================
-    
-    function updateClientsFromOrders() {
-      const clientMap = new Map();
-      
-      orders.forEach(order => {
-        const key = order.phone;
-        if (!clientMap.has(key)) {
-          clientMap.set(key, {
-            name: order.client,
-            phone: order.phone,
-            email: order.email,
-            orders: [],
-            totalSpent: 0,
-            lastOrder: order.date
-          });
-        }
-        
-        const client = clientMap.get(key);
-        client.orders.push(order.id);
-        client.totalSpent += order.totalTTC;
-        if (new Date(order.date) > new Date(client.lastOrder)) {
-          client.lastOrder = order.date;
-        }
-      });
-      
-      clients = Array.from(clientMap.values());
-      localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
     }
     
     // ==================== FONCTIONS POUR LES STOCKS ====================
@@ -2876,155 +2999,876 @@
       return movement;
     }
     
-    // ==================== VÉRIFICATION DES COMMANDES ====================
+    // ==================== FACTURES ====================
     
-    function checkOrderStock(items) {
-      const insufficientStock = [];
+    function saveInvoices() {
+      localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
+      updateClientsFromDevisAndInvoices();
+      updateInvoicesTable();
+      updateRecentInvoices();
+      updateStats();
+    }
+    
+    function updateInvoicesTable() {
+      const tbody = document.getElementById('invoicesList');
+      if (!tbody) return;
       
-      items.forEach(item => {
-        const product = products.find(p => p.id === item.productId);
-        if (!product || product.stock < item.quantity) {
-          insufficientStock.push({
-            product: item.name,
-            requested: item.quantity,
-            available: product ? product.stock : 0
-          });
+      const sortedInvoices = [...invoices].sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      tbody.innerHTML = '';
+      sortedInvoices.forEach(invoice => {
+        const statusClass = invoice.status === 'paid' ? 'badge-paid' : invoice.status === 'partial' ? 'badge-pending' : 'badge-unpaid';
+        const statusLabel = invoice.status === 'paid' ? 'Payée' : invoice.status === 'partial' ? 'Partielle' : 'Impayée';
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${invoice.id}</strong></td>
+          <td>${invoice.client}</td>
+          <td>${invoice.phone}</td>
+          <td>${invoice.email || '-'}</td>
+          <td>${invoice.totalHT.toLocaleString()} FCFA</td>
+          <td>${invoice.tva.toLocaleString()} FCFA</td>
+          <td><strong>${invoice.totalTTC.toLocaleString()} FCFA</strong></td>
+          <td>${formatDate(invoice.date)}</td>
+          <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewInvoiceDetails('${invoice.id}')" title="Voir"><i class="fas fa-eye"></i></button>
+            <button class="action-btn pdf" onclick="downloadInvoicePDF('${invoice.id}')" title="PDF"><i class="fas fa-download"></i></button>
+            <button class="action-btn delete" onclick="deleteInvoice('${invoice.id}')" title="Supprimer"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#invoicesTable')) {
+        $('#invoicesTable').DataTable().destroy();
+      }
+      
+      $('#invoicesTable').DataTable({
+        pageLength: 10,
+        order: [[7, 'desc']],
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
         }
       });
       
-      return insufficientStock;
+      updateInvoiceStats();
     }
     
-    function processOrderStock(orderId, items) {
-      items.forEach(item => {
-        addStockMovement(
-          item.productId,
-          'sortie',
-          item.quantity,
-          'commande',
-          `Commande ${orderId}`
-        );
+    function updateRecentInvoices() {
+      const tbody = document.getElementById('recentInvoicesList');
+      if (!tbody) return;
+      
+      const recentInvoices = [...invoices].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+      
+      tbody.innerHTML = '';
+      recentInvoices.forEach(invoice => {
+        const statusClass = invoice.status === 'paid' ? 'badge-paid' : invoice.status === 'partial' ? 'badge-pending' : 'badge-unpaid';
+        const statusLabel = invoice.status === 'paid' ? 'Payée' : invoice.status === 'partial' ? 'Partielle' : 'Impayée';
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${invoice.id}</strong></td>
+          <td>${invoice.client}</td>
+          <td>${invoice.totalTTC.toLocaleString()} FCFA</td>
+          <td>${formatDate(invoice.date)}</td>
+          <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewInvoiceDetails('${invoice.id}')"><i class="fas fa-eye"></i></button>
+            <button class="action-btn pdf" onclick="downloadInvoicePDF('${invoice.id}')"><i class="fas fa-download"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#recentInvoicesTable')) {
+        $('#recentInvoicesTable').DataTable().destroy();
+      }
+      
+      $('#recentInvoicesTable').DataTable({
+        pageLength: 5,
+        order: [[3, 'desc']],
+        searching: false,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
       });
     }
     
-    // ==================== COMMANDES ====================
-    
-    function saveOrders() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
-      updateClientsFromOrders();
-      updateStats();
-      updateOrdersTable();
-      updateRecentOrders();
-      updateBadges();
-      initCharts();
+    function updateInvoiceStats() {
+      const totalInvoices = invoices.length;
+      const paidInvoices = invoices.filter(i => i.status === 'paid').length;
+      const unpaidInvoices = invoices.filter(i => i.status === 'unpaid' || i.status === 'partial').length;
+      const totalAmount = invoices.reduce((sum, i) => sum + i.totalTTC, 0);
+      
+      document.getElementById('statTotalInvoices').innerText = totalInvoices;
+      document.getElementById('statPaidInvoices').innerText = paidInvoices;
+      document.getElementById('statUnpaidInvoices').innerText = unpaidInvoices;
+      document.getElementById('statTotalAmount').innerText = totalAmount.toLocaleString() + ' FCFA';
+      document.getElementById('invoicesCountAll').innerText = totalInvoices;
+      document.getElementById('invoicesCountPaid').innerText = paidInvoices;
+      document.getElementById('invoicesCountUnpaid').innerText = unpaidInvoices;
+      document.getElementById('statFactures').innerText = totalInvoices;
     }
     
-    // ==================== FACTURES ====================
-    
-    function generateInvoiceForOrder(order, silent = false) {
-      const invoiceId = 'INV-' + order.id.replace('CMD-', '');
-      
-      const existing = invoices.find(inv => inv.orderId === order.id);
-      if (existing) return existing;
-      
-      const invoice = {
-        id: invoiceId,
-        orderId: order.id,
-        client: order.client,
-        phone: order.phone,
-        email: order.email,
-        date: new Date().toISOString(),
-        dueDate: new Date(Date.now() + 15 * 86400000).toISOString(),
-        items: order.items,
-        subtotalHT: order.totalHT,
-        tva: order.totalTVA,
-        totalTTC: order.totalTTC,
-        status: order.paymentStatus === 'paid' ? 'paid' : 'unpaid'
-      };
-      
-      invoices.push(invoice);
-      localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
-      
-      if (!silent) {
-        showNotification('Facture générée', `Facture ${invoiceId} créée avec succès`);
-      }
-      
-      return invoice;
+    function generateInvoiceId() {
+      const year = new Date().getFullYear();
+      const count = invoices.length + 1;
+      return `FACT-${year}-${String(count).padStart(3, '0')}`;
     }
     
-    // ==================== RECEVOIR UNE NOUVELLE COMMANDE ====================
-    
-    function receiveNewOrder(orderData) {
-      const insufficientStock = checkOrderStock(orderData.items);
+    function addInvoice(event) {
+      event.preventDefault();
       
-      if (insufficientStock.length > 0) {
-        let message = "Stock insuffisant pour :\n";
-        insufficientStock.forEach(item => {
-          message += `${item.product}: demandé ${item.requested}, disponible ${item.available}\n`;
-        });
-        alert(message);
-        return null;
+      const clientSelect = document.getElementById('invoiceClient');
+      const selectedClient = clients.find(c => c.phone === clientSelect.value);
+      if (!selectedClient) {
+        alert('Veuillez sélectionner un client');
+        return;
       }
       
-      const totalHT = orderData.items.reduce((sum, item) => sum + (item.quantity * item.priceHT), 0);
-      const totalTVA = calculateTVA(totalHT);
+      const items = [];
+      let totalHT = 0;
+      let hasValidItems = false;
+      
+      document.querySelectorAll('.invoice-item').forEach(item => {
+        const productSelect = item.querySelector('select[name="productId"]');
+        const quantity = parseInt(item.querySelector('input[name="quantity"]').value);
+        
+        if (productSelect && productSelect.value && quantity > 0) {
+          const product = products.find(p => p.id == productSelect.value);
+          if (product) {
+            items.push({
+              productId: product.id,
+              name: product.name,
+              quantity: quantity,
+              priceHT: product.priceHT
+            });
+            totalHT += product.priceHT * quantity;
+            hasValidItems = true;
+          }
+        }
+      });
+      
+      if (!hasValidItems) {
+        alert('Veuillez ajouter au moins un article valide');
+        return;
+      }
+      
+      const tva = calculateTVA(totalHT);
       const totalTTC = calculateTTC(totalHT);
       
-      const newOrder = {
-        id: 'CMD-' + new Date().getFullYear() + '-' + String(orders.length + 1).padStart(3, '0'),
-        ...orderData,
+      const today = new Date().toISOString().split('T')[0];
+      const dueDate = new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0];
+      
+      const newInvoice = {
+        id: generateInvoiceId(),
+        client: selectedClient.name,
+        phone: selectedClient.phone,
+        email: selectedClient.email || '',
+        date: document.getElementById('invoiceDate').value || today,
+        dueDate: document.getElementById('invoiceDueDate').value || dueDate,
+        items: items,
         totalHT: totalHT,
-        totalTVA: totalTVA,
+        tva: tva,
         totalTTC: totalTTC,
-        date: new Date().toISOString(),
-        status: 'pending',
-        paymentStatus: 'unpaid'
+        status: document.getElementById('invoicePaymentStatus').value,
+        paymentMethod: document.getElementById('invoicePaymentMethod').value
       };
       
-      orders.push(newOrder);
-      saveOrders();
+      invoices.push(newInvoice);
+      saveInvoices();
       
-      processOrderStock(newOrder.id, orderData.items);
-      generateInvoiceForOrder(newOrder);
+      bootstrap.Modal.getInstance(document.getElementById('addInvoiceModal')).hide();
+      showNotification('Facture créée', `La facture ${newInvoice.id} a été créée avec succès`);
+    }
+    
+    function addInvoiceItem() {
+      const container = document.getElementById('invoiceItems');
+      const newItem = document.createElement('div');
+      newItem.className = 'row mb-3 invoice-item';
       
-      showNotification('Nouvelle commande', `Commande de ${orderData.client} - ${totalTTC.toLocaleString()} FCFA TTC`);
+      let productOptions = '<option value="">Sélectionnez un produit</option>';
+      products.forEach(p => {
+        productOptions += `<option value="${p.id}" data-price="${p.priceHT}">${p.name} - ${p.priceHT.toLocaleString()} FCFA</option>`;
+      });
       
-      updateStockAlerts();
+      newItem.innerHTML = `
+        <div class="col-md-5">
+          <select class="form-select" name="productId" required onchange="updateItemPrice(this)">
+            ${productOptions}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <input type="number" class="form-control" name="quantity" placeholder="Quantité" min="1" value="1" required>
+        </div>
+        <div class="col-md-3">
+          <input type="text" class="form-control" name="price" placeholder="Prix HT" readonly>
+        </div>
+        <div class="col-md-1">
+          <button type="button" class="action-btn delete" onclick="removeInvoiceItem(this)">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      `;
       
-      return newOrder.id;
+      container.appendChild(newItem);
+    }
+    
+    function removeInvoiceItem(btn) {
+      const items = document.querySelectorAll('.invoice-item');
+      if (items.length > 1) {
+        btn.closest('.invoice-item').remove();
+      } else {
+        alert('Vous devez garder au moins un article');
+      }
+    }
+    
+    function updateItemPrice(select) {
+      const row = select.closest('.invoice-item');
+      const priceInput = row.querySelector('input[name="price"]');
+      const selected = select.options[select.selectedIndex];
+      const price = selected.dataset.price;
+      
+      if (price) {
+        priceInput.value = parseInt(price).toLocaleString() + ' FCFA';
+      } else {
+        priceInput.value = '';
+      }
+    }
+    
+    function deleteInvoice(invoiceId) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer cette facture ?')) {
+        invoices = invoices.filter(i => i.id !== invoiceId);
+        saveInvoices();
+        showNotification('Facture supprimée', 'La facture a été supprimée avec succès');
+      }
+    }
+    
+    function filterInvoices(filter, event) {
+      document.querySelectorAll('#section-factures .admin-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      const tbody = document.getElementById('invoicesList');
+      if (!tbody) return;
+      
+      let filteredInvoices = invoices;
+      if (filter === 'paid') {
+        filteredInvoices = invoices.filter(i => i.status === 'paid');
+      } else if (filter === 'unpaid') {
+        filteredInvoices = invoices.filter(i => i.status === 'unpaid' || i.status === 'partial');
+      }
+      
+      filteredInvoices.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      tbody.innerHTML = '';
+      filteredInvoices.forEach(invoice => {
+        const statusClass = invoice.status === 'paid' ? 'badge-paid' : invoice.status === 'partial' ? 'badge-pending' : 'badge-unpaid';
+        const statusLabel = invoice.status === 'paid' ? 'Payée' : invoice.status === 'partial' ? 'Partielle' : 'Impayée';
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${invoice.id}</strong></td>
+          <td>${invoice.client}</td>
+          <td>${invoice.phone}</td>
+          <td>${invoice.email || '-'}</td>
+          <td>${invoice.totalHT.toLocaleString()} FCFA</td>
+          <td>${invoice.tva.toLocaleString()} FCFA</td>
+          <td><strong>${invoice.totalTTC.toLocaleString()} FCFA</strong></td>
+          <td>${formatDate(invoice.date)}</td>
+          <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewInvoiceDetails('${invoice.id}')" title="Voir"><i class="fas fa-eye"></i></button>
+            <button class="action-btn pdf" onclick="downloadInvoicePDF('${invoice.id}')" title="PDF"><i class="fas fa-download"></i></button>
+            <button class="action-btn delete" onclick="deleteInvoice('${invoice.id}')" title="Supprimer"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#invoicesTable')) {
+        $('#invoicesTable').DataTable().destroy();
+      }
+      
+      $('#invoicesTable').DataTable({
+        pageLength: 10,
+        order: [[7, 'desc']],
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    function showAddInvoiceModal() {
+      // Remplir la liste des clients
+      const clientSelect = document.getElementById('invoiceClient');
+      clientSelect.innerHTML = '<option value="">Sélectionnez un client</option>';
+      
+      clients.forEach(client => {
+        clientSelect.innerHTML += `<option value="${client.phone}">${client.name} - ${client.phone}</option>`;
+      });
+      
+      // Remplir la liste des produits pour le premier article
+      const firstProductSelect = document.querySelector('.invoice-item select[name="productId"]');
+      if (firstProductSelect) {
+        let productOptions = '<option value="">Sélectionnez un produit</option>';
+        products.forEach(p => {
+          productOptions += `<option value="${p.id}" data-price="${p.priceHT}">${p.name} - ${p.priceHT.toLocaleString()} FCFA</option>`;
+        });
+        firstProductSelect.innerHTML = productOptions;
+      }
+      
+      // Définir les dates par défaut
+      const today = new Date().toISOString().split('T')[0];
+      const dueDate = new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0];
+      document.getElementById('invoiceDate').value = today;
+      document.getElementById('invoiceDueDate').value = dueDate;
+      
+      new bootstrap.Modal(document.getElementById('addInvoiceModal')).show();
+    }
+    
+    function updateClientInfo() {
+      const clientSelect = document.getElementById('invoiceClient');
+      const selectedClient = clients.find(c => c.phone === clientSelect.value);
+      
+      if (selectedClient) {
+        document.getElementById('invoicePhone').value = selectedClient.phone;
+        document.getElementById('invoiceEmail').value = selectedClient.email || '';
+      } else {
+        document.getElementById('invoicePhone').value = '';
+        document.getElementById('invoiceEmail').value = '';
+      }
+    }
+    
+    // ==================== FONCTIONS POUR LES DEVIS ====================
+    
+    function saveDevis() {
+      localStorage.setItem(DEVIS_KEY, JSON.stringify(devis));
+      updateDevisTables();
+      updateDevisStats();
+      updateClientsFromDevisAndInvoices();
+      updateBadges();
+    }
+    
+    function updateDevisTables() {
+      const tbody = document.getElementById('devisList');
+      if (!tbody) return;
+      
+      const sortedDevis = [...devis].sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      tbody.innerHTML = '';
+      sortedDevis.forEach(d => {
+        const statusClass = getDevisStatusClass(d.status);
+        const statusLabel = getDevisStatusLabel(d.status);
+        const budget = d.customerInfo.budget ? parseInt(d.customerInfo.budget).toLocaleString() + ' FCFA' : 'Non spécifié';
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${d.id}</strong></td>
+          <td>${formatDate(d.date)}</td>
+          <td>${d.customerInfo.name}</td>
+          <td>${d.customerInfo.phone}</td>
+          <td>${d.customerInfo.email || '-'}</td>
+          <td>${d.product.name}</td>
+          <td>${d.customerInfo.quantity}</td>
+          <td>${d.customerInfo.eventDate ? formatDate(d.customerInfo.eventDate) : '-'}</td>
+          <td>${budget}</td>
+          <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewDevisDetails('${d.id}')" title="Voir détails"><i class="fas fa-eye"></i></button>
+            <button class="action-btn whatsapp" onclick="contactDevisClient('${d.id}')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
+            <button class="action-btn invoice" onclick="convertDevisToInvoiceFromList('${d.id}')" title="Générer facture"><i class="fas fa-file-invoice-dollar"></i></button>
+            <button class="action-btn delete" onclick="deleteDevis('${d.id}')" title="Supprimer"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#devisTable')) {
+        $('#devisTable').DataTable().destroy();
+      }
+      
+      $('#devisTable').DataTable({
+        pageLength: 10,
+        order: [[1, 'desc']],
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+      
+      updateRecentDevisTable();
+    }
+    
+    function updateRecentDevisTable() {
+      const tbody = document.getElementById('recentDevisList');
+      if (!tbody) return;
+      
+      const recentDevis = [...devis].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+      
+      tbody.innerHTML = '';
+      recentDevis.forEach(d => {
+        const statusClass = getDevisStatusClass(d.status);
+        const statusLabel = getDevisStatusLabel(d.status);
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${d.id}</strong></td>
+          <td>${d.customerInfo.name}</td>
+          <td>${d.product.name}</td>
+          <td>${d.customerInfo.phone}</td>
+          <td>${formatDate(d.date)}</td>
+          <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewDevisDetails('${d.id}')"><i class="fas fa-eye"></i></button>
+            <button class="action-btn whatsapp" onclick="contactDevisClient('${d.id}')"><i class="fab fa-whatsapp"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#recentDevisTable')) {
+        $('#recentDevisTable').DataTable().destroy();
+      }
+      
+      $('#recentDevisTable').DataTable({
+        pageLength: 5,
+        order: [[4, 'desc']],
+        searching: false,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    function updateDevisStats() {
+      const totalDevis = devis.length;
+      const pendingDevis = devis.filter(d => d.status === 'pending').length;
+      const sentDevis = devis.filter(d => d.status === 'sent').length;
+      const convertedDevis = devis.filter(d => d.status === 'converted').length;
+      const cancelledDevis = devis.filter(d => d.status === 'cancelled').length;
+      const conversionRate = totalDevis > 0 ? Math.round((convertedDevis / totalDevis) * 100) : 0;
+      
+      document.getElementById('statTotalDevis').innerText = totalDevis;
+      document.getElementById('statPendingDevis').innerText = pendingDevis;
+      document.getElementById('statSentDevis').innerText = sentDevis;
+      document.getElementById('statConversionRate').innerText = conversionRate;
+      
+      document.getElementById('devisCountAll').innerText = totalDevis;
+      document.getElementById('devisCountPending').innerText = pendingDevis;
+      document.getElementById('devisCountSent').innerText = sentDevis;
+      document.getElementById('devisCountConverted').innerText = convertedDevis;
+      document.getElementById('devisCountCancelled').innerText = cancelledDevis;
+      
+      document.getElementById('statDevis').innerText = totalDevis;
+    }
+    
+    function getDevisStatusClass(status) {
+      switch(status) {
+        case 'pending': return 'badge-devis-pending';
+        case 'sent': return 'badge-devis-sent';
+        case 'converted': return 'badge-devis-converted';
+        case 'cancelled': return 'badge-devis-cancelled';
+        default: return 'badge-devis-pending';
+      }
+    }
+    
+    function getDevisStatusLabel(status) {
+      switch(status) {
+        case 'pending': return 'En attente';
+        case 'sent': return 'Devis envoyé';
+        case 'converted': return 'Convertie';
+        case 'cancelled': return 'Annulée';
+        default: return status;
+      }
+    }
+    
+    function viewDevisDetails(devisId) {
+      const devisItem = devis.find(d => d.id === devisId);
+      if (!devisItem) return;
+      
+      currentDevisId = devisId;
+      
+      document.getElementById('modalDevisId').innerText = devisItem.id;
+      document.getElementById('modalDevisName').innerText = devisItem.customerInfo.name;
+      document.getElementById('modalDevisPhone').innerText = devisItem.customerInfo.phone;
+      document.getElementById('modalDevisEmail').innerText = devisItem.customerInfo.email || 'Non spécifié';
+      document.getElementById('modalDevisDate').innerText = formatDate(devisItem.date);
+      document.getElementById('modalDevisQuantity').innerText = devisItem.customerInfo.quantity;
+      document.getElementById('modalDevisEventDate').innerText = devisItem.customerInfo.eventDate ? formatDate(devisItem.customerInfo.eventDate) : 'Non spécifiée';
+      document.getElementById('modalDevisBudget').innerText = devisItem.customerInfo.budget ? parseInt(devisItem.customerInfo.budget).toLocaleString() + ' FCFA' : 'Non spécifié';
+      document.getElementById('modalDevisMessage').innerText = devisItem.customerInfo.message || 'Aucun message';
+      document.getElementById('modalDevisStatusSelect').value = devisItem.status || 'pending';
+      document.getElementById('modalDevisNotes').value = devisItem.notes || '';
+      
+      const productDiv = document.getElementById('modalDevisProduct');
+      productDiv.innerHTML = `
+        <div class="d-flex align-items-center gap-3">
+          <img src="${getProductImage(devisItem.product.id)}" style="width: 60px; height: 60px; border-radius: 10px; object-fit: cover;">
+          <div>
+            <h6 class="mb-1">${devisItem.product.name}</h6>
+            <p class="small mb-0">Catégorie: ${getCategoryLabel(devisItem.product.category)}</p>
+          </div>
+        </div>
+      `;
+      
+      new bootstrap.Modal(document.getElementById('devisDetailsModal')).show();
+    }
+    
+    function getProductImage(productId) {
+      const product = products.find(p => p.id === productId);
+      return product ? product.image : 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200';
+    }
+    
+    function updateDevisStatus(status) {
+      if (!currentDevisId) return;
+      const devisItem = devis.find(d => d.id === currentDevisId);
+      if (devisItem) {
+        devisItem.status = status;
+        devisItem.notes = document.getElementById('modalDevisNotes').value;
+        saveDevis();
+        showNotification('Statut mis à jour', `La demande ${devisItem.id} est maintenant ${getDevisStatusLabel(status)}`);
+      }
+    }
+    
+    function deleteDevis(devisId) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer cette demande de devis ?')) {
+        devis = devis.filter(d => d.id !== devisId);
+        saveDevis();
+        showNotification('Devis supprimé', 'La demande a été supprimée avec succès');
+      }
+    }
+    
+    function filterDevis(filter, event) {
+      document.querySelectorAll('#section-devis .admin-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      const tbody = document.getElementById('devisList');
+      if (!tbody) return;
+      
+      let filteredDevis = devis;
+      if (filter !== 'all') {
+        filteredDevis = devis.filter(d => d.status === filter);
+      }
+      
+      filteredDevis.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      tbody.innerHTML = '';
+      filteredDevis.forEach(d => {
+        const statusClass = getDevisStatusClass(d.status);
+        const statusLabel = getDevisStatusLabel(d.status);
+        const budget = d.customerInfo.budget ? parseInt(d.customerInfo.budget).toLocaleString() + ' FCFA' : 'Non spécifié';
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${d.id}</strong></td>
+          <td>${formatDate(d.date)}</td>
+          <td>${d.customerInfo.name}</td>
+          <td>${d.customerInfo.phone}</td>
+          <td>${d.customerInfo.email || '-'}</td>
+          <td>${d.product.name}</td>
+          <td>${d.customerInfo.quantity}</td>
+          <td>${d.customerInfo.eventDate ? formatDate(d.customerInfo.eventDate) : '-'}</td>
+          <td>${budget}</td>
+          <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewDevisDetails('${d.id}')" title="Voir détails"><i class="fas fa-eye"></i></button>
+            <button class="action-btn whatsapp" onclick="contactDevisClient('${d.id}')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
+            <button class="action-btn invoice" onclick="convertDevisToInvoiceFromList('${d.id}')" title="Générer facture"><i class="fas fa-file-invoice-dollar"></i></button>
+            <button class="action-btn delete" onclick="deleteDevis('${d.id}')" title="Supprimer"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#devisTable')) {
+        $('#devisTable').DataTable().destroy();
+      }
+      
+      $('#devisTable').DataTable({
+        pageLength: 10,
+        order: [[1, 'desc']],
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    function contactDevisClient(devisId) {
+      const devisItem = devis.find(d => d.id === devisId);
+      if (!devisItem) return;
+      
+      const phone = devisItem.customerInfo.phone.replace(/\s/g, '');
+      const product = devisItem.product.name;
+      const quantity = devisItem.customerInfo.quantity;
+      
+      let message = `Bonjour ${devisItem.customerInfo.name}, je vous contacte de NJEEYGU suite à votre demande de devis pour ${product} (quantité: ${quantity}).`;
+      
+      if (devisItem.status === 'pending') {
+        message += "\n\nNous avons bien reçu votre demande et nous vous préparons un devis personnalisé. Nous revenons vers vous très rapidement.";
+      } else if (devisItem.status === 'sent') {
+        message += "\n\nAvez-vous eu l'occasion de consulter le devis que nous vous avons envoyé ? N'hésitez pas si vous avez des questions.";
+      }
+      
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+    
+    function sendDevisQuote() {
+      if (!currentDevisId) return;
+      const devisItem = devis.find(d => d.id === currentDevisId);
+      if (!devisItem) return;
+      
+      devisItem.status = 'sent';
+      devisItem.notes = document.getElementById('modalDevisNotes').value;
+      saveDevis();
+      
+      const phone = devisItem.customerInfo.phone.replace(/\s/g, '');
+      const product = devisItem.product.name;
+      const quantity = devisItem.customerInfo.quantity;
+      
+      let message = `*NJEEYGU - DEVIS PERSONNALISÉ*\n\n`;
+      message += `Bonjour ${devisItem.customerInfo.name},\n\n`;
+      message += `Suite à votre demande, nous avons le plaisir de vous faire parvenir notre devis pour :\n`;
+      message += `- Produit : ${product}\n`;
+      message += `- Quantité : ${quantity}\n\n`;
+      message += `*Prix unitaire* : [À COMPLÉTER] FCFA HT\n`;
+      message += `*TVA 18%* : [À COMPLÉTER] FCFA\n`;
+      message += `*Total TTC* : [À COMPLÉTER] FCFA\n\n`;
+      message += `*Délai de livraison* : [À COMPLÉTER]\n`;
+      message += `*Validité du devis* : 30 jours\n\n`;
+      message += `N'hésitez pas à nous contacter pour toute question ou pour confirmer votre commande.\n\n`;
+      message += `Cordialement,\nL'équipe NJEEYGU`;
+      
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+      
+      bootstrap.Modal.getInstance(document.getElementById('devisDetailsModal')).hide();
+      showNotification('Devis envoyé', `Le devis a été envoyé à ${devisItem.customerInfo.name}`);
+    }
+    
+    function convertDevisToInvoice() {
+      if (!currentDevisId) return;
+      const devisItem = devis.find(d => d.id === currentDevisId);
+      if (!devisItem) return;
+      
+      convertDevisToInvoiceInternal(devisItem);
+      bootstrap.Modal.getInstance(document.getElementById('devisDetailsModal')).hide();
+    }
+    
+    function convertDevisToInvoiceFromList(devisId) {
+      const devisItem = devis.find(d => d.id === devisId);
+      if (!devisItem) return;
+      
+      convertDevisToInvoiceInternal(devisItem);
+    }
+    
+    function convertDevisToInvoiceInternal(devisItem) {
+      const product = products.find(p => p.id === devisItem.product.id);
+      if (!product) {
+        alert('Produit non trouvé dans la base');
+        return;
+      }
+      
+      const quantity = parseInt(devisItem.customerInfo.quantity) || 1;
+      const totalHT = product.priceHT * quantity;
+      const tva = calculateTVA(totalHT);
+      const totalTTC = calculateTTC(totalHT);
+      
+      const invoiceId = generateInvoiceId();
+      
+      const today = new Date().toISOString().split('T')[0];
+      const dueDate = new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0];
+      
+      const newInvoice = {
+        id: invoiceId,
+        client: devisItem.customerInfo.name,
+        phone: devisItem.customerInfo.phone,
+        email: devisItem.customerInfo.email || '',
+        date: today,
+        dueDate: dueDate,
+        items: [{
+          productId: product.id,
+          name: product.name,
+          quantity: quantity,
+          priceHT: product.priceHT
+        }],
+        totalHT: totalHT,
+        tva: tva,
+        totalTTC: totalTTC,
+        status: 'unpaid',
+        paymentMethod: 'non spécifié'
+      };
+      
+      invoices.push(newInvoice);
+      saveInvoices();
+      
+      devisItem.status = 'converted';
+      devisItem.notes = (devisItem.notes || '') + `\nConvertie en facture ${invoiceId} le ${new Date().toLocaleDateString()}`;
+      saveDevis();
+      
+      showNotification('Facture créée', `La facture ${invoiceId} a été créée avec succès`);
+    }
+    
+    function exportDevis() {
+      const data = devis.map(d => ({
+        'Référence': d.id,
+        'Date': formatDate(d.date),
+        'Client': d.customerInfo.name,
+        'Téléphone': d.customerInfo.phone,
+        'Email': d.customerInfo.email || '',
+        'Produit': d.product.name,
+        'Quantité': d.customerInfo.quantity,
+        'Date événement': d.customerInfo.eventDate ? formatDate(d.customerInfo.eventDate) : '',
+        'Budget': d.customerInfo.budget || '',
+        'Statut': getDevisStatusLabel(d.status)
+      }));
+      
+      const csv = convertToCSV(data);
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `demandes_devis_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      showNotification('Export réussi', 'Le fichier CSV a été généré');
+    }
+    
+    function generateDevisReport() {
+      const totalDevis = devis.length;
+      const pendingCount = devis.filter(d => d.status === 'pending').length;
+      const sentCount = devis.filter(d => d.status === 'sent').length;
+      const convertedCount = devis.filter(d => d.status === 'converted').length;
+      const conversionRate = totalDevis > 0 ? Math.round((convertedCount / totalDevis) * 100) : 0;
+      
+      const productCounts = {};
+      devis.forEach(d => {
+        const productName = d.product.name;
+        productCounts[productName] = (productCounts[productName] || 0) + 1;
+      });
+      
+      let topProducts = Object.entries(productCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([name, count]) => `- ${name}: ${count} demandes`)
+        .join('\n');
+      
+      const report = `
+        RAPPORT DES DEMANDES DE DEVIS
+        =============================
+        
+        Date: ${new Date().toLocaleDateString()}
+        
+        RÉCAPITULATIF:
+        - Total demandes: ${totalDevis}
+        - En attente: ${pendingCount}
+        - Devis envoyés: ${sentCount}
+        - Converties en facture: ${convertedCount}
+        - Annulées: ${devis.filter(d => d.status === 'cancelled').length}
+        
+        PERFORMANCE:
+        - Taux de conversion: ${conversionRate}%
+        
+        PRODUITS LES PLUS DEMANDÉS:
+${topProducts || 'Aucune donnée'}
+        
+        ÉVOLUTION MENSUELLE:
+        ${getMonthlyDevisBreakdown()}
+      `;
+      
+      alert(report);
+    }
+    
+    function getMonthlyDevisBreakdown() {
+      const months = {};
+      devis.forEach(d => {
+        const date = new Date(d.date);
+        const key = `${date.getMonth()+1}/${date.getFullYear()}`;
+        months[key] = (months[key] || 0) + 1;
+      });
+      
+      return Object.entries(months)
+        .sort((a, b) => {
+          const [mA, yA] = a[0].split('/');
+          const [mB, yB] = b[0].split('/');
+          return new Date(yA, mA-1) - new Date(yB, mB-1);
+        })
+        .map(([month, count]) => `- ${month}: ${count} demandes`)
+        .join('\n');
+    }
+    
+    // ==================== FONCTIONS POUR LE STOCK (NOUVEAU) ====================
+    
+    function showAddStockModal() {
+      // Réinitialiser le formulaire
+      document.getElementById('stockModalProductName').innerText = 'Nouveau produit';
+      document.getElementById('stockModalProductId').value = '';
+      document.getElementById('stockModalCurrentStock').value = '0';
+      document.getElementById('stockModalMinStock').value = '5';
+      document.getElementById('stockModalQuantity').value = '1';
+      document.getElementById('stockModalNewValue').value = '0';
+      document.getElementById('stockModalComment').value = '';
+      
+      // Modifier le titre du modal
+      document.querySelector('#stockManagementModal .modal-title').innerHTML = 'Ajouter un nouveau stock';
+      
+      // Afficher le modal
+      new bootstrap.Modal(document.getElementById('stockManagementModal')).show();
+    }
+    
+    function addNewStock() {
+      const productName = prompt('Nom du nouveau produit :');
+      if (!productName) return;
+      
+      const category = prompt('Catégorie (table/lumiere/mariage/ballon/deco) :', 'deco');
+      if (!category) return;
+      
+      const priceHT = parseInt(prompt('Prix HT (FCFA) :', '10000'));
+      if (isNaN(priceHT) || priceHT <= 0) return;
+      
+      const stock = parseInt(prompt('Quantité initiale en stock :', '10'));
+      if (isNaN(stock) || stock < 0) return;
+      
+      const minStock = parseInt(prompt('Stock minimum d\'alerte :', '5')) || 5;
+      
+      const defaultImage = 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200';
+      
+      const newProduct = {
+        id: products.length + 1,
+        name: productName,
+        category: category,
+        priceHT: priceHT,
+        priceTTC: calculateTTC(priceHT),
+        stock: stock,
+        minStock: minStock,
+        status: 'active',
+        image: defaultImage,
+        location: prompt('Emplacement (ex: A1-R2) :', 'Nouveau') || 'Nouveau'
+      };
+      
+      products.push(newProduct);
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+      
+      addStockMovement(
+        newProduct.id,
+        'entree',
+        stock,
+        'reception',
+        'Nouveau produit ajouté'
+      );
+      
+      updateProductsTable();
+      updateStockTable();
+      showNotification('Produit ajouté', `${newProduct.name} a été ajouté au stock avec succès`);
     }
     
     // ==================== MISES À JOUR UI ====================
     
     function updateStats() {
-      const totalOrders = orders.length;
-      const pendingOrders = orders.filter(o => o.status === 'pending').length;
-      const confirmedOrders = orders.filter(o => o.status === 'confirmed').length;
-      const shippedOrders = orders.filter(o => o.status === 'shipped').length;
-      const deliveredOrders = orders.filter(o => o.status === 'delivered').length;
-      const cancelledOrders = orders.filter(o => o.status === 'cancelled').length;
-      const uniqueClients = new Set(orders.map(o => o.phone)).size;
-      
-      document.getElementById('statCommandes').innerText = totalOrders;
-      document.getElementById('statEnAttente').innerText = pendingOrders;
       document.getElementById('statProduits').innerText = products.length;
-      document.getElementById('statClients').innerText = uniqueClients;
+      document.getElementById('statClients').innerText = clients.length;
       
-      document.getElementById('countAll').innerText = totalOrders;
-      document.getElementById('countPending').innerText = pendingOrders;
-      document.getElementById('countConfirmed').innerText = confirmedOrders;
-      document.getElementById('countShipped').innerText = shippedOrders;
-      document.getElementById('countDelivered').innerText = deliveredOrders;
-      document.getElementById('countCancelled').innerText = cancelledOrders;
-      
-      document.getElementById('statPendingCount').innerText = pendingOrders;
-      document.getElementById('statConfirmedCount').innerText = confirmedOrders;
-      document.getElementById('statShippedCount').innerText = shippedOrders;
-      document.getElementById('statDeliveredCount').innerText = deliveredOrders;
-      document.getElementById('statCancelledCount').innerText = cancelledOrders;
-      
-      const totalAnnual = orders.reduce((sum, o) => sum + o.totalTTC, 0);
-      document.getElementById('totalAnnualSales').innerText = totalAnnual.toLocaleString();
+      updateDevisStats();
+      updateInvoiceStats();
     }
     
     function updateStockStats() {
@@ -3041,16 +3885,13 @@
     }
     
     function updateBadges() {
-      const pendingCount = orders.filter(o => o.status === 'pending').length;
-      document.getElementById('pendingOrdersBadge').innerText = pendingCount;
+      const pendingDevis = devis.filter(d => d.status === 'pending').length;
+      document.getElementById('devisPendingBadge').innerText = pendingDevis;
       
       const lowStock = products.filter(p => p.stock <= p.minStock).length;
       document.getElementById('lowStockBadge').innerText = lowStock;
       document.getElementById('stockAlertBadge').innerText = lowStock;
       
-      document.getElementById('messagesBadge').innerText = '2';
-      
-      // Mise à jour du badge des salaires
       const now = new Date();
       const pendingPayments = employees.filter(emp => {
         const paidThisMonth = payments.some(p => 
@@ -3091,97 +3932,6 @@
     }
     
     // ==================== TABLEAUX ====================
-    
-    function updateOrdersTable(filter = 'all') {
-      const tbody = document.getElementById('ordersList');
-      if (!tbody) return;
-      
-      let filteredOrders = orders;
-      if (filter !== 'all') {
-        filteredOrders = orders.filter(o => o.status === filter);
-      }
-      
-      filteredOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
-      
-      tbody.innerHTML = '';
-      filteredOrders.forEach(order => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><strong>${order.id}</strong></td>
-          <td>${order.client}</td>
-          <td>${order.phone}</td>
-          <td>${order.email}</td>
-          <td>${order.totalHT.toLocaleString()} FCFA</td>
-          <td>${order.totalTVA.toLocaleString()} FCFA</td>
-          <td><strong>${order.totalTTC.toLocaleString()} FCFA</strong></td>
-          <td>${formatDate(order.date)}</td>
-          <td>
-            <span class="badge-status ${getStatusClass(order.status)}">${getStatusLabel(order.status)}</span>
-          </td>
-          <td>
-            <span class="badge-status ${order.paymentStatus === 'paid' ? 'badge-paid' : order.paymentStatus === 'partial' ? 'badge-pending' : 'badge-unpaid'}">
-              ${order.paymentStatus === 'paid' ? 'Payé' : order.paymentStatus === 'partial' ? 'Partiel' : 'Impayé'}
-            </span>
-          </td>
-          <td>
-            <button class="action-btn" onclick="viewOrderDetails('${order.id}')" title="Voir détails"><i class="fas fa-eye"></i></button>
-            <button class="action-btn whatsapp" onclick="contactCustomer('${order.phone}', '${order.id}')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
-            <button class="action-btn pdf" onclick="viewInvoice('${order.id}')" title="Facture"><i class="fas fa-file-invoice"></i></button>
-            <button class="action-btn delete" onclick="deleteOrder('${order.id}')" title="Supprimer"><i class="fas fa-trash"></i></button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      
-      if ($.fn.DataTable.isDataTable('#ordersTable')) {
-        $('#ordersTable').DataTable().destroy();
-      }
-      
-      $('#ordersTable').DataTable({
-        pageLength: 10,
-        order: [[7, 'desc']],
-        language: {
-          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
-        }
-      });
-    }
-    
-    function updateRecentOrders() {
-      const tbody = document.getElementById('recentOrdersList');
-      if (!tbody) return;
-      
-      const recentOrders = [...orders].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
-      
-      tbody.innerHTML = '';
-      recentOrders.forEach(order => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><strong>${order.id}</strong></td>
-          <td>${order.client}</td>
-          <td>${order.totalTTC.toLocaleString()} FCFA</td>
-          <td>${formatDate(order.date)}</td>
-          <td><span class="badge-status ${getStatusClass(order.status)}">${getStatusLabel(order.status)}</span></td>
-          <td>
-            <button class="action-btn" onclick="viewOrderDetails('${order.id}')"><i class="fas fa-eye"></i></button>
-            <button class="action-btn whatsapp" onclick="contactCustomer('${order.phone}', '${order.id}')"><i class="fab fa-whatsapp"></i></button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      
-      if ($.fn.DataTable.isDataTable('#recentOrdersTable')) {
-        $('#recentOrdersTable').DataTable().destroy();
-      }
-      
-      $('#recentOrdersTable').DataTable({
-        pageLength: 5,
-        order: [[3, 'desc']],
-        searching: false,
-        language: {
-          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
-        }
-      });
-    }
     
     function updateProductsTable() {
       const tbody = document.getElementById('productsList');
@@ -3378,46 +4128,16 @@
       });
     }
     
-    function updateInvoicesTable() {
-      const tbody = document.getElementById('invoicesList');
-      if (!tbody) return;
-      
-      tbody.innerHTML = '';
-      invoices.forEach(invoice => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><strong>${invoice.id}</strong></td>
-          <td>${invoice.orderId}</td>
-          <td>${invoice.client}</td>
-          <td>${invoice.subtotalHT.toLocaleString()} FCFA</td>
-          <td>${invoice.tva.toLocaleString()} FCFA</td>
-          <td><strong>${invoice.totalTTC.toLocaleString()} FCFA</strong></td>
-          <td>${formatDate(invoice.date)}</td>
-          <td><span class="badge-status ${invoice.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${invoice.status === 'paid' ? 'Payée' : 'Impayée'}</span></td>
-          <td>
-            <button class="action-btn" onclick="viewInvoiceDetails('${invoice.id}')"><i class="fas fa-eye"></i></button>
-            <button class="action-btn pdf" onclick="downloadInvoicePDF('${invoice.id}')"><i class="fas fa-download"></i></button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      
-      if ($.fn.DataTable.isDataTable('#invoicesTable')) {
-        $('#invoicesTable').DataTable().destroy();
-      }
-      
-      $('#invoicesTable').DataTable({
-        pageLength: 10,
-        order: [[6, 'desc']],
-        language: {
-          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
-        }
-      });
-    }
-    
     function updateClientsTable() {
       const tbody = document.getElementById('clientsList');
       if (!tbody) return;
+      
+      const totalSpent = clients.reduce((sum, c) => sum + (c.totalSpent || 0), 0);
+      
+      document.getElementById('statTotalClients').innerText = clients.length;
+      document.getElementById('statClientsWithDevis').innerText = clients.filter(c => c.devisCount > 0).length;
+      document.getElementById('statClientsWithInvoices').innerText = clients.filter(c => c.invoicesCount > 0).length;
+      document.getElementById('statTotalSpent').innerText = totalSpent.toLocaleString() + ' FCFA';
       
       tbody.innerHTML = '';
       clients.forEach(client => {
@@ -3426,11 +4146,14 @@
           <td><strong>${client.name}</strong></td>
           <td>${client.phone}</td>
           <td>${client.email || 'Non renseigné'}</td>
-          <td>${client.orders.length}</td>
-          <td>${client.totalSpent.toLocaleString()} FCFA</td>
-          <td>${formatDate(client.lastOrder)}</td>
+          <td>${client.devisCount || 0}</td>
+          <td>${client.invoicesCount || 0}</td>
+          <td>${client.totalSpent ? client.totalSpent.toLocaleString() : 0} FCFA</td>
+          <td>${formatDate(client.lastActivity)}</td>
           <td>
-            <button class="action-btn" onclick="contactCustomer('${client.phone}')"><i class="fab fa-whatsapp"></i></button>
+            <button class="action-btn" onclick="contactClient('${client.phone}')"><i class="fab fa-whatsapp"></i></button>
+            <button class="action-btn invoice" onclick="createInvoiceForClient('${client.phone}')"><i class="fas fa-file-invoice-dollar"></i></button>
+            <button class="action-btn delete" onclick="deleteClient('${client.phone}')"><i class="fas fa-user-slash"></i></button>
           </td>
         `;
         tbody.appendChild(row);
@@ -3490,6 +4213,166 @@
       });
     }
     
+    // ==================== FONCTIONS POUR LES CLIENTS ====================
+    
+    function showAddClientModal() {
+      document.getElementById('addClientForm').reset();
+      new bootstrap.Modal(document.getElementById('addClientModal')).show();
+    }
+    
+    function addClient(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById('clientName').value;
+      const phone = document.getElementById('clientPhone').value;
+      const email = document.getElementById('clientEmail').value;
+      const address = document.getElementById('clientAddress').value;
+      
+      const existing = clients.find(c => c.phone === phone);
+      if (existing) {
+        alert('Un client avec ce numéro de téléphone existe déjà');
+        return;
+      }
+      
+      const newClient = {
+        name: name,
+        phone: phone,
+        email: email,
+        address: address,
+        devisCount: 0,
+        invoicesCount: 0,
+        totalSpent: 0,
+        lastActivity: new Date().toISOString()
+      };
+      
+      clients.push(newClient);
+      localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
+      
+      bootstrap.Modal.getInstance(document.getElementById('addClientModal')).hide();
+      updateClientsTable();
+      showNotification('Client ajouté', `${name} a été ajouté à la liste des clients`);
+      
+      // Mettre à jour le select des clients dans le modal de facture
+      const clientSelect = document.getElementById('invoiceClient');
+      if (clientSelect) {
+        clientSelect.innerHTML += `<option value="${phone}">${name} - ${phone}</option>`;
+      }
+    }
+    
+    function deleteClient(phone) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
+        clients = clients.filter(c => c.phone !== phone);
+        localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
+        updateClientsTable();
+        showNotification('Client supprimé', 'Le client a été supprimé avec succès');
+      }
+    }
+    
+    function contactClient(phone) {
+      const phoneNumber = phone.replace(/\s/g, '');
+      const message = 'Bonjour, je vous contacte de la part de NJEEYGU.';
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+    
+    function createInvoiceForClient(phone) {
+      const client = clients.find(c => c.phone === phone);
+      if (!client) return;
+      
+      showAddInvoiceModal();
+      setTimeout(() => {
+        const clientSelect = document.getElementById('invoiceClient');
+        clientSelect.value = phone;
+        updateClientInfo();
+      }, 100);
+    }
+    
+    function exportClients() {
+      const data = clients.map(c => ({
+        'Nom': c.name,
+        'Téléphone': c.phone,
+        'Email': c.email || '',
+        'Demandes devis': c.devisCount || 0,
+        'Factures': c.invoicesCount || 0,
+        'Total dépensé': c.totalSpent || 0,
+        'Dernière activité': formatDate(c.lastActivity)
+      }));
+      
+      const csv = convertToCSV(data);
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `clients_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      showNotification('Export réussi', 'La liste des clients a été exportée');
+    }
+    
+    // ==================== FONCTIONS POUR L'ÉQUIPE ====================
+    
+    function initTeamUI() {
+      const tbody = document.getElementById('teamList');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      team.forEach(member => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><img src="${member.image || 'https://randomuser.me/api/portraits/lego/1.jpg'}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></td>
+          <td><strong>${member.name}</strong></td>
+          <td>${member.position}</td>
+          <td>${member.bio || ''}</td>
+          <td>
+            <button class="action-btn" onclick="editTeamMember(${member.id})"><i class="fas fa-edit"></i></button>
+            <button class="action-btn delete" onclick="deleteTeamMember(${member.id})"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+    
+    function showAddTeamMemberModal() {
+      document.getElementById('addTeamMemberForm').reset();
+      new bootstrap.Modal(document.getElementById('addTeamMemberModal')).show();
+    }
+    
+    function addTeamMember(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById('memberName').value;
+      const position = document.getElementById('memberPosition').value;
+      const bio = document.getElementById('memberBio').value;
+      const photo = document.getElementById('memberPhoto').value || 'https://randomuser.me/api/portraits/lego/1.jpg';
+      
+      const newMember = {
+        id: team.length + 1,
+        name: name,
+        position: position,
+        bio: bio,
+        image: photo
+      };
+      
+      team.push(newMember);
+      localStorage.setItem(TEAM_KEY, JSON.stringify(team));
+      
+      bootstrap.Modal.getInstance(document.getElementById('addTeamMemberModal')).hide();
+      initTeamUI();
+      showNotification('Membre ajouté', `${name} a été ajouté à l'équipe`);
+    }
+    
+    function deleteTeamMember(memberId) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer ce membre ?')) {
+        team = team.filter(m => m.id !== memberId);
+        localStorage.setItem(TEAM_KEY, JSON.stringify(team));
+        initTeamUI();
+        showNotification('Membre supprimé', 'Le membre a été retiré de l\'équipe');
+      }
+    }
+    
+    function editTeamMember(memberId) {
+      alert('Fonctionnalité d\'édition à implémenter');
+    }
+    
     // ==================== FONCTIONS POUR LES SALAIRES ====================
     
     function updateSalariesUI() {
@@ -3547,7 +4430,7 @@
             <button class="action-btn" onclick="editEmployee(${emp.id})" title="Modifier"><i class="fas fa-edit"></i></button>
             <button class="action-btn" onclick="payEmployee(${emp.id})" title="Payer"><i class="fas fa-money-bill-wave"></i></button>
             <button class="action-btn pdf" onclick="generatePayslip(${emp.id})" title="Bulletin"><i class="fas fa-file-pdf"></i></button>
-            <button class="action-btn delete" onclick="deleteEmployee(${emp.id})" title="Désactiver"><i class="fas fa-user-slash"></i></button>
+            <button class="action-btn delete" onclick="deleteEmployee(${emp.id})" title="Supprimer"><i class="fas fa-user-slash"></i></button>
           </td>
         `;
         tbody.appendChild(row);
@@ -3821,11 +4704,11 @@
       const employee = employees.find(e => e.id === employeeId);
       if (!employee) return;
       
-      if (confirm(`Voulez-vous désactiver ${employee.name} ?`)) {
-        employee.status = 'inactif';
+      if (confirm(`Voulez-vous supprimer définitivement ${employee.name} de la liste des employés ?`)) {
+        employees = employees.filter(e => e.id !== employeeId);
         localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(employees));
         updateSalariesUI();
-        showNotification('Employé désactivé', `${employee.name} a été désactivé`);
+        showNotification('Employé supprimé', `${employee.name} a été supprimé de la liste`);
       }
     }
     
@@ -3899,6 +4782,7 @@
       
       doc.setFontSize(10);
       doc.setTextColor(...orEclatant);
+      doc.setFont('helvetica', 'normal');
       doc.text('Le Grand Jour', 105, 22, { align: 'center' });
       
       doc.setFontSize(16);
@@ -3908,6 +4792,7 @@
       
       doc.setFontSize(10);
       doc.setTextColor(100, 100, 100);
+      doc.setFont('helvetica', 'normal');
       doc.text(`Période: ${payment.period}`, 20, 52);
       
       doc.setFontSize(11);
@@ -4057,170 +4942,6 @@
       }
     }
     
-    // ==================== ACTIONS SUR LES COMMANDES ====================
-    
-    function viewOrderDetails(orderId) {
-      const order = orders.find(o => o.id === orderId);
-      if (!order) return;
-      
-      currentOrderId = orderId;
-      
-      document.getElementById('modalOrderId').innerText = order.id;
-      document.getElementById('modalClientName').innerText = order.client;
-      document.getElementById('modalClientPhone').innerText = order.phone;
-      document.getElementById('modalClientEmail').innerText = order.email;
-      document.getElementById('modalOrderDate').innerText = formatDate(order.date);
-      document.getElementById('modalOrderTotalHT').innerText = order.totalHT.toLocaleString() + ' FCFA';
-      document.getElementById('modalOrderTVA').innerText = order.totalTVA.toLocaleString() + ' FCFA';
-      document.getElementById('modalOrderTotalTTC').innerText = order.totalTTC.toLocaleString() + ' FCFA';
-      document.getElementById('modalOrderStatus').innerHTML = `<span class="badge-status ${getStatusClass(order.status)}">${getStatusLabel(order.status)}</span>`;
-      
-      const paymentLabel = order.paymentStatus === 'paid' ? 'Payé' : order.paymentStatus === 'partial' ? 'Paiement partiel' : 'Impayé';
-      const paymentClass = order.paymentStatus === 'paid' ? 'badge-paid' : order.paymentStatus === 'partial' ? 'badge-pending' : 'badge-unpaid';
-      document.getElementById('modalPaymentStatus').innerHTML = `<span class="badge-status ${paymentClass}">${paymentLabel}</span>`;
-      
-      const itemsDiv = document.getElementById('modalOrderItems');
-      itemsDiv.innerHTML = '';
-      order.items.forEach(item => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'order-product-item';
-        itemDiv.innerHTML = `
-          <img src="${item.image}" class="order-product-img">
-          <div style="flex: 1;">
-            <strong>${item.name}</strong><br>
-            <small>Quantité: ${item.quantity} - Prix unitaire HT: ${item.priceHT.toLocaleString()} FCFA</small><br>
-            <small class="text-muted">TVA 18%: ${(item.priceHT * TVA_RATE).toLocaleString()} FCFA</small>
-          </div>
-          <div>
-            <div>${(item.quantity * item.priceHT).toLocaleString()} FCFA HT</div>
-            <small class="text-success">TTC: ${(item.quantity * item.priceHT * (1 + TVA_RATE)).toLocaleString()} FCFA</small>
-          </div>
-        `;
-        itemsDiv.appendChild(itemDiv);
-      });
-      
-      document.getElementById('modalStatusSelect').value = order.status;
-      document.getElementById('modalPaymentSelect').value = order.paymentStatus || 'unpaid';
-      
-      new bootstrap.Modal(document.getElementById('orderDetailsModal')).show();
-    }
-    
-    function updateOrderStatus(status) {
-      if (!currentOrderId) return;
-      const order = orders.find(o => o.id === currentOrderId);
-      if (order) {
-        const oldStatus = order.status;
-        order.status = status;
-        saveOrders();
-        
-        if (status === 'cancelled' && oldStatus !== 'cancelled') {
-          order.items.forEach(item => {
-            addStockMovement(
-              item.productId,
-              'entree',
-              item.quantity,
-              'retour_client',
-              `Annulation commande ${order.id}`
-            );
-          });
-          showNotification('Stock mis à jour', 'Les produits ont été remis en stock');
-        }
-        
-        document.getElementById('modalOrderStatus').innerHTML = `<span class="badge-status ${getStatusClass(status)}">${getStatusLabel(status)}</span>`;
-        showNotification('Statut mis à jour', `La commande ${order.id} est maintenant ${getStatusLabel(status)}`);
-      }
-    }
-    
-    function updatePaymentStatus(status) {
-      if (!currentOrderId) return;
-      const order = orders.find(o => o.id === currentOrderId);
-      if (order) {
-        order.paymentStatus = status;
-        saveOrders();
-        
-        const invoice = invoices.find(inv => inv.orderId === order.id);
-        if (invoice) {
-          invoice.status = status === 'paid' ? 'paid' : 'unpaid';
-          localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
-        }
-        
-        const paymentLabel = status === 'paid' ? 'Payé' : status === 'partial' ? 'Paiement partiel' : 'Impayé';
-        const paymentClass = status === 'paid' ? 'badge-paid' : status === 'partial' ? 'badge-pending' : 'badge-unpaid';
-        document.getElementById('modalPaymentStatus').innerHTML = `<span class="badge-status ${paymentClass}">${paymentLabel}</span>`;
-        showNotification('Paiement mis à jour', `Le statut de paiement a été modifié`);
-      }
-    }
-    
-    function deleteOrder(orderId) {
-      if (confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')) {
-        orders = orders.filter(o => o.id !== orderId);
-        invoices = invoices.filter(inv => inv.orderId !== orderId);
-        saveOrders();
-        localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
-        updateOrdersTable();
-        showNotification('Commande supprimée', 'La commande a été supprimée avec succès');
-      }
-    }
-    
-    function filterOrders(filter, event) {
-      document.querySelectorAll('#section-commandes .admin-tab').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
-      updateOrdersTable(filter);
-    }
-    
-    function filterStock(filter, event) {
-      document.querySelectorAll('#section-stock .admin-tab').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
-      updateStockTable(filter);
-    }
-    
-    function filterInvoices(filter, event) {
-      document.querySelectorAll('#section-factures .admin-tab').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
-      
-      const tbody = document.getElementById('invoicesList');
-      if (!tbody) return;
-      
-      let filteredInvoices = invoices;
-      if (filter === 'paid') {
-        filteredInvoices = invoices.filter(inv => inv.status === 'paid');
-      } else if (filter === 'unpaid') {
-        filteredInvoices = invoices.filter(inv => inv.status === 'unpaid');
-      }
-      
-      tbody.innerHTML = '';
-      filteredInvoices.forEach(invoice => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><strong>${invoice.id}</strong></td>
-          <td>${invoice.orderId}</td>
-          <td>${invoice.client}</td>
-          <td>${invoice.subtotalHT.toLocaleString()} FCFA</td>
-          <td>${invoice.tva.toLocaleString()} FCFA</td>
-          <td><strong>${invoice.totalTTC.toLocaleString()} FCFA</strong></td>
-          <td>${formatDate(invoice.date)}</td>
-          <td><span class="badge-status ${invoice.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${invoice.status === 'paid' ? 'Payée' : 'Impayée'}</span></td>
-          <td>
-            <button class="action-btn" onclick="viewInvoiceDetails('${invoice.id}')"><i class="fas fa-eye"></i></button>
-            <button class="action-btn pdf" onclick="downloadInvoicePDF('${invoice.id}')"><i class="fas fa-download"></i></button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      
-      if ($.fn.DataTable.isDataTable('#invoicesTable')) {
-        $('#invoicesTable').DataTable().destroy();
-      }
-      
-      $('#invoicesTable').DataTable({
-        pageLength: 10,
-        order: [[6, 'desc']],
-        language: {
-          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
-        }
-      });
-    }
-    
     // ==================== ACTIONS SUR LE STOCK ====================
     
     function openStockModal(productId) {
@@ -4235,6 +4956,9 @@
       document.getElementById('stockModalQuantity').value = 1;
       document.getElementById('stockModalNewValue').value = product.stock;
       document.getElementById('stockModalComment').value = '';
+      
+      // Modifier le titre du modal
+      document.querySelector('#stockManagementModal .modal-title').innerHTML = 'Gérer le stock - <span id="stockModalProductName">' + product.name + '</span>';
       
       toggleStockOperationFields();
       
@@ -4256,15 +4980,22 @@
     }
     
     function updateStock() {
-      const productId = parseInt(document.getElementById('stockModalProductId').value);
-      const product = products.find(p => p.id === productId);
-      if (!product) return;
-      
+      const productId = document.getElementById('stockModalProductId').value;
       const operation = document.getElementById('stockModalOperation').value;
       const reason = document.getElementById('stockModalReason').value;
       const comment = document.getElementById('stockModalComment').value;
-      const oldStock = product.stock;
       
+      // Si c'est un nouveau produit (pas d'ID)
+      if (!productId) {
+        addNewStock();
+        bootstrap.Modal.getInstance(document.getElementById('stockManagementModal')).hide();
+        return;
+      }
+      
+      const product = products.find(p => p.id == productId);
+      if (!product) return;
+      
+      const oldStock = product.stock;
       let newStock = oldStock;
       let quantity = 0;
       let type = 'ajustement';
@@ -4286,7 +5017,7 @@
       const minStock = parseInt(document.getElementById('stockModalMinStock').value) || 5;
       product.minStock = minStock;
       
-      addStockMovement(productId, type, quantity, reason, comment);
+      addStockMovement(product.id, type, quantity, reason, comment);
       
       bootstrap.Modal.getInstance(document.getElementById('stockManagementModal')).hide();
       
@@ -4515,151 +5246,138 @@
       }
     }
     
-    function showLinksTab(tab, event) {
-      document.querySelectorAll('#section-liens .links-tab-content').forEach(el => {
-        el.style.display = 'none';
-      });
-      
-      document.getElementById(`links-${tab}`).style.display = 'block';
-      
-      document.querySelectorAll('#section-liens .admin-tab').forEach(t => {
-        t.classList.remove('active');
-      });
+    function filterStock(filter, event) {
+      document.querySelectorAll('#section-stock .admin-tab').forEach(t => t.classList.remove('active'));
       event.target.classList.add('active');
+      updateStockTable(filter);
     }
     
-    function addMenuItem() {
-      alert('Fonctionnalité d\'ajout de lien à implémenter');
-    }
-    
-    function addFooterLink() {
-      alert('Fonctionnalité d\'ajout de lien footer à implémenter');
-    }
-    
-    function addSocialLink() {
-      alert('Fonctionnalité d\'ajout de réseau social à implémenter');
-    }
-    
-    function addPage() {
-      alert('Fonctionnalité d\'ajout de page à implémenter');
-    }
-    
-    // ==================== FACTURES ====================
-    
-    function generateInvoice() {
-      if (!currentOrderId) return;
-      const order = orders.find(o => o.id === currentOrderId);
-      if (!order) return;
-      
-      const invoice = generateInvoiceForOrder(order);
-      viewInvoiceDetails(invoice.id);
-    }
-    
-    function viewInvoice(orderId) {
-      const order = orders.find(o => o.id === orderId);
-      if (!order) return;
-      
-      const invoice = invoices.find(inv => inv.orderId === orderId) || generateInvoiceForOrder(order);
-      viewInvoiceDetails(invoice.id);
-    }
+    // ==================== FACTURE PDF ====================
     
     function viewInvoiceDetails(invoiceId) {
-      const invoice = invoices.find(inv => inv.id === invoiceId);
+      const invoice = invoices.find(i => i.id === invoiceId);
       if (!invoice) return;
       
       currentInvoiceId = invoiceId;
       document.getElementById('invoiceModalId').innerText = invoice.id;
       
-      const content = document.getElementById('invoiceContent');
-      content.innerHTML = generateInvoiceHTML(invoice);
-      
-      new bootstrap.Modal(document.getElementById('invoiceModal')).show();
-    }
-    
-    function generateInvoiceHTML(invoice) {
+      // Calculer les totaux par article
       let itemsHTML = '';
       invoice.items.forEach(item => {
         const totalHT = item.quantity * item.priceHT;
+        const tvaUnitaire = item.priceHT * TVA_RATE;
         const totalTTC = totalHT * (1 + TVA_RATE);
+        
         itemsHTML += `
           <tr>
             <td>${item.name}</td>
             <td class="text-center">${item.quantity}</td>
             <td class="text-end">${item.priceHT.toLocaleString()} FCFA</td>
-            <td class="text-end">${(item.priceHT * TVA_RATE).toLocaleString()} FCFA</td>
+            <td class="text-end">${tvaUnitaire.toLocaleString()} FCFA</td>
             <td class="text-end">${totalHT.toLocaleString()} FCFA</td>
+            <td class="text-end"><strong>${Math.round(totalTTC).toLocaleString()} FCFA</strong></td>
           </tr>
         `;
       });
       
-      return `
-        <div class="invoice-header">
-          <div class="invoice-logo">
-            <img src="images/log1.png" alt="NJEEYGU Logo" onerror="this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
-            <div>
-              <h2 class="invoice-title">NJEEYGU</h2>
-              <p style="color: var(--or-eclatant);">Le Grand Jour</p>
+      // Ajouter la TVA récapitulative
+      const tvaTotale = invoice.tva || calculateTVA(invoice.totalHT);
+      const totalTTC = invoice.totalTTC || calculateTTC(invoice.totalHT);
+      
+      const invoiceHTML = `
+        <div class="invoice-box" id="invoice-content-${invoice.id}">
+          <div class="invoice-header">
+            <div class="invoice-logo">
+              <img src="images/log1.png" alt="NJEEYGU Logo" onerror="this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
+              <div>
+                <h2 class="invoice-title">NJEEYGU</h2>
+                <p style="color: var(--or-eclatant);">Le Grand Jour</p>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <h3 style="color: var(--rouge-profond); margin-bottom: 5px;">FACTURE</h3>
+              <p style="font-size: 1.2rem; font-weight: bold; margin: 0;">N° ${invoice.id}</p>
             </div>
           </div>
-          <div style="text-align: right;">
-            <h3 style="color: var(--rouge-profond);">FACTURE</h3>
-            <p><strong>N° ${invoice.id}</strong></p>
+          
+          <div class="row invoice-details" style="margin-bottom: 30px;">
+            <div class="col-6">
+              <div style="background: #f8f1e0; padding: 15px; border-radius: 10px;">
+                <strong style="color: var(--rouge-profond); display: block; margin-bottom: 10px;">FACTURÉ À</strong>
+                <p style="margin: 2px 0;"><strong>${invoice.client}</strong></p>
+                <p style="margin: 2px 0;">Tél: ${invoice.phone}</p>
+                <p style="margin: 2px 0;">Email: ${invoice.email || 'Non spécifié'}</p>
+              </div>
+            </div>
+            <div class="col-6 text-end">
+              <div style="background: #f8f1e0; padding: 15px; border-radius: 10px;">
+                <strong style="color: var(--rouge-profond); display: block; margin-bottom: 10px;">DÉTAILS</strong>
+                <p style="margin: 2px 0;"><strong>Date d'émission:</strong> ${formatDate(invoice.date)}</p>
+                <p style="margin: 2px 0;"><strong>Date d'échéance:</strong> ${formatDate(invoice.dueDate || invoice.date)}</p>
+                <p style="margin: 2px 0;"><strong>Mode de paiement:</strong> ${invoice.paymentMethod || 'Non spécifié'}</p>
+              </div>
+            </div>
           </div>
-        </div>
-        
-        <div class="row invoice-details">
-          <div class="col-6">
-            <strong style="color: var(--rouge-profond);">Facturé à :</strong><br>
-            ${invoice.client}<br>
-            Tél: ${invoice.phone}<br>
-            Email: ${invoice.email}
+          
+          <table class="invoice-table" style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <thead>
+              <tr style="background: var(--rouge-profond); color: white;">
+                <th style="padding: 12px; text-align: left;">Produit</th>
+                <th style="padding: 12px; text-align: center;">Qté</th>
+                <th style="padding: 12px; text-align: right;">Prix unitaire HT</th>
+                <th style="padding: 12px; text-align: right;">TVA 18%</th>
+                <th style="padding: 12px; text-align: right;">Total HT</th>
+                <th style="padding: 12px; text-align: right;">Total TTC</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHTML}
+            </tbody>
+            <tfoot>
+              <tr style="border-top: 2px solid var(--or-eclatant);">
+                <td colspan="4" class="text-end" style="padding: 12px;"><strong>SOUS-TOTAL HT</strong></td>
+                <td class="text-end" style="padding: 12px;"><strong>${invoice.totalHT.toLocaleString()} FCFA</strong></td>
+                <td class="text-end" style="padding: 12px;"></td>
+              </tr>
+              <tr>
+                <td colspan="4" class="text-end" style="padding: 12px;"><strong>TVA (18%)</strong></td>
+                <td class="text-end" style="padding: 12px;"><strong>${tvaTotale.toLocaleString()} FCFA</strong></td>
+                <td class="text-end" style="padding: 12px;"></td>
+              </tr>
+              <tr style="background: rgba(212, 175, 55, 0.1);">
+                <td colspan="4" class="text-end" style="padding: 15px;"><strong style="color: var(--rouge-profond); font-size: 1.1rem;">TOTAL TTC</strong></td>
+                <td class="text-end" style="padding: 15px;"></td>
+                <td class="text-end" style="padding: 15px;"><strong style="color: var(--rouge-profond); font-size: 1.2rem;">${totalTTC.toLocaleString()} FCFA</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+          
+          <div class="row mt-4">
+            <div class="col-12">
+              <div style="background: #f8f1e0; padding: 15px; border-radius: 10px; text-align: center;">
+                <p style="margin: 5px 0;"><strong>Statut de paiement :</strong> 
+                  <span class="badge-status ${invoice.status === 'paid' ? 'badge-paid' : invoice.status === 'partial' ? 'badge-pending' : 'badge-unpaid'}">
+                    ${invoice.status === 'paid' ? 'Payée' : invoice.status === 'partial' ? 'Paiement partiel' : 'Impayée'}
+                  </span>
+                </p>
+              </div>
+            </div>
           </div>
-          <div class="col-6 text-end">
-            <strong style="color: var(--rouge-profond);">Détails :</strong><br>
-            Date d'émission: ${formatDate(invoice.date)}<br>
-            Date d'échéance: ${formatDate(invoice.dueDate)}<br>
-            Commande: ${invoice.orderId}
+          
+          <div class="invoice-footer" style="margin-top: 40px; text-align: center; color: #666; font-size: 0.9rem;">
+            <p>Merci de votre confiance ! TVA 18% incluse.</p>
+            <p style="font-size: 0.8rem;">Pour toute question, contactez-nous au +221 77 544 97 95</p>
+            <p style="font-size: 0.8rem; margin-top: 20px;">NJEEYGU - Le Grand Jour - 123 Rue Principale, Saint-Louis</p>
           </div>
-        </div>
-        
-        <table class="invoice-table">
-          <thead>
-            <tr>
-              <th>Produit</th>
-              <th class="text-center">Qté</th>
-              <th class="text-end">Prix unitaire HT</th>
-              <th class="text-end">TVA 18%</th>
-              <th class="text-end">Total HT</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${itemsHTML}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="4" class="text-end"><strong>Sous-total HT</strong></td>
-              <td class="text-end">${invoice.subtotalHT.toLocaleString()} FCFA</td>
-            </tr>
-            <tr>
-              <td colspan="4" class="text-end"><strong>TVA (18%)</strong></td>
-              <td class="text-end">${invoice.tva.toLocaleString()} FCFA</td>
-            </tr>
-            <tr>
-              <td colspan="4" class="text-end"><strong style="color: var(--rouge-profond);">TOTAL TTC</strong></td>
-              <td class="text-end"><strong style="color: var(--rouge-profond);">${invoice.totalTTC.toLocaleString()} FCFA</strong></td>
-            </tr>
-          </tfoot>
-        </table>
-        
-        <div class="invoice-footer">
-          <p>Merci de votre confiance ! TVA 18% incluse. Pour toute question, contactez-nous au +221 77 544 97 95</p>
-          <p style="font-size: 0.8rem;">NJEEYGU - Le Grand Jour - 123 Rue Principale, Saint-Louis</p>
         </div>
       `;
+      
+      document.getElementById('invoiceContent').innerHTML = invoiceHTML;
+      new bootstrap.Modal(document.getElementById('invoiceModal')).show();
     }
     
     function downloadInvoicePDF(invoiceId) {
-      const invoice = invoices.find(inv => inv.id === invoiceId) || invoices.find(inv => inv.id === currentInvoiceId);
+      const invoice = invoices.find(i => i.id === invoiceId) || invoices.find(i => i.id === currentInvoiceId);
       if (!invoice) return;
       
       const { jsPDF } = window.jspdf;
@@ -4667,48 +5385,59 @@
       
       const rougeProfond = [139, 0, 0];
       const orEclatant = [212, 175, 55];
+      const grisClair = [245, 245, 245];
       
+      // En-tête avec logo
       doc.setFillColor(...rougeProfond);
-      doc.rect(0, 0, 210, 40, 'F');
+      doc.rect(0, 0, 210, 35, 'F');
       
-      doc.setFontSize(24);
+      doc.setFontSize(22);
       doc.setTextColor(255, 255, 255);
       doc.setFont('helvetica', 'bold');
-      doc.text('NJEEYGU', 105, 20, { align: 'center' });
+      doc.text('NJEEYGU', 105, 18, { align: 'center' });
       
-      doc.setFontSize(12);
+      doc.setFontSize(11);
       doc.setTextColor(...orEclatant);
       doc.setFont('helvetica', 'normal');
-      doc.text('Le Grand Jour', 105, 30, { align: 'center' });
+      doc.text('Le Grand Jour', 105, 27, { align: 'center' });
       
+      // Titre FACTURE
       doc.setFontSize(20);
       doc.setTextColor(...rougeProfond);
       doc.setFont('helvetica', 'bold');
-      doc.text('FACTURE', 20, 55);
+      doc.text('FACTURE', 20, 48);
       
       doc.setFontSize(10);
       doc.setTextColor(100, 100, 100);
       doc.setFont('helvetica', 'normal');
-      doc.text(`N° ${invoice.id}`, 20, 62);
+      doc.text(`N° ${invoice.id}`, 20, 55);
       
+      // Informations client
       doc.setFontSize(11);
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
-      doc.text('Facturé à :', 20, 80);
-      doc.text('Détails :', 120, 80);
+      doc.text('FACTURÉ À :', 20, 70);
       
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
-      doc.text(invoice.client, 20, 88);
-      doc.text(`Tél: ${invoice.phone}`, 20, 95);
-      doc.text(`Email: ${invoice.email}`, 20, 102);
+      doc.text(invoice.client, 20, 78);
+      doc.text(`Tél: ${invoice.phone}`, 20, 85);
+      doc.text(`Email: ${invoice.email || 'Non spécifié'}`, 20, 92);
       
-      doc.text(`Date d'émission: ${formatDate(invoice.date)}`, 120, 88);
-      doc.text(`Date d'échéance: ${formatDate(invoice.dueDate)}`, 120, 95);
-      doc.text(`Commande: ${invoice.orderId}`, 120, 102);
+      // Détails de la facture
+      doc.setFont('helvetica', 'bold');
+      doc.text('DÉTAILS :', 120, 70);
       
-      const startY = 120;
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Date d'émission: ${formatDate(invoice.date)}`, 120, 78);
+      doc.text(`Date d'échéance: ${formatDate(invoice.dueDate || invoice.date)}`, 120, 85);
+      doc.text(`Mode de paiement: ${invoice.paymentMethod || 'Non spécifié'}`, 120, 92);
       
+      // Tableau des articles
+      const startY = 110;
+      const rowHeight = 8;
+      
+      // En-tête du tableau
       doc.setFillColor(...rougeProfond);
       doc.rect(20, startY - 5, 170, 8, 'F');
       
@@ -4716,90 +5445,114 @@
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
       doc.text('Produit', 22, startY);
-      doc.text('Qté', 85, startY);
-      doc.text('Prix HT', 105, startY);
-      doc.text('TVA', 130, startY);
-      doc.text('Total HT', 155, startY);
+      doc.text('Qté', 75, startY);
+      doc.text('Prix HT', 95, startY);
+      doc.text('TVA', 120, startY);
+      doc.text('Total HT', 140, startY);
+      doc.text('Total TTC', 165, startY);
       
+      // Corps du tableau
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8);
-      let y = startY + 8;
+      let y = startY + rowHeight;
+      let rowCount = 0;
       
-      invoice.items.forEach((item, index) => {
-        if (index % 2 === 0) {
-          doc.setFillColor(245, 245, 245);
+      invoice.items.forEach((item) => {
+        const totalHT = item.quantity * item.priceHT;
+        const tva = item.priceHT * TVA_RATE;
+        const totalTTC = totalHT * (1 + TVA_RATE);
+        
+        // Ligne alternée
+        if (rowCount % 2 === 0) {
+          doc.setFillColor(...grisClair);
           doc.rect(20, y - 4, 170, 8, 'F');
         }
         
-        const totalHT = item.quantity * item.priceHT;
-        const tva = item.priceHT * TVA_RATE;
-        
         doc.text(item.name.substring(0, 15), 22, y);
-        doc.text(item.quantity.toString(), 90, y, { align: 'center' });
-        doc.text(`${item.priceHT.toLocaleString()}`, 110, y, { align: 'right' });
-        doc.text(`${tva.toLocaleString()}`, 135, y, { align: 'right' });
-        doc.text(`${totalHT.toLocaleString()}`, 165, y, { align: 'right' });
-        y += 8;
+        doc.text(item.quantity.toString(), 80, y, { align: 'center' });
+        doc.text(`${item.priceHT.toLocaleString()}`, 100, y, { align: 'right' });
+        doc.text(`${tva.toLocaleString()}`, 125, y, { align: 'right' });
+        doc.text(`${totalHT.toLocaleString()}`, 145, y, { align: 'right' });
+        doc.text(`${Math.round(totalTTC).toLocaleString()}`, 170, y, { align: 'right' });
+        
+        y += rowHeight;
+        rowCount++;
       });
       
+      // Ligne de séparation
       doc.setDrawColor(...orEclatant);
       doc.line(20, y, 190, y);
       y += 6;
       
+      // Totaux
+      const tvaTotale = invoice.tva || calculateTVA(invoice.totalHT);
+      const totalTTC = invoice.totalTTC || calculateTTC(invoice.totalHT);
+      
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(9);
-      doc.text('Sous-total HT', 125, y);
-      doc.text(`${invoice.subtotalHT.toLocaleString()} FCFA`, 180, y, { align: 'right' });
+      
+      doc.text('Sous-total HT', 120, y);
+      doc.text(`${invoice.totalHT.toLocaleString()} FCFA`, 180, y, { align: 'right' });
       y += 6;
       
-      doc.text('TVA 18%', 125, y);
-      doc.text(`${invoice.tva.toLocaleString()} FCFA`, 180, y, { align: 'right' });
+      doc.text('TVA 18%', 120, y);
+      doc.text(`${tvaTotale.toLocaleString()} FCFA`, 180, y, { align: 'right' });
       y += 8;
       
       doc.setFontSize(11);
       doc.setTextColor(...rougeProfond);
-      doc.text('TOTAL TTC', 125, y);
-      doc.text(`${invoice.totalTTC.toLocaleString()} FCFA`, 180, y, { align: 'right' });
+      doc.text('TOTAL TTC', 120, y);
+      doc.text(`${totalTTC.toLocaleString()} FCFA`, 180, y, { align: 'right' });
       
-      y += 20;
+      // Statut de paiement
+      y += 12;
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100);
+      doc.setFont('helvetica', 'bold');
+      const statutTexte = invoice.status === 'paid' ? 'Payée' : invoice.status === 'partial' ? 'Paiement partiel' : 'Impayée';
+      doc.text(`Statut de paiement: ${statutTexte}`, 20, y);
+      
+      // Pied de page
+      y += 15;
       doc.setFontSize(9);
       doc.setTextColor(100, 100, 100);
       doc.setFont('helvetica', 'normal');
-      doc.text('Merci de votre confiance ! TVA 18% incluse. Pour toute question, contactez-nous au +221 77 544 97 95', 105, y, { align: 'center' });
+      doc.text('Merci de votre confiance ! TVA 18% incluse.', 105, y, { align: 'center' });
       
-      y += 6;
+      y += 5;
       doc.setFontSize(8);
+      doc.text('Pour toute question, contactez-nous au +221 77 544 97 95', 105, y, { align: 'center' });
+      
+      y += 5;
       doc.text('NJEEYGU - Le Grand Jour - 123 Rue Principale, Saint-Louis', 105, y, { align: 'center' });
       
+      // Sauvegarder le PDF
       doc.save(`facture-${invoice.id}.pdf`);
       showNotification('PDF généré', `La facture ${invoice.id} a été téléchargée`);
     }
     
-    function printInvoice() {
-      window.print();
-    }
-    
-    // ==================== CONTACT CLIENT ====================
-    
-    function contactCustomer(phone, orderId = '') {
-      const phoneNumber = phone.replace(/\s/g, '');
-      let message = 'Bonjour, je vous contacte de la part de NJEEYGU.';
+    function generateInvoiceReport() {
+      const paidInvoices = invoices.filter(i => i.status === 'paid').length;
+      const unpaidInvoices = invoices.filter(i => i.status === 'unpaid' || i.status === 'partial').length;
+      const totalHT = invoices.reduce((sum, i) => sum + i.totalHT, 0);
+      const totalTVA = invoices.reduce((sum, i) => sum + i.tva, 0);
+      const totalTTC = invoices.reduce((sum, i) => sum + i.totalTTC, 0);
       
-      if (orderId) {
-        message = `Bonjour, je vous contacte au sujet de votre commande ${orderId}.`;
-      }
-      
-      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-      window.open(url, '_blank');
-    }
-    
-    function contactCustomerFromModal() {
-      if (!currentOrderId) return;
-      const order = orders.find(o => o.id === currentOrderId);
-      if (order) {
-        contactCustomer(order.phone, order.id);
-      }
+      alert(`
+        RAPPORT DES FACTURES
+        ====================
+        
+        Date: ${new Date().toLocaleDateString()}
+        
+        Total factures: ${invoices.length}
+        Factures payées: ${paidInvoices}
+        Factures impayées: ${unpaidInvoices}
+        
+        Montants:
+        - Total HT: ${totalHT.toLocaleString()} FCFA
+        - TVA 18%: ${totalTVA.toLocaleString()} FCFA
+        - Total TTC: ${totalTTC.toLocaleString()} FCFA
+      `);
     }
     
     // ==================== NOTIFICATIONS ====================
@@ -4818,295 +5571,6 @@
       document.getElementById('notificationToast').style.display = 'none';
     }
     
-    // ==================== EXPORT / RAPPORTS ====================
-    
-    function exportOrders() {
-      const data = orders.map(o => ({
-        'N° Commande': o.id,
-        'Client': o.client,
-        'Téléphone': o.phone,
-        'Email': o.email,
-        'Total HT': o.totalHT,
-        'TVA 18%': o.totalTVA,
-        'Total TTC': o.totalTTC,
-        'Date': formatDate(o.date),
-        'Statut': getStatusLabel(o.status),
-        'Paiement': o.paymentStatus
-      }));
-      
-      const csv = convertToCSV(data);
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `commandes_${new Date().toISOString().split('T')[0]}.csv`;
-      a.click();
-      showNotification('Export réussi', 'Le fichier CSV a été généré');
-    }
-    
-    function generateReport() {
-      const totalRevenueHT = orders.reduce((sum, o) => sum + o.totalHT, 0);
-      const totalRevenueTTC = orders.reduce((sum, o) => sum + o.totalTTC, 0);
-      const totalTVA = orders.reduce((sum, o) => sum + o.totalTVA, 0);
-      const pendingCount = orders.filter(o => o.status === 'pending').length;
-      
-      const report = `
-        RAPPORT DES COMMANDES
-        =====================
-        
-        Date: ${new Date().toLocaleDateString()}
-        Total commandes: ${orders.length}
-        
-        Chiffre d'affaires:
-        - HT: ${totalRevenueHT.toLocaleString()} FCFA
-        - TVA 18%: ${totalTVA.toLocaleString()} FCFA
-        - TTC: ${totalRevenueTTC.toLocaleString()} FCFA
-        
-        Commandes en attente: ${pendingCount}
-        Commandes livrées: ${orders.filter(o => o.status === 'delivered').length}
-        Commandes annulées: ${orders.filter(o => o.status === 'cancelled').length}
-      `;
-      
-      alert(report);
-    }
-    
-    function generateInvoiceReport() {
-      const paidInvoices = invoices.filter(i => i.status === 'paid').length;
-      const unpaidInvoices = invoices.filter(i => i.status === 'unpaid').length;
-      const totalHT = invoices.reduce((sum, i) => sum + i.subtotalHT, 0);
-      const totalTVA = invoices.reduce((sum, i) => sum + i.tva, 0);
-      const totalTTC = invoices.reduce((sum, i) => sum + i.totalTTC, 0);
-      
-      alert(`
-        RAPPORT DES FACTURES
-        ====================
-        
-        Total factures: ${invoices.length}
-        Factures payées: ${paidInvoices}
-        Factures impayées: ${unpaidInvoices}
-        
-        Montants:
-        - Total HT: ${totalHT.toLocaleString()} FCFA
-        - TVA 18%: ${totalTVA.toLocaleString()} FCFA
-        - Total TTC: ${totalTTC.toLocaleString()} FCFA
-      `);
-    }
-    
-    function convertToCSV(data) {
-      if (data.length === 0) return '';
-      const headers = Object.keys(data[0]);
-      const rows = data.map(obj => headers.map(header => obj[header]).join(','));
-      return [headers.join(','), ...rows].join('\n');
-    }
-    
-    // ==================== GRAPHIQUES ====================
-    
-    let salesChart, ordersChart, categoryChart, stockChart;
-    
-    function initCharts() {
-      const monthlySalesHT = Array(12).fill(0);
-      const monthlySalesTTC = Array(12).fill(0);
-      
-      orders.forEach(order => {
-        const date = new Date(order.date);
-        const month = date.getMonth();
-        monthlySalesHT[month] += order.totalHT / 1000;
-        monthlySalesTTC[month] += order.totalTTC / 1000;
-      });
-      
-      const ctx = document.getElementById('salesChart')?.getContext('2d');
-      if (ctx) {
-        if (salesChart) salesChart.destroy();
-        salesChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
-            datasets: [
-              {
-                label: 'Ventes HT (milliers FCFA)',
-                data: monthlySalesHT,
-                borderColor: '#8B0000',
-                backgroundColor: 'rgba(139, 0, 0, 0.1)',
-                tension: 0.4,
-                fill: true
-              },
-              {
-                label: 'Ventes TTC (milliers FCFA)',
-                data: monthlySalesTTC,
-                borderColor: '#D4AF37',
-                backgroundColor: 'rgba(212, 175, 55, 0.1)',
-                tension: 0.4,
-                fill: true,
-                borderDash: [5, 5]
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            aspectRatio: 2,
-            plugins: {
-              legend: {
-                display: false
-              }
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  font: {
-                    size: 9
-                  }
-                }
-              },
-              x: {
-                ticks: {
-                  font: {
-                    size: 9
-                  }
-                }
-              }
-            }
-          }
-        });
-      }
-      
-      const statusCounts = [
-        orders.filter(o => o.status === 'pending').length,
-        orders.filter(o => o.status === 'confirmed').length,
-        orders.filter(o => o.status === 'shipped').length,
-        orders.filter(o => o.status === 'delivered').length,
-        orders.filter(o => o.status === 'cancelled').length
-      ];
-      
-      const ctx2 = document.getElementById('ordersStatusChart')?.getContext('2d');
-      if (ctx2) {
-        if (ordersChart) ordersChart.destroy();
-        ordersChart = new Chart(ctx2, {
-          type: 'doughnut',
-          data: {
-            labels: ['En attente', 'Confirmées', 'Expédiées', 'Livrées', 'Annulées'],
-            datasets: [{
-              data: statusCounts,
-              backgroundColor: ['#FFC107', '#17A2B8', '#007BFF', '#28A745', '#DC3545'],
-              borderWidth: 0
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-              legend: {
-                display: false
-              }
-            }
-          }
-        });
-      }
-      
-      const categorySalesHT = {};
-      orders.forEach(order => {
-        order.items.forEach(item => {
-          const product = products.find(p => p.id === item.productId);
-          if (product) {
-            const cat = product.category;
-            categorySalesHT[cat] = (categorySalesHT[cat] || 0) + (item.quantity * item.priceHT);
-          }
-        });
-      });
-      
-      const ctx3 = document.getElementById('categorySalesChart')?.getContext('2d');
-      if (ctx3) {
-        if (categoryChart) categoryChart.destroy();
-        categoryChart = new Chart(ctx3, {
-          type: 'bar',
-          data: {
-            labels: ['Table', 'Lumières', 'Mariage', 'Ballons', 'Déco'],
-            datasets: [
-              {
-                label: 'Ventes HT (FCFA)',
-                data: [
-                  categorySalesHT['table'] || 0,
-                  categorySalesHT['lumiere'] || 0,
-                  categorySalesHT['mariage'] || 0,
-                  categorySalesHT['ballon'] || 0,
-                  categorySalesHT['deco'] || 0
-                ],
-                backgroundColor: '#8B0000'
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-              legend: {
-                display: false
-              }
-            }
-          }
-        });
-      }
-      
-      const ctx4 = document.getElementById('revenueChart')?.getContext('2d');
-      if (ctx4) {
-        new Chart(ctx4, {
-          type: 'line',
-          data: {
-            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
-            datasets: [{
-              label: 'Chiffre d\'affaires TTC',
-              data: monthlySalesTTC.map(v => v * 1000),
-              borderColor: '#D4AF37',
-              backgroundColor: 'rgba(212, 175, 55, 0.1)',
-              tension: 0.4,
-              fill: true
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-              legend: {
-                display: false
-              }
-            }
-          }
-        });
-      }
-      
-      const ctx5 = document.getElementById('stockChart')?.getContext('2d');
-      if (ctx5) {
-        const stockCategories = {
-          critical: products.filter(p => p.stock <= p.minStock * 0.5).length,
-          low: products.filter(p => p.stock <= p.minStock && p.stock > p.minStock * 0.5).length,
-          medium: products.filter(p => p.stock > p.minStock && p.stock <= p.minStock * 2).length,
-          high: products.filter(p => p.stock > p.minStock * 2).length
-        };
-        
-        stockChart = new Chart(ctx5, {
-          type: 'doughnut',
-          data: {
-            labels: ['Critique', 'Faible', 'Moyen', 'Élevé'],
-            datasets: [{
-              data: [stockCategories.critical, stockCategories.low, stockCategories.medium, stockCategories.high],
-              backgroundColor: ['#dc3545', '#ffc107', '#17a2b8', '#28a745'],
-              borderWidth: 0
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-              legend: {
-                position: 'bottom'
-              }
-            }
-          }
-        });
-      }
-    }
-    
     // ==================== UTILITAIRES ====================
     
     function formatDate(dateString) {
@@ -5118,28 +5582,6 @@
       });
     }
     
-    function getStatusClass(status) {
-      switch(status) {
-        case 'pending': return 'badge-pending';
-        case 'confirmed': return 'badge-confirmed';
-        case 'shipped': return 'badge-shipped';
-        case 'delivered': return 'badge-delivered';
-        case 'cancelled': return 'badge-cancelled';
-        default: return 'badge-pending';
-      }
-    }
-    
-    function getStatusLabel(status) {
-      switch(status) {
-        case 'pending': return 'En attente';
-        case 'confirmed': return 'Confirmée';
-        case 'shipped': return 'Expédiée';
-        case 'delivered': return 'Livrée';
-        case 'cancelled': return 'Annulée';
-        default: return status;
-      }
-    }
-    
     function getCategoryLabel(cat) {
       switch(cat) {
         case 'table': return 'Art de la table';
@@ -5149,6 +5591,13 @@
         case 'deco': return 'Décoration';
         default: return cat;
       }
+    }
+    
+    function convertToCSV(data) {
+      if (data.length === 0) return '';
+      const headers = Object.keys(data[0]);
+      const rows = data.map(obj => headers.map(header => obj[header]).join(','));
+      return [headers.join(','), ...rows].join('\n');
     }
     
     // ==================== NAVIGATION ====================
@@ -5168,24 +5617,23 @@
       
       const titles = {
         'dashboard': 'Tableau de bord',
-        'commandes': 'Gestion des commandes',
+        'devis': 'Gestion des demandes de devis',
         'produits': 'Gestion des produits',
         'stock': 'Gestion des stocks',
         'factures': 'Gestion des factures',
         'clients': 'Gestion des clients',
         'services': 'Services',
-        'messages': 'Messages',
-        'temoignages': 'Témoignages',
         'equipe': 'Équipe',
         'salaires': 'Gestion des salaires',
-        'liens': 'Liens & Pages',
-        'parametres': 'Paramètres',
-        'statistiques': 'Statistiques'
+        'parametres': 'Paramètres'
       };
       
       document.getElementById('pageTitle').innerText = titles[section] || section;
       
-      if (section === 'commandes') updateOrdersTable();
+      if (section === 'devis') {
+        updateDevisTables();
+        updateDevisStats();
+      }
       if (section === 'produits') updateProductsTable();
       if (section === 'stock') {
         updateStockTable();
@@ -5193,12 +5641,12 @@
       }
       if (section === 'factures') updateInvoicesTable();
       if (section === 'clients') updateClientsTable();
+      if (section === 'equipe') initTeamUI();
       if (section === 'salaires') {
         updateSalariesUI();
       }
       if (section === 'dashboard') {
         updateStats();
-        initCharts();
       }
     }
     
@@ -5214,25 +5662,27 @@
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('adminInterface').style.display = 'block';
         
+        initDevis();
         initProducts();
-        initOrders(); // Commandes vides
+        initInvoices();
+        initClients();
         initEmployees();
         initPayments();
+        initTeam();
         initStockMovements();
-        initInvoices(); // Factures vides
         
-        updateClientsFromOrders(); // Clients vides
         updateStats();
-        updateOrdersTable();
-        updateRecentOrders();
+        updateDevisTables();
+        updateDevisStats();
         updateProductsTable();
         updateStockTable();
         updateStockMovementsTable();
         updateInvoicesTable();
+        updateRecentInvoices();
         updateClientsTable();
+        initTeamUI();
         updateSalariesUI();
         updateBadges();
-        initCharts();
         
         updateStockAlerts();
       } else {
@@ -5248,9 +5698,9 @@
     // ==================== RECHERCHE EN TEMPS RÉEL ====================
     
     document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('searchOrder')?.addEventListener('keyup', function(e) {
+      document.getElementById('searchDevis')?.addEventListener('keyup', function(e) {
         const searchTerm = e.target.value.toLowerCase();
-        const rows = document.querySelectorAll('#ordersList tr');
+        const rows = document.querySelectorAll('#devisList tr');
         
         rows.forEach(row => {
           const text = row.textContent.toLowerCase();
@@ -5277,6 +5727,19 @@
           row.style.display = text.includes(searchTerm) ? '' : 'none';
         });
       });
+      
+      document.getElementById('searchInvoice')?.addEventListener('keyup', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('#invoicesList tr');
+        
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+      });
+      
+      // Initialiser les écouteurs pour le client select
+      document.getElementById('invoiceClient')?.addEventListener('change', updateClientInfo);
     });
   </script>
   
