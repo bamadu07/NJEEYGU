@@ -26,6 +26,8 @@
   <!-- jsPDF pour générer des PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+  <!-- html2canvas pour capture d'écran -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -679,174 +681,184 @@
       object-fit: cover;
     }
     
-    /* Invoice */
-    .invoice-box {
+    /* Invoice - Style optimisé pour mobile */
+    .invoice-pdf-mobile {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
       background: white;
-      padding: 30px;
-      border-radius: 15px;
-      border: 1px solid #eee;
+      font-family: 'Montserrat', sans-serif;
+      color: #000;
+      font-size: 12px;
+      line-height: 1.4;
     }
     
-    .invoice-header {
+    .invoice-header-mobile {
       display: flex;
-      justify-content: space-between;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
       border-bottom: 2px solid var(--or-eclatant);
     }
     
-    .invoice-logo {
+    .company-info-mobile {
+      width: 100%;
+    }
+    
+    .company-logo-mobile {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--rouge-profond);
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
+      gap: 10px;
+    }
+    
+    .company-logo-mobile i {
+      color: var(--or-eclatant);
+    }
+    
+    .company-contact-mobile {
+      font-size: 10px;
+      color: #666;
+      line-height: 1.3;
+    }
+    
+    .invoice-title-mobile {
+      width: 100%;
+    }
+    
+    .invoice-title-mobile h1 {
+      font-size: 22px;
+      font-weight: bold;
+      color: var(--rouge-profond);
+      margin: 0 0 10px 0;
+    }
+    
+    .invoice-number-mobile {
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: var(--or-eclatant);
+    }
+    
+    .invoice-details-mobile {
+      margin: 15px 0;
+      display: flex;
+      flex-direction: column;
       gap: 15px;
     }
     
-    .invoice-logo img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      border: 2px solid var(--or-eclatant);
-      object-fit: cover;
+    .client-info-mobile, .order-info-mobile {
+      width: 100%;
+      background: #f8f1e0;
+      padding: 12px;
+      border-radius: 10px;
     }
     
-    .invoice-title {
+    .section-title-mobile {
+      font-size: 13px;
+      font-weight: bold;
       color: var(--rouge-profond);
-      font-size: 2rem;
-      margin-bottom: 0;
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--or-eclatant);
     }
     
-    .invoice-details {
-      margin-bottom: 30px;
-    }
-    
-    .invoice-table {
+    .invoice-table-mobile {
       width: 100%;
       border-collapse: collapse;
-      margin: 20px 0;
+      margin: 15px 0;
+      font-size: 10px;
     }
     
-    .invoice-table th {
+    .invoice-table-mobile thead {
       background: var(--rouge-profond);
-      color: white;
-      padding: 12px;
+    }
+    
+    .invoice-table-mobile th {
+      padding: 8px 6px;
       text-align: left;
-    }
-    
-    .invoice-table td {
-      padding: 12px;
-      border-bottom: 1px solid #eee;
-    }
-    
-    .invoice-table tfoot tr:last-child td {
-      border-bottom: none;
+      color: white;
       font-weight: bold;
+      border: none;
+      font-size: 10px;
     }
     
-    .invoice-footer {
-      margin-top: 40px;
+    .invoice-table-mobile td {
+      padding: 6px;
+      border-bottom: 1px solid #ddd;
+      font-size: 10px;
+    }
+    
+    .invoice-table-mobile .text-right {
+      text-align: right;
+    }
+    
+    .invoice-table-mobile .text-center {
       text-align: center;
-      color: #666;
-      font-size: 0.9rem;
     }
     
-    /* Notification */
-    .notification-toast {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: white;
-      border-left: 4px solid var(--or-eclatant);
-      padding: 15px 20px;
+    .totals-section-mobile {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
       border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      z-index: 9999;
-      animation: slideIn 0.3s ease;
+      border: 1px solid var(--or-eclatant);
     }
     
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+    .total-row-mobile {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      padding: 4px 0;
+      font-size: 11px;
     }
     
-    /* Search box */
-    .search-box {
-      position: relative;
+    .grand-total-mobile {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--rouge-profond);
+      border-top: 2px solid var(--or-eclatant);
+      border-bottom: none;
+      padding-top: 8px;
+      margin-top: 8px;
     }
     
-    .search-box i {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #999;
+    .footer-mobile {
+      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 1px solid #ddd;
+      text-align: center;
+      font-size: 9px;
+      color: #666;
+      line-height: 1.3;
     }
     
-    .search-box input {
-      padding-left: 40px;
+    .stamp-mobile {
+      text-align: center;
+      margin: 20px auto;
+      padding: 15px 25px;
+      border: 2px solid var(--or-eclatant);
+      border-radius: 3px;
+      display: inline-block;
+      transform: rotate(-5deg);
+      background: rgba(212, 175, 55, 0.05);
+      font-size: 10px;
     }
     
-    /* Responsive */
-    @media (max-width: 992px) {
-      .admin-sidebar {
-        width: 70px;
-      }
-      
-      .sidebar-header h3,
-      .sidebar-header p,
-      .sidebar-menu a span {
-        display: none;
-      }
-      
-      .sidebar-menu a i {
-        width: 100%;
-        text-align: center;
-        font-size: 1.3rem;
-      }
-      
-      .notification-badge {
-        right: 5px;
-        font-size: 0.6rem;
-        padding: 1px 4px;
-      }
-      
-      .admin-main {
-        margin-left: 70px;
-      }
+    .conditions-mobile {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 3px;
+      font-size: 9px;
+      line-height: 1.3;
     }
     
-    @media (max-width: 768px) {
-      .admin-main {
-        padding: 15px;
-      }
-      
-      .admin-topbar {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-      }
-      
-      .admin-user {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-    
-    /* Print styles */
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      .invoice-box, .invoice-box * {
-        visibility: visible;
-      }
-      .invoice-box {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-      }
-    }
-
     .btn-rouge {
       background: var(--rouge-profond);
       color: white;
@@ -914,6 +926,124 @@
       color: var(--rouge-profond);
       font-weight: bold;
       font-size: 1.1rem;
+    }
+
+    /* Table des stocks faibles */
+    .low-stock-alert {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+    
+    /* Responsive pour mobile */
+    @media (max-width: 768px) {
+      .admin-sidebar {
+        width: 70px;
+      }
+      
+      .sidebar-header h3,
+      .sidebar-header p,
+      .sidebar-menu a span {
+        display: none;
+      }
+      
+      .sidebar-menu a i {
+        width: 100%;
+        text-align: center;
+        font-size: 1.3rem;
+      }
+      
+      .notification-badge {
+        right: 5px;
+        font-size: 0.6rem;
+        padding: 1px 4px;
+      }
+      
+      .admin-main {
+        margin-left: 70px;
+        padding: 15px;
+      }
+      
+      .invoice-pdf-mobile {
+        padding: 15px;
+        font-size: 11px;
+      }
+      
+      .invoice-table-mobile {
+        font-size: 9px;
+      }
+      
+      .invoice-table-mobile th,
+      .invoice-table-mobile td {
+        padding: 5px 4px;
+        font-size: 9px;
+      }
+      
+      .invoice-title-mobile h1 {
+        font-size: 20px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .admin-main {
+        padding: 10px;
+      }
+      
+      .admin-topbar {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+      
+      .admin-user {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .invoice-pdf-mobile {
+        padding: 10px;
+        font-size: 10px;
+      }
+      
+      .invoice-table-mobile {
+        font-size: 8px;
+      }
+      
+      .invoice-title-mobile h1 {
+        font-size: 18px;
+      }
+    }
+    
+    /* Print styles */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .invoice-pdf-mobile, .invoice-pdf-mobile * {
+        visibility: visible;
+      }
+      .invoice-pdf-mobile {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 10mm !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        font-size: 10px !important;
+      }
+      
+      .invoice-table-mobile {
+        font-size: 9px !important;
+      }
+      
+      .invoice-table-mobile th,
+      .invoice-table-mobile td {
+        padding: 4px 3px !important;
+        font-size: 9px !important;
+      }
     }
   </style>
 </head>
@@ -1015,7 +1145,7 @@
           <h2 id="pageTitle">Tableau de bord</h2>
           <div class="admin-user">
             <div class="admin-user-info">
-              <div class="name" id="adminName">Mariama Ndiaye</div>
+              <div class="name" id="adminName">Mme Sarr</div>
               <div class="role" id="adminRole">Administrateur</div>
             </div>
             <img src="images/log1.png" alt="Admin" onerror="this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
@@ -1023,7 +1153,7 @@
         </div>
         
         <!-- Notification Toast -->
-        <div id="notificationToast" class="notification-toast" style="display: none;">
+        <div id="notificationToast" class="notification-toast" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 9999; background: white; border-radius: 15px; padding: 15px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border-left: 4px solid var(--or-eclatant);">
           <div class="d-flex align-items-center">
             <i class="fas fa-shopping-cart me-2" style="color: var(--or-eclatant);"></i>
             <div>
@@ -1084,6 +1214,12 @@
             </div>
           </div>
           
+          <!-- Alerte stock faible -->
+          <div id="lowStockAlert" class="low-stock-alert" style="display: none;">
+            <strong><i class="fas fa-exclamation-triangle me-2" style="color: #856404;"></i>Produits avec stock faible :</strong>
+            <span id="lowStockCount">0</span> produit(s) nécessitent une attention
+          </div>
+          
           <!-- Dernières demandes de devis -->
           <div class="admin-table">
             <div class="table-header">
@@ -1119,7 +1255,7 @@
                 <tr>
                   <th>N° Facture</th>
                   <th>Client</th>
-                  <th>Montant</th>
+                  <th>Montant TTC</th>
                   <th>Date</th>
                   <th>Statut</th>
                   <th>Actions</th>
@@ -1379,11 +1515,11 @@
         <!-- ==================== GESTION DES STOCKS ==================== -->
         <div id="section-stock" class="admin-section" style="display: none;">
           <div class="admin-tabs">
-            <div class="admin-tab active" onclick="filterStock('all', event)">Tous les stocks</div>
-            <div class="admin-tab" onclick="filterStock('critical', event)">Stock critique</div>
-            <div class="admin-tab" onclick="filterStock('low', event)">Stock faible</div>
-            <div class="admin-tab" onclick="filterStock('medium', event)">Stock moyen</div>
-            <div class="admin-tab" onclick="filterStock('high', event)">Stock élevé</div>
+            <div class="admin-tab active" onclick="filterStock('all', event)">Tous les stocks (<span id="stockCountAll">0</span>)</div>
+            <div class="admin-tab" onclick="filterStock('critical', event)">Stock critique (<span id="stockCountCritical">0</span>)</div>
+            <div class="admin-tab" onclick="filterStock('low', event)">Stock faible (<span id="stockCountLow">0</span>)</div>
+            <div class="admin-tab" onclick="filterStock('medium', event)">Stock moyen (<span id="stockCountMedium">0</span>)</div>
+            <div class="admin-tab" onclick="filterStock('high', event)">Stock élevé (<span id="stockCountHigh">0</span>)</div>
           </div>
           
           <div class="row g-4 mb-4">
@@ -1416,7 +1552,7 @@
                 </div>
                 <div class="stat-info">
                   <h3 id="statStockValue">0</h3>
-                  <p>Valeur totale</p>
+                  <p>Valeur totale TTC</p>
                 </div>
               </div>
             </div>
@@ -1677,81 +1813,130 @@
         <!-- ==================== SERVICES ==================== -->
         <div id="section-services" class="admin-section" style="display: none;">
           <div class="admin-tabs">
-            <div class="admin-tab active">Liste des services</div>
-            <div class="admin-tab">Ajouter un service</div>
+            <div class="admin-tab active" onclick="showServicesTab('list', event)">Liste des services</div>
+            <div class="admin-tab" onclick="showServicesTab('add', event)">Ajouter un service</div>
           </div>
           
-          <div class="admin-table">
-            <table class="display nowrap" style="width:100%">
-              <thead>
-                <tr>
-                  <th>Service</th>
-                  <th>Description</th>
-                  <th>Prix</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Mariage</strong></td>
-                  <td>Décoration complète de cérémonie</td>
-                  <td>250 000 FCFA</td>
-                  <td>
-                    <button class="action-btn"><i class="fas fa-edit"></i></button>
-                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Événements Pro</strong></td>
-                  <td>Séminaires, inaugurations</td>
-                  <td>Sur mesure</td>
-                  <td>
-                    <button class="action-btn"><i class="fas fa-edit"></i></button>
-                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Événements Privés</strong></td>
-                  <td>Baptêmes, anniversaires</td>
-                  <td>150 000 FCFA</td>
-                  <td>
-                    <button class="action-btn"><i class="fas fa-edit"></i></button>
-                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div id="services-list" class="services-tab-content">
+            <div class="admin-table">
+              <div class="table-header">
+                <h4>Services proposés</h4>
+                <button class="btn btn-or btn-sm" onclick="showServicesTab('add', event)">
+                  <i class="fas fa-plus me-1"></i> Nouveau service
+                </button>
+              </div>
+              <table id="servicesTable" class="display nowrap" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Description</th>
+                    <th>Prix HT</th>
+                    <th>TVA (18%)</th>
+                    <th>Prix TTC</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="servicesList">
+                  <!-- Les services seront insérés ici -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div id="services-add" class="services-tab-content" style="display: none;">
+            <div class="admin-form">
+              <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Ajouter un service</h4>
+              <form id="addServiceForm" onsubmit="addService(event)">
+                <div class="form-group">
+                  <label>Nom du service *</label>
+                  <input type="text" class="form-control" id="serviceName" required>
+                </div>
+                
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea class="form-control" id="serviceDescription" rows="3"></textarea>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Prix HT (FCFA) *</label>
+                      <input type="number" class="form-control" id="servicePriceHT" required onchange="updateServicePriceTTC()">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Prix TTC (FCFA)</label>
+                      <input type="text" class="form-control" id="servicePriceTTC" readonly>
+                    </div>
+                  </div>
+                </div>
+                
+                <button type="submit" class="btn btn-rouge">Ajouter le service</button>
+              </form>
+            </div>
           </div>
         </div>
         
         <!-- ==================== ÉQUIPE ==================== -->
         <div id="section-equipe" class="admin-section" style="display: none;">
           <div class="admin-tabs">
-            <div class="admin-tab active">Membres de l'équipe</div>
-            <div class="admin-tab">Ajouter un membre</div>
+            <div class="admin-tab active" onclick="showTeamTab('list', event)">Membres de l'équipe</div>
+            <div class="admin-tab" onclick="showTeamTab('add', event)">Ajouter un membre</div>
           </div>
           
-          <div class="admin-table">
-            <div class="table-header">
-              <h4>Membres de l'équipe</h4>
-              <button class="btn btn-or btn-sm" onclick="showAddTeamMemberModal()">
-                <i class="fas fa-user-plus me-1"></i> Ajouter un membre
-              </button>
+          <div id="team-list" class="team-tab-content">
+            <div class="admin-table">
+              <div class="table-header">
+                <h4>Membres de l'équipe</h4>
+                <button class="btn btn-or btn-sm" onclick="showTeamTab('add', event)">
+                  <i class="fas fa-user-plus me-1"></i> Ajouter un membre
+                </button>
+              </div>
+              <table id="teamTable" class="display nowrap" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Photo</th>
+                    <th>Nom</th>
+                    <th>Poste</th>
+                    <th>Bio</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="teamList">
+                  <!-- Les membres de l'équipe seront insérés ici -->
+                </tbody>
+              </table>
             </div>
-            <table id="teamTable" class="display nowrap" style="width:100%">
-              <thead>
-                <tr>
-                  <th>Photo</th>
-                  <th>Nom</th>
-                  <th>Poste</th>
-                  <th>Bio</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="teamList">
-                <!-- Les membres de l'équipe seront insérés ici -->
-              </tbody>
-            </table>
+          </div>
+          
+          <div id="team-add" class="team-tab-content" style="display: none;">
+            <div class="admin-form">
+              <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Ajouter un membre à l'équipe</h4>
+              <form id="addTeamMemberForm" onsubmit="addTeamMember(event)">
+                <div class="form-group">
+                  <label>Nom complet *</label>
+                  <input type="text" class="form-control" id="memberName" required>
+                </div>
+                
+                <div class="form-group">
+                  <label>Poste *</label>
+                  <input type="text" class="form-control" id="memberPosition" required>
+                </div>
+                
+                <div class="form-group">
+                  <label>Bio / Description</label>
+                  <textarea class="form-control" id="memberBio" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label>Photo URL</label>
+                  <input type="url" class="form-control" id="memberPhoto" placeholder="https://...">
+                </div>
+                
+                <button type="submit" class="btn btn-rouge">Ajouter le membre</button>
+              </form>
+            </div>
           </div>
         </div>
         
@@ -2020,62 +2205,85 @@
         <!-- ==================== PARAMÈTRES ==================== -->
         <div id="section-parametres" class="admin-section" style="display: none;">
           <div class="admin-tabs">
-            <div class="admin-tab active">Général</div>
-            <div class="admin-tab">Utilisateurs</div>
-            <div class="admin-tab">Notifications</div>
-            <div class="admin-tab">Paiements</div>
+            <div class="admin-tab active" onclick="showSettingsTab('general', event)">Général</div>
+            <div class="admin-tab" onclick="showSettingsTab('users', event)">Utilisateurs</div>
+            <div class="admin-tab" onclick="showSettingsTab('notifications', event)">Notifications</div>
+            <div class="admin-tab" onclick="showSettingsTab('payments', event)">Paiements</div>
           </div>
           
-          <div class="admin-form">
-            <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Paramètres généraux</h4>
-            <form>
-              <div class="form-group">
-                <label>Nom de l'entreprise</label>
-                <input type="text" class="form-control" value="NJEEYGU - Le Grand Jour">
-              </div>
-              
-              <div class="form-group">
-                <label>Email de contact</label>
-                <input type="email" class="form-control" value="contact@njeeygu.sn">
-              </div>
-              
-              <div class="form-group">
-                <label>Téléphone</label>
-                <input type="text" class="form-control" value="+221 77 544 97 95">
-              </div>
-              
-              <div class="form-group">
-                <label>Adresse</label>
-                <input type="text" class="form-control" value="123 Rue Principale, Saint-Louis">
-              </div>
-              
-              <div class="form-group">
-                <label>Numéro WhatsApp</label>
-                <input type="text" class="form-control" value="221775449795">
-              </div>
-              
-              <div class="form-group">
-                <label>Devise</label>
-                <select class="form-select">
-                  <option value="FCFA" selected>FCFA</option>
-                  <option value="EUR">Euro</option>
-                  <option value="USD">Dollar</option>
-                </select>
-              </div>
-              
-              <div class="form-group">
-                <label>Taux de TVA (%)</label>
-                <input type="number" class="form-control" value="18" readonly>
-                <small class="text-muted">Taux fixe à 18%</small>
-              </div>
-              
-              <div class="form-group">
-                <label>Seuil d'alerte stock par défaut</label>
-                <input type="number" class="form-control" value="5">
-              </div>
-              
-              <button type="submit" class="btn btn-rouge">Enregistrer les modifications</button>
-            </form>
+          <div id="settings-general" class="settings-tab-content">
+            <div class="admin-form">
+              <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Paramètres généraux</h4>
+              <form id="settingsForm" onsubmit="saveSettings(event)">
+                <div class="form-group">
+                  <label>Nom de l'entreprise</label>
+                  <input type="text" class="form-control" id="companyName" value="NJEEYGU - Le Grand Jour">
+                </div>
+                
+                <div class="form-group">
+                  <label>Email de contact</label>
+                  <input type="email" class="form-control" id="companyEmail" value="contact@njeeygu.sn">
+                </div>
+                
+                <div class="form-group">
+                  <label>Téléphone</label>
+                  <input type="text" class="form-control" id="companyPhone" value="+221 77 544 97 95">
+                </div>
+                
+                <div class="form-group">
+                  <label>Adresse</label>
+                  <input type="text" class="form-control" id="companyAddress" value="123 Rue Principale, Saint-Louis">
+                </div>
+                
+                <div class="form-group">
+                  <label>Numéro WhatsApp</label>
+                  <input type="text" class="form-control" id="companyWhatsapp" value="221775449795">
+                </div>
+                
+                <div class="form-group">
+                  <label>Devise</label>
+                  <select class="form-select" id="companyCurrency">
+                    <option value="FCFA" selected>FCFA</option>
+                    <option value="EUR">Euro</option>
+                    <option value="USD">Dollar</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label>Taux de TVA (%)</label>
+                  <input type="number" class="form-control" id="tvaRate" value="18" readonly>
+                  <small class="text-muted">Taux fixe à 18%</small>
+                </div>
+                
+                <div class="form-group">
+                  <label>Seuil d'alerte stock par défaut</label>
+                  <input type="number" class="form-control" id="defaultStockAlert" value="5">
+                </div>
+                
+                <button type="submit" class="btn btn-rouge">Enregistrer les modifications</button>
+              </form>
+            </div>
+          </div>
+          
+          <div id="settings-users" class="settings-tab-content" style="display: none;">
+            <div class="admin-form">
+              <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Gestion des utilisateurs</h4>
+              <p class="text-muted">Fonctionnalité à venir...</p>
+            </div>
+          </div>
+          
+          <div id="settings-notifications" class="settings-tab-content" style="display: none;">
+            <div class="admin-form">
+              <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Paramètres des notifications</h4>
+              <p class="text-muted">Fonctionnalité à venir...</p>
+            </div>
+          </div>
+          
+          <div id="settings-payments" class="settings-tab-content" style="display: none;">
+            <div class="admin-form">
+              <h4 style="color: var(--rouge-profond); margin-bottom: 20px;">Paramètres de paiement</h4>
+              <p class="text-muted">Fonctionnalité à venir...</p>
+            </div>
           </div>
         </div>
       </div>
@@ -2463,24 +2671,83 @@
     </div>
   </div>
 
-  <!-- Modal Visualisation Facture -->
+  <!-- Modal Visualisation Facture avec le même style que la première version -->
   <div class="modal fade" id="invoiceModal" tabindex="-1">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Facture <span id="invoiceModalId"></span></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="modal-header" style="background: linear-gradient(135deg, var(--rouge-profond), var(--or-eclatant));">
+          <h5 class="modal-title">
+            <i class="fas fa-file-invoice me-2"></i>Facture <span id="invoiceModalNumber"></span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div id="invoiceContent" class="invoice-box">
-            <!-- Le contenu de la facture sera généré ici -->
+          <div id="invoiceContent" style="background: white; max-width: 800px; margin: 0 auto;">
+            <!-- Le contenu de la facture sera injecté ici -->
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-or" onclick="downloadInvoicePDF()">
-            <i class="fas fa-download me-2"></i> Télécharger PDF
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-times me-1"></i> Fermer
           </button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          <button type="button" class="btn btn-or" onclick="downloadInvoicePDF()">
+            <i class="fas fa-download me-1"></i> Télécharger PDF
+          </button>
+          <button type="button" class="btn btn-rouge" onclick="printInvoice()">
+            <i class="fas fa-print me-1"></i> Imprimer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Visualisation Bulletin de Salaire (même style que la facture) -->
+  <div class="modal fade" id="payslipModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header" style="background: linear-gradient(135deg, var(--rouge-profond), var(--vert-emeraude));">
+          <h5 class="modal-title">
+            <i class="fas fa-file-pdf me-2"></i>Bulletin de Salaire <span id="payslipModalNumber"></span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="payslipContent" style="background: white; max-width: 800px; margin: 0 auto;">
+            <!-- Le contenu du bulletin sera injecté ici -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-times me-1"></i> Fermer
+          </button>
+          <button type="button" class="btn btn-or" onclick="downloadPayslipPDF()">
+            <i class="fas fa-download me-1"></i> Télécharger PDF
+          </button>
+          <button type="button" class="btn btn-rouge" onclick="printPayslip()">
+            <i class="fas fa-print me-1"></i> Imprimer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Ajouter Catégorie -->
+  <div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Ajouter une catégorie</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Nom de la catégorie</label>
+            <input type="text" class="form-control" id="newCategoryName" placeholder="Ex: Art de la table">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-rouge" onclick="addCategory()">Ajouter</button>
         </div>
       </div>
     </div>
@@ -2497,6 +2764,8 @@
     const EMPLOYEES_KEY = 'njeeygu_employees';
     const PAYMENTS_KEY = 'njeeygu_payments';
     const TEAM_KEY = 'njeeygu_team';
+    const SERVICES_KEY = 'njeeygu_services';
+    const SETTINGS_KEY = 'njeeygu_settings';
     
     // Données
     let devis = [];
@@ -2507,10 +2776,23 @@
     let employees = [];
     let payments = [];
     let team = [];
+    let services = [];
+    let settings = {
+      companyName: 'NJEEYGU - Le Grand Jour',
+      companyEmail: 'contact@njeeygu.sn',
+      companyPhone: '+221 77 544 97 95',
+      companyAddress: '123 Rue Principale, Saint-Louis',
+      companyWhatsapp: '221775449795',
+      currency: 'FCFA',
+      tvaRate: 18,
+      defaultStockAlert: 5
+    };
     
     let currentDevisId = null;
     let currentInvoiceId = null;
     let currentStockProductId = null;
+    let currentInvoiceData = null; // Pour la génération de PDF
+    let currentPayslipData = null; // Pour la génération de bulletin PDF
     
     // ==================== FONCTIONS TVA ====================
     
@@ -2525,10 +2807,16 @@
     function updatePriceTTC() {
       const priceHT = parseFloat(document.getElementById('productPriceHT').value) || 0;
       const priceTTC = calculateTTC(priceHT);
-      document.getElementById('productPriceTTC').value = Math.round(priceTTC).toLocaleString();
+      document.getElementById('productPriceTTC').value = Math.round(priceTTC).toLocaleString('fr-FR');
     }
     
-    // ==================== INITIALISATION DES DEVIS ====================
+    function updateServicePriceTTC() {
+      const priceHT = parseFloat(document.getElementById('servicePriceHT').value) || 0;
+      const priceTTC = calculateTTC(priceHT);
+      document.getElementById('servicePriceTTC').value = Math.round(priceTTC).toLocaleString('fr-FR') + ' FCFA';
+    }
+    
+    // ==================== INITIALISATION DES DONNÉES ====================
     
     function initDevis() {
       const stored = localStorage.getItem(DEVIS_KEY);
@@ -2544,152 +2832,20 @@
           devis = [];
         }
       } else {
-        devis = [
-          {
-            id: 'DEV-2026-001',
-            date: new Date(2026, 1, 15).toISOString(),
-            type: 'Devis personnalisé',
-            product: {
-              id: 1,
-              name: 'Centre de table Royal',
-              category: 'table'
-            },
-            customerInfo: {
-              name: 'Aïssatou Dieng',
-              phone: '77 123 45 67',
-              email: 'aissatou.d@email.com',
-              quantity: 10,
-              eventDate: '2026-04-20',
-              budget: '250000',
-              message: 'Je souhaiterais un devis pour 10 centres de table pour un mariage en avril.'
-            },
-            status: 'pending',
-            notes: '',
-            timestamp: new Date(2026, 1, 15).toISOString()
-          },
-          {
-            id: 'DEV-2026-002',
-            date: new Date(2026, 1, 18).toISOString(),
-            type: 'Devis personnalisé',
-            product: {
-              id: 2,
-              name: 'Guirlande Dorée',
-              category: 'lumiere'
-            },
-            customerInfo: {
-              name: 'Mamadou Diallo',
-              phone: '78 987 65 43',
-              email: 'mamadou.d@email.com',
-              quantity: 5,
-              eventDate: '2026-05-05',
-              budget: '100000',
-              message: 'Besoin de guirlandes pour une soirée d\'entreprise.'
-            },
-            status: 'pending',
-            notes: '',
-            timestamp: new Date(2026, 1, 18).toISOString()
-          },
-          {
-            id: 'DEV-2026-003',
-            date: new Date(2026, 1, 20).toISOString(),
-            type: 'Devis personnalisé',
-            product: {
-              id: 3,
-              name: 'Bouquet de Mariée Prestige',
-              category: 'mariage'
-            },
-            customerInfo: {
-              name: 'Fatou Sow',
-              phone: '70 456 78 90',
-              email: 'fatou.s@email.com',
-              quantity: 1,
-              eventDate: '2026-06-10',
-              budget: '50000',
-              message: 'Je voudrais un bouquet de mariée avec des roses blanches.'
-            },
-            status: 'sent',
-            notes: 'Devis envoyé le 21/02',
-            timestamp: new Date(2026, 1, 20).toISOString()
-          }
-        ];
+        
         localStorage.setItem(DEVIS_KEY, JSON.stringify(devis));
       }
     }
-    
-    // ==================== INITIALISATION DES PRODUITS ====================
     
     function initProducts() {
       const stored = localStorage.getItem(PRODUCTS_KEY);
       if (stored) {
         products = JSON.parse(stored);
       } else {
-        products = [
-          {
-            id: 1,
-            name: 'Centre de table Royal',
-            category: 'table',
-            priceHT: 25000,
-            priceTTC: calculateTTC(25000),
-            stock: 15,
-            minStock: 5,
-            status: 'active',
-            image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200',
-            location: 'A1-R2'
-          },
-          {
-            id: 2,
-            name: 'Guirlande Dorée',
-            category: 'lumiere',
-            priceHT: 12000,
-            priceTTC: calculateTTC(12000),
-            stock: 8,
-            minStock: 5,
-            status: 'active',
-            image: 'https://images.unsplash.com/photo-1517292987719-0369a794ec0f?w=200',
-            location: 'B3-R1'
-          },
-          {
-            id: 3,
-            name: 'Bouquet de Mariée Prestige',
-            category: 'mariage',
-            priceHT: 45000,
-            priceTTC: calculateTTC(45000),
-            stock: 3,
-            minStock: 3,
-            status: 'active',
-            image: 'https://images.unsplash.com/photo-1591886960571-74d43a9d4166?w=200',
-            location: 'C2-R4'
-          },
-          {
-            id: 4,
-            name: 'Ballons Arc-en-ciel (lot de 10)',
-            category: 'ballon',
-            priceHT: 8500,
-            priceTTC: calculateTTC(8500),
-            stock: 25,
-            minStock: 10,
-            status: 'active',
-            image: 'https://images.unsplash.com/photo-1530103043960-721387b916e6?w=200',
-            location: 'D1-R3'
-          },
-          {
-            id: 5,
-            name: 'Nappe Satinée Luxe',
-            category: 'deco',
-            priceHT: 18500,
-            priceTTC: calculateTTC(18500),
-            stock: 12,
-            minStock: 5,
-            status: 'active',
-            image: 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=200',
-            location: 'A2-R1'
-          }
-        ];
+        
         localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
       }
     }
-    
-    // ==================== INITIALISATION DES FACTURES ====================
     
     function initInvoices() {
       const stored = localStorage.getItem(INVOICES_KEY);
@@ -2701,8 +2857,6 @@
       }
     }
     
-    // ==================== INITIALISATION DES CLIENTS ====================
-    
     function initClients() {
       const stored = localStorage.getItem(CLIENTS_KEY);
       if (stored) {
@@ -2712,6 +2866,117 @@
         localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
       }
       updateClientsFromDevisAndInvoices();
+    }
+    
+    function initServices() {
+      const stored = localStorage.getItem(SERVICES_KEY);
+      if (stored) {
+        services = JSON.parse(stored);
+      } else {
+        services = [
+          {
+            id: 1,
+            name: 'Mariage',
+            description: 'Décoration complète de cérémonie',
+            priceHT: 250000,
+            priceTTC: calculateTTC(250000)
+          },
+          {
+            id: 2,
+            name: 'Événements Professionnels',
+            description: 'Séminaires, inaugurations',
+            priceHT: 150000,
+            priceTTC: calculateTTC(150000)
+          },
+          {
+            id: 3,
+            name: 'Événements Privés',
+            description: 'Baptêmes, anniversaires',
+            priceHT: 150000,
+            priceTTC: calculateTTC(150000)
+          }
+        ];
+        localStorage.setItem(SERVICES_KEY, JSON.stringify(services));
+      }
+    }
+    
+    function initEmployees() {
+      const stored = localStorage.getItem(EMPLOYEES_KEY);
+      if (stored) {
+        employees = JSON.parse(stored);
+      } else {
+        
+        localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(employees));
+      }
+    }
+    
+    function initPayments() {
+      const stored = localStorage.getItem(PAYMENTS_KEY);
+      if (stored) {
+        payments = JSON.parse(stored);
+      } else {
+        const today = new Date();
+        payments = [];
+        
+        for (let i = 0; i < 3; i++) {
+          const month = today.getMonth() - i;
+          const year = today.getFullYear();
+          const paymentDate = new Date(year, month, 28);
+          
+          employees.forEach(emp => {
+            const bonus = i === 0 ? emp.defaultBonus * 1.2 : emp.defaultBonus;
+            
+            payments.push({
+              id: payments.length + 1,
+              employeeId: emp.id,
+              employeeName: emp.name,
+              position: emp.position,
+              paymentDate: paymentDate.toISOString(),
+              period: `${paymentDate.toLocaleString('fr-FR', { month: 'long' })} ${year}`,
+              baseSalary: emp.baseSalary,
+              bonus: bonus,
+              total: emp.baseSalary + bonus,
+              status: 'payé',
+              paymentMethod: 'virement',
+              notes: ''
+            });
+          });
+        }
+        
+        localStorage.setItem(PAYMENTS_KEY, JSON.stringify(payments));
+      }
+    }
+    
+    function initTeam() {
+      const stored = localStorage.getItem(TEAM_KEY);
+      if (stored) {
+        team = JSON.parse(stored);
+      } else {
+        
+        localStorage.setItem(TEAM_KEY, JSON.stringify(team));
+      }
+    }
+    
+    function initStockMovements() {
+      const stored = localStorage.getItem(STOCK_MOVEMENTS_KEY);
+      if (stored) {
+        stockMovements = JSON.parse(stored);
+      } else {
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        
+        
+        localStorage.setItem(STOCK_MOVEMENTS_KEY, JSON.stringify(stockMovements));
+      }
+    }
+    
+    function initSettings() {
+      const stored = localStorage.getItem(SETTINGS_KEY);
+      if (stored) {
+        settings = JSON.parse(stored);
+      }
     }
     
     function updateClientsFromDevisAndInvoices() {
@@ -2773,189 +3038,6 @@
       localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
     }
     
-    // ==================== INITIALISATION DES EMPLOYÉS ====================
-    
-    function initEmployees() {
-      const stored = localStorage.getItem(EMPLOYEES_KEY);
-      if (stored) {
-        employees = JSON.parse(stored);
-      } else {
-        employees = [
-          {
-            id: 1,
-            name: 'Mariama Ndiaye',
-            position: 'Directrice Créative',
-            baseSalary: 350000,
-            defaultBonus: 50000,
-            hireDate: '2020-01-15',
-            phone: '77 123 45 67',
-            email: 'mariama.n@njeeygu.sn',
-            bankAccount: 'SN 12345 67890 12345 67890 12',
-            status: 'actif',
-            notes: 'Fondatrice',
-            image: 'https://randomuser.me/api/portraits/women/44.jpg'
-          },
-          {
-            id: 2,
-            name: 'Amadou Diallo',
-            position: 'Chef de projet',
-            baseSalary: 250000,
-            defaultBonus: 25000,
-            hireDate: '2021-03-10',
-            phone: '76 234 56 78',
-            email: 'amadou.d@njeeygu.sn',
-            bankAccount: 'SN 98765 43210 98765 43210 98',
-            status: 'actif',
-            notes: 'Responsable événements',
-            image: 'https://randomuser.me/api/portraits/men/32.jpg'
-          },
-          {
-            id: 3,
-            name: 'Fatou Sow',
-            position: 'Décoratrice',
-            baseSalary: 200000,
-            defaultBonus: 15000,
-            hireDate: '2022-06-20',
-            phone: '70 345 67 89',
-            email: 'fatou.s@njeeygu.sn',
-            bankAccount: 'SN 54321 09876 54321 09876 54',
-            status: 'actif',
-            notes: 'Spécialiste mariage',
-            image: 'https://randomuser.me/api/portraits/women/68.jpg'
-          },
-          {
-            id: 4,
-            name: 'Ibrahima Fall',
-            position: 'Assistant logistique',
-            baseSalary: 150000,
-            defaultBonus: 10000,
-            hireDate: '2023-09-05',
-            phone: '78 456 78 90',
-            email: 'ibrahima.f@njeeygu.sn',
-            bankAccount: 'SN 13579 24680 13579 24680 13',
-            status: 'actif',
-            notes: 'Gestion stock',
-            image: 'https://randomuser.me/api/portraits/men/75.jpg'
-          }
-        ];
-        localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(employees));
-      }
-    }
-    
-    // ==================== INITIALISATION DES PAIEMENTS ====================
-    
-    function initPayments() {
-      const stored = localStorage.getItem(PAYMENTS_KEY);
-      if (stored) {
-        payments = JSON.parse(stored);
-      } else {
-        const today = new Date();
-        payments = [];
-        
-        for (let i = 0; i < 3; i++) {
-          const month = today.getMonth() - i;
-          const year = today.getFullYear();
-          const paymentDate = new Date(year, month, 28);
-          
-          employees.forEach(emp => {
-            const bonus = i === 0 ? emp.defaultBonus * 1.2 : emp.defaultBonus;
-            
-            payments.push({
-              id: payments.length + 1,
-              employeeId: emp.id,
-              employeeName: emp.name,
-              position: emp.position,
-              paymentDate: paymentDate.toISOString(),
-              period: `${paymentDate.toLocaleString('fr-FR', { month: 'long' })} ${year}`,
-              baseSalary: emp.baseSalary,
-              bonus: bonus,
-              total: emp.baseSalary + bonus,
-              status: 'payé',
-              paymentMethod: 'virement',
-              notes: ''
-            });
-          });
-        }
-        
-        localStorage.setItem(PAYMENTS_KEY, JSON.stringify(payments));
-      }
-    }
-    
-    // ==================== INITIALISATION DE L'ÉQUIPE ====================
-    
-    function initTeam() {
-      const stored = localStorage.getItem(TEAM_KEY);
-      if (stored) {
-        team = JSON.parse(stored);
-      } else {
-        team = [
-          {
-            id: 1,
-            name: 'Mariama Ndiaye',
-            position: 'Directrice Créative',
-            bio: '10 ans d\'expérience en décoration d\'événements',
-            image: 'https://randomuser.me/api/portraits/women/44.jpg'
-          },
-          {
-            id: 2,
-            name: 'Amadou Diallo',
-            position: 'Chef de projet',
-            bio: 'Spécialiste en organisation d\'événements',
-            image: 'https://randomuser.me/api/portraits/men/32.jpg'
-          },
-          {
-            id: 3,
-            name: 'Fatou Sow',
-            position: 'Décoratrice',
-            bio: 'Expert en décoration florale',
-            image: 'https://randomuser.me/api/portraits/women/68.jpg'
-          }
-        ];
-        localStorage.setItem(TEAM_KEY, JSON.stringify(team));
-      }
-    }
-    
-    // ==================== INITIALISATION DES MOUVEMENTS DE STOCK ====================
-    
-    function initStockMovements() {
-      const stored = localStorage.getItem(STOCK_MOVEMENTS_KEY);
-      if (stored) {
-        stockMovements = JSON.parse(stored);
-      } else {
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-        
-        stockMovements = [
-          {
-            id: 1,
-            date: today.toISOString(),
-            productId: 1,
-            productName: 'Centre de table Royal',
-            type: 'entree',
-            quantity: 10,
-            stockAfter: 12,
-            reason: 'reception',
-            comment: 'Réception fournisseur',
-            user: 'Admin'
-          },
-          {
-            id: 2,
-            date: yesterday.toISOString(),
-            productId: 2,
-            productName: 'Guirlande Dorée',
-            type: 'sortie',
-            quantity: 2,
-            stockAfter: 8,
-            reason: 'commande',
-            comment: 'Commande #CMD-2026-001',
-            user: 'Admin'
-          }
-        ];
-        localStorage.setItem(STOCK_MOVEMENTS_KEY, JSON.stringify(stockMovements));
-      }
-    }
-    
     // ==================== FONCTIONS POUR LES STOCKS ====================
     
     function addStockMovement(productId, type, quantity, reason, comment) {
@@ -2971,6 +3053,10 @@
       } else if (type === 'sortie') {
         newStock = Math.max(0, oldStock - quantity);
         product.stock = newStock;
+      } else if (type === 'ajustement') {
+        newStock = quantity;
+        quantity = newStock - oldStock;
+        type = newStock > oldStock ? 'entree' : 'sortie';
       }
       
       const movement = {
@@ -2979,7 +3065,7 @@
         productId: productId,
         productName: product.name,
         type: type,
-        quantity: quantity,
+        quantity: Math.abs(quantity),
         stockBefore: oldStock,
         stockAfter: newStock,
         reason: reason,
@@ -2999,7 +3085,7 @@
       return movement;
     }
     
-    // ==================== FACTURES ====================
+    // ==================== FONCTIONS FACTURES ====================
     
     function saveInvoices() {
       localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
@@ -3007,116 +3093,15 @@
       updateInvoicesTable();
       updateRecentInvoices();
       updateStats();
-    }
-    
-    function updateInvoicesTable() {
-      const tbody = document.getElementById('invoicesList');
-      if (!tbody) return;
-      
-      const sortedInvoices = [...invoices].sort((a, b) => new Date(b.date) - new Date(a.date));
-      
-      tbody.innerHTML = '';
-      sortedInvoices.forEach(invoice => {
-        const statusClass = invoice.status === 'paid' ? 'badge-paid' : invoice.status === 'partial' ? 'badge-pending' : 'badge-unpaid';
-        const statusLabel = invoice.status === 'paid' ? 'Payée' : invoice.status === 'partial' ? 'Partielle' : 'Impayée';
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><strong>${invoice.id}</strong></td>
-          <td>${invoice.client}</td>
-          <td>${invoice.phone}</td>
-          <td>${invoice.email || '-'}</td>
-          <td>${invoice.totalHT.toLocaleString()} FCFA</td>
-          <td>${invoice.tva.toLocaleString()} FCFA</td>
-          <td><strong>${invoice.totalTTC.toLocaleString()} FCFA</strong></td>
-          <td>${formatDate(invoice.date)}</td>
-          <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
-          <td>
-            <button class="action-btn" onclick="viewInvoiceDetails('${invoice.id}')" title="Voir"><i class="fas fa-eye"></i></button>
-            <button class="action-btn pdf" onclick="downloadInvoicePDF('${invoice.id}')" title="PDF"><i class="fas fa-download"></i></button>
-            <button class="action-btn delete" onclick="deleteInvoice('${invoice.id}')" title="Supprimer"><i class="fas fa-trash"></i></button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      
-      if ($.fn.DataTable.isDataTable('#invoicesTable')) {
-        $('#invoicesTable').DataTable().destroy();
-      }
-      
-      $('#invoicesTable').DataTable({
-        pageLength: 10,
-        order: [[7, 'desc']],
-        language: {
-          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
-        }
-      });
-      
       updateInvoiceStats();
     }
-    
-    function updateRecentInvoices() {
-      const tbody = document.getElementById('recentInvoicesList');
-      if (!tbody) return;
-      
-      const recentInvoices = [...invoices].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
-      
-      tbody.innerHTML = '';
-      recentInvoices.forEach(invoice => {
-        const statusClass = invoice.status === 'paid' ? 'badge-paid' : invoice.status === 'partial' ? 'badge-pending' : 'badge-unpaid';
-        const statusLabel = invoice.status === 'paid' ? 'Payée' : invoice.status === 'partial' ? 'Partielle' : 'Impayée';
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><strong>${invoice.id}</strong></td>
-          <td>${invoice.client}</td>
-          <td>${invoice.totalTTC.toLocaleString()} FCFA</td>
-          <td>${formatDate(invoice.date)}</td>
-          <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
-          <td>
-            <button class="action-btn" onclick="viewInvoiceDetails('${invoice.id}')"><i class="fas fa-eye"></i></button>
-            <button class="action-btn pdf" onclick="downloadInvoicePDF('${invoice.id}')"><i class="fas fa-download"></i></button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      
-      if ($.fn.DataTable.isDataTable('#recentInvoicesTable')) {
-        $('#recentInvoicesTable').DataTable().destroy();
-      }
-      
-      $('#recentInvoicesTable').DataTable({
-        pageLength: 5,
-        order: [[3, 'desc']],
-        searching: false,
-        language: {
-          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
-        }
-      });
-    }
-    
-    function updateInvoiceStats() {
-      const totalInvoices = invoices.length;
-      const paidInvoices = invoices.filter(i => i.status === 'paid').length;
-      const unpaidInvoices = invoices.filter(i => i.status === 'unpaid' || i.status === 'partial').length;
-      const totalAmount = invoices.reduce((sum, i) => sum + i.totalTTC, 0);
-      
-      document.getElementById('statTotalInvoices').innerText = totalInvoices;
-      document.getElementById('statPaidInvoices').innerText = paidInvoices;
-      document.getElementById('statUnpaidInvoices').innerText = unpaidInvoices;
-      document.getElementById('statTotalAmount').innerText = totalAmount.toLocaleString() + ' FCFA';
-      document.getElementById('invoicesCountAll').innerText = totalInvoices;
-      document.getElementById('invoicesCountPaid').innerText = paidInvoices;
-      document.getElementById('invoicesCountUnpaid').innerText = unpaidInvoices;
-      document.getElementById('statFactures').innerText = totalInvoices;
-    }
-    
+
     function generateInvoiceId() {
       const year = new Date().getFullYear();
       const count = invoices.length + 1;
       return `FACT-${year}-${String(count).padStart(3, '0')}`;
     }
-    
+
     function addInvoice(event) {
       event.preventDefault();
       
@@ -3161,13 +3146,16 @@
       const today = new Date().toISOString().split('T')[0];
       const dueDate = new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0];
       
+      const invoiceDate = document.getElementById('invoiceDate').value || today;
+      const invoiceDueDate = document.getElementById('invoiceDueDate').value || dueDate;
+      
       const newInvoice = {
         id: generateInvoiceId(),
         client: selectedClient.name,
         phone: selectedClient.phone,
         email: selectedClient.email || '',
-        date: document.getElementById('invoiceDate').value || today,
-        dueDate: document.getElementById('invoiceDueDate').value || dueDate,
+        date: invoiceDate,
+        dueDate: invoiceDueDate,
         items: items,
         totalHT: totalHT,
         tva: tva,
@@ -3179,20 +3167,37 @@
       invoices.push(newInvoice);
       saveInvoices();
       
-      bootstrap.Modal.getInstance(document.getElementById('addInvoiceModal')).hide();
+      // Mettre à jour le stock pour chaque article
+      items.forEach(item => {
+        addStockMovement(
+          item.productId,
+          'sortie',
+          item.quantity,
+          'facture',
+          `Facture ${newInvoice.id}`
+        );
+      });
+      
+      // Fermer le modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('addInvoiceModal'));
+      if (modal) modal.hide();
+      
+      // Réinitialiser le formulaire
+      document.getElementById('addInvoiceForm').reset();
+      
       showNotification('Facture créée', `La facture ${newInvoice.id} a été créée avec succès`);
     }
-    
+
     function addInvoiceItem() {
       const container = document.getElementById('invoiceItems');
-      const newItem = document.createElement('div');
-      newItem.className = 'row mb-3 invoice-item';
       
       let productOptions = '<option value="">Sélectionnez un produit</option>';
       products.forEach(p => {
-        productOptions += `<option value="${p.id}" data-price="${p.priceHT}">${p.name} - ${p.priceHT.toLocaleString()} FCFA</option>`;
+        productOptions += `<option value="${p.id}" data-price="${p.priceHT}">${p.name} - ${p.priceHT.toLocaleString('fr-FR')} FCFA (Stock: ${p.stock})</option>`;
       });
       
+      const newItem = document.createElement('div');
+      newItem.className = 'row mb-3 invoice-item';
       newItem.innerHTML = `
         <div class="col-md-5">
           <select class="form-select" name="productId" required onchange="updateItemPrice(this)">
@@ -3214,7 +3219,7 @@
       
       container.appendChild(newItem);
     }
-    
+
     function removeInvoiceItem(btn) {
       const items = document.querySelectorAll('.invoice-item');
       if (items.length > 1) {
@@ -3223,7 +3228,7 @@
         alert('Vous devez garder au moins un article');
       }
     }
-    
+
     function updateItemPrice(select) {
       const row = select.closest('.invoice-item');
       const priceInput = row.querySelector('input[name="price"]');
@@ -3231,12 +3236,404 @@
       const price = selected.dataset.price;
       
       if (price) {
-        priceInput.value = parseInt(price).toLocaleString() + ' FCFA';
+        priceInput.value = parseInt(price).toLocaleString('fr-FR') + ' FCFA';
       } else {
         priceInput.value = '';
       }
     }
+
+    // ==================== FONCTION DE GÉNÉRATION DE FACTURE ====================
     
+    function generateInvoiceForOrder(invoiceId) {
+      const invoice = invoices.find(i => i.id === invoiceId);
+      if (!invoice) {
+        showNotification('Erreur', 'Facture non trouvée', 'error');
+        return;
+      }
+      
+      currentInvoiceId = invoiceId;
+      currentInvoiceData = invoice;
+      
+      const invoiceNumber = invoice.id;
+      const orderNumber = `CMD-${String(invoices.indexOf(invoice) + 1).padStart(4, '0')}`;
+      
+      // Calculer la TVA pour chaque article
+      const itemsRows = invoice.items.map((item, index) => {
+        const totalHT = item.quantity * item.priceHT;
+        const tva = item.priceHT * TVA_RATE;
+        const totalTTC = totalHT * (1 + TVA_RATE);
+        
+        return `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${item.name}</td>
+            <td class="text-center">${item.quantity}</td>
+            <td class="text-center">${Math.round(item.priceHT).toLocaleString('fr-FR')}</td>
+            <td class="text-center">${Math.round(tva).toLocaleString('fr-FR')}</td>
+            <td class="text-right">${Math.round(totalHT).toLocaleString('fr-FR')}</td>
+            <td class="text-right">${Math.round(totalTTC).toLocaleString('fr-FR')}</td>
+          </tr>
+        `;
+      }).join('');
+      
+      // Construire le contenu HTML de la facture OPTIMISÉ POUR MOBILE
+      const invoiceHTML = `
+        <div class="invoice-pdf-mobile">
+          <div class="invoice-header-mobile">
+            <div class="company-info-mobile">
+              <div class="company-logo-mobile">
+                <i class="fas fa-utensils"></i> ${settings.companyName}
+              </div>
+              <div class="company-contact-mobile">
+                <strong>Décoration d'événements</strong><br>
+                ${settings.companyAddress}<br>
+                <strong>Téléphone:</strong> ${settings.companyPhone}<br>
+                <strong>Email:</strong> ${settings.companyEmail}<br>
+                <strong>NIF:</strong> 1234567890
+              </div>
+            </div>
+            <div class="invoice-title-mobile">
+              <h1>FACTURE</h1>
+              <div class="invoice-number-mobile">
+                <strong>N°:</strong> ${invoiceNumber}
+              </div>
+              <div style="font-size: 11px;">
+                <strong>Date:</strong> ${new Date(invoice.date).toLocaleDateString('fr-FR')}<br>
+                <strong>Commande:</strong> ${orderNumber}
+              </div>
+            </div>
+          </div>
+          
+          <div class="invoice-details-mobile">
+            <div class="client-info-mobile">
+              <div class="section-title-mobile">INFORMATIONS CLIENT</div>
+              <div style="font-size: 11px; line-height: 1.4;">
+                <strong>${invoice.client}</strong><br>
+                Tél: ${invoice.phone}<br>
+                ${invoice.email ? `Email: ${invoice.email}<br>` : ''}
+              </div>
+            </div>
+            
+            <div class="order-info-mobile">
+              <div class="section-title-mobile">DÉTAILS FACTURE</div>
+              <div style="font-size: 11px; line-height: 1.4;">
+                <strong>Date d'échéance:</strong> ${new Date(invoice.dueDate || invoice.date).toLocaleDateString('fr-FR')}<br>
+                <strong>Statut:</strong> <span style="color: ${invoice.status === 'paid' ? '#28a745' : '#ffc107'};">${invoice.status === 'paid' ? 'Payée' : invoice.status === 'partial' ? 'Paiement partiel' : 'Impayée'}</span><br>
+                <strong>Paiement:</strong> ${invoice.paymentMethod || 'À déterminer'}
+              </div>
+            </div>
+          </div>
+          
+          <div class="section-title-mobile">ARTICLES FACTURÉS</div>
+          <table class="invoice-table-mobile">
+            <thead>
+              <tr>
+                <th>N°</th>
+                <th>ARTICLE</th>
+                <th class="text-center">QTÉ</th>
+                <th class="text-center">PRIX HT</th>
+                <th class="text-center">TVA 18%</th>
+                <th class="text-right">TOTAL HT</th>
+                <th class="text-right">TOTAL TTC</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsRows}
+            </tbody>
+          </table>
+          
+          <div class="totals-section-mobile">
+            <div class="total-row-mobile">
+              <span><strong>Sous-total HT:</strong></span>
+              <span>${Math.round(invoice.totalHT).toLocaleString('fr-FR')} FCFA</span>
+            </div>
+            <div class="total-row-mobile">
+              <span><strong>TVA (18%):</strong></span>
+              <span>${Math.round(invoice.tva).toLocaleString('fr-FR')} FCFA</span>
+            </div>
+            <div class="total-row-mobile grand-total-mobile">
+              <span><strong>TOTAL TTC:</strong></span>
+              <span><strong>${Math.round(invoice.totalTTC).toLocaleString('fr-FR')} FCFA</strong></span>
+            </div>
+          </div>
+          
+          <div class="conditions-mobile">
+            <strong>Conditions de paiement:</strong><br>
+            • Paiement à réception de facture<br>
+            • Accepté: Espèces, Wave, Orange Money, Free Money<br>
+            • TVA 18% incluse<br>
+            • Facture = Reçu officiel
+          </div>
+          
+          <div class="stamp-mobile">
+            <div style="font-size: 12px; font-weight: bold; color: var(--rouge-profond);">
+              <i class="fas fa-stamp"></i> ${invoice.status === 'paid' ? 'PAYÉ' : 'EN ATTENTE DE PAIEMENT'}
+            </div>
+            <div style="font-size: 10px; margin-top: 3px;">
+              ${new Date().toLocaleDateString('fr-FR')}
+            </div>
+            <div style="font-size: 9px; margin-top: 5px; color: #666;">
+              Signature & Cachet
+            </div>
+          </div>
+          
+          <div class="footer-mobile">
+            <p style="margin: 0 0 5px 0; font-size: 10px; font-weight: bold;">
+              Merci pour votre confiance !
+            </p>
+            <p style="margin: 0;">
+              NJEEYGU - Le Grand Jour<br>
+              Tél: ${settings.companyPhone} | Email: ${settings.companyEmail}
+            </p>
+            <p style="margin: 5px 0 0 0; color: #999;">
+              Facture générée automatiquement • N° ${invoiceNumber}
+            </p>
+          </div>
+        </div>
+      `;
+      
+      // Injecter le HTML dans le modal
+      document.getElementById('invoiceContent').innerHTML = invoiceHTML;
+      document.getElementById('invoiceModalNumber').textContent = invoiceNumber;
+      
+      // Afficher le modal
+      const modal = new bootstrap.Modal(document.getElementById('invoiceModal'));
+      modal.show();
+    }
+
+    function downloadInvoicePDF() {
+      if (!currentInvoiceData) {
+        showNotification('Erreur', 'Aucune facture à télécharger', 'error');
+        return;
+      }
+      
+      showNotification('Génération du PDF en cours...', 'info');
+      
+      const invoiceElement = document.getElementById('invoiceContent');
+      
+      // Sauvegarder les styles originaux
+      const originalStyles = {
+        width: invoiceElement.style.width,
+        maxWidth: invoiceElement.style.maxWidth,
+        margin: invoiceElement.style.margin,
+        padding: invoiceElement.style.padding,
+        fontSize: invoiceElement.style.fontSize,
+        lineHeight: invoiceElement.style.lineHeight
+      };
+      
+      // Appliquer des styles optimisés pour le PDF mobile
+      invoiceElement.style.width = '800px';
+      invoiceElement.style.maxWidth = '800px';
+      invoiceElement.style.margin = '0 auto';
+      invoiceElement.style.padding = '20px';
+      invoiceElement.style.fontSize = '12px';
+      invoiceElement.style.lineHeight = '1.4';
+      invoiceElement.style.backgroundColor = '#ffffff';
+      
+      // Options optimisées pour mobile
+      html2canvas(invoiceElement, {
+        scale: 3, // Haute résolution pour mobile
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        letterRendering: true,
+        allowTaint: true,
+        width: 800,
+        windowWidth: 800,
+        onclone: function(clonedDoc) {
+          const clonedElement = clonedDoc.getElementById('invoiceContent');
+          if (clonedElement) {
+            clonedElement.style.width = '800px';
+            clonedElement.style.maxWidth = '800px';
+            clonedElement.style.boxSizing = 'border-box';
+            clonedElement.style.fontSize = '12px';
+            clonedElement.style.lineHeight = '1.4';
+            clonedElement.style.fontFamily = 'Montserrat, sans-serif';
+          }
+        }
+      }).then(canvas => {
+        // Restaurer les styles originaux
+        invoiceElement.style.width = originalStyles.width;
+        invoiceElement.style.maxWidth = originalStyles.maxWidth;
+        invoiceElement.style.margin = originalStyles.margin;
+        invoiceElement.style.padding = originalStyles.padding;
+        invoiceElement.style.fontSize = originalStyles.fontSize;
+        invoiceElement.style.lineHeight = originalStyles.lineHeight;
+        
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jspdf.jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
+        
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        
+        // Calculer la hauteur de l'image pour qu'elle s'adapte à la page
+        const imgWidth = 190; // Largeur fixe pour mobile
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        // Ajouter l'image au PDF
+        pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+        
+        // Télécharger le PDF
+        pdf.save(`Facture-${currentInvoiceData.id}.pdf`);
+        
+        showNotification('PDF téléchargé avec succès!', 'success');
+      }).catch(error => {
+        console.error('Erreur lors de la génération du PDF:', error);
+        showNotification('Erreur lors de la génération du PDF', 'error');
+        
+        // Restaurer les styles originaux en cas d'erreur
+        invoiceElement.style.width = originalStyles.width;
+        invoiceElement.style.maxWidth = originalStyles.maxWidth;
+        invoiceElement.style.margin = originalStyles.margin;
+        invoiceElement.style.padding = originalStyles.padding;
+        invoiceElement.style.fontSize = originalStyles.fontSize;
+        invoiceElement.style.lineHeight = originalStyles.lineHeight;
+      });
+    }
+
+    function printInvoice() {
+      if (!currentInvoiceData) {
+        showNotification('Erreur', 'Aucune facture à imprimer', 'error');
+        return;
+      }
+      
+      const printWindow = window.open('', '_blank');
+      const invoiceContent = document.getElementById('invoiceContent').innerHTML;
+      
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Facture ${currentInvoiceData.id}</title>
+          <style>
+            body {
+              font-family: 'Montserrat', Arial, sans-serif;
+              margin: 0;
+              padding: 20px;
+              color: #000;
+              font-size: 12px;
+              line-height: 1.4;
+            }
+            
+            .invoice-pdf-mobile {
+              width: 100%;
+              max-width: 800px;
+              margin: 0 auto;
+              padding: 20px;
+              background: white;
+            }
+            
+            .invoice-header-mobile {
+              display: flex;
+              flex-direction: column;
+              gap: 15px;
+              margin-bottom: 20px;
+              padding-bottom: 15px;
+              border-bottom: 2px solid #D4AF37;
+            }
+            
+            .company-logo-mobile {
+              font-size: 18px;
+              font-weight: bold;
+              color: #8B0000;
+              margin-bottom: 8px;
+            }
+            
+            .invoice-title-mobile h1 {
+              font-size: 22px;
+              font-weight: bold;
+              color: #8B0000;
+              margin: 0 0 10px 0;
+            }
+            
+            .invoice-table-mobile {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 15px 0;
+              font-size: 10px;
+            }
+            
+            .invoice-table-mobile th {
+              background: #8B0000;
+              color: white;
+              padding: 8px 6px;
+              text-align: left;
+              font-weight: bold;
+            }
+            
+            .invoice-table-mobile td {
+              padding: 6px;
+              border-bottom: 1px solid #ddd;
+            }
+            
+            .text-right {
+              text-align: right;
+            }
+            
+            .text-center {
+              text-align: center;
+            }
+            
+            .stamp-mobile {
+              text-align: center;
+              margin: 20px auto;
+              padding: 15px 25px;
+              border: 2px solid #D4AF37;
+              border-radius: 3px;
+              display: inline-block;
+              transform: rotate(-5deg);
+              background: rgba(212, 175, 55, 0.05);
+            }
+            
+            @media print {
+              body {
+                padding: 0;
+              }
+              .invoice-pdf-mobile {
+                padding: 10mm !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+              }
+              .stamp-mobile {
+                transform: rotate(-5deg) !important;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          ${invoiceContent}
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() {
+                window.close();
+              }, 1000);
+            };
+          <\/script>
+        </body>
+        </html>
+      `);
+      
+      printWindow.document.close();
+    }
+
+    function viewInvoiceDetails(invoiceId) {
+      const invoice = invoices.find(i => i.id === invoiceId);
+      if (!invoice) {
+        console.error('Facture non trouvée:', invoiceId);
+        showNotification('Erreur', 'Facture non trouvée', 'error');
+        return;
+      }
+      
+      generateInvoiceForOrder(invoiceId);
+    }
+
     function deleteInvoice(invoiceId) {
       if (confirm('Êtes-vous sûr de vouloir supprimer cette facture ?')) {
         invoices = invoices.filter(i => i.id !== invoiceId);
@@ -3244,7 +3641,7 @@
         showNotification('Facture supprimée', 'La facture a été supprimée avec succès');
       }
     }
-    
+
     function filterInvoices(filter, event) {
       document.querySelectorAll('#section-factures .admin-tab').forEach(t => t.classList.remove('active'));
       event.target.classList.add('active');
@@ -3272,14 +3669,14 @@
           <td>${invoice.client}</td>
           <td>${invoice.phone}</td>
           <td>${invoice.email || '-'}</td>
-          <td>${invoice.totalHT.toLocaleString()} FCFA</td>
-          <td>${invoice.tva.toLocaleString()} FCFA</td>
-          <td><strong>${invoice.totalTTC.toLocaleString()} FCFA</strong></td>
+          <td>${Math.round(invoice.totalHT).toLocaleString('fr-FR')} FCFA</td>
+          <td>${Math.round(invoice.tva).toLocaleString('fr-FR')} FCFA</td>
+          <td><strong>${Math.round(invoice.totalTTC).toLocaleString('fr-FR')} FCFA</strong></td>
           <td>${formatDate(invoice.date)}</td>
           <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
           <td>
             <button class="action-btn" onclick="viewInvoiceDetails('${invoice.id}')" title="Voir"><i class="fas fa-eye"></i></button>
-            <button class="action-btn pdf" onclick="downloadInvoicePDF('${invoice.id}')" title="PDF"><i class="fas fa-download"></i></button>
+            <button class="action-btn pdf" onclick="generateInvoiceForOrder('${invoice.id}')" title="PDF"><i class="fas fa-download"></i></button>
             <button class="action-btn delete" onclick="deleteInvoice('${invoice.id}')" title="Supprimer"><i class="fas fa-trash"></i></button>
           </td>
         `;
@@ -3298,7 +3695,7 @@
         }
       });
     }
-    
+
     function showAddInvoiceModal() {
       // Remplir la liste des clients
       const clientSelect = document.getElementById('invoiceClient');
@@ -3313,7 +3710,7 @@
       if (firstProductSelect) {
         let productOptions = '<option value="">Sélectionnez un produit</option>';
         products.forEach(p => {
-          productOptions += `<option value="${p.id}" data-price="${p.priceHT}">${p.name} - ${p.priceHT.toLocaleString()} FCFA</option>`;
+          productOptions += `<option value="${p.id}" data-price="${p.priceHT}">${p.name} - ${p.priceHT.toLocaleString('fr-FR')} FCFA (Stock: ${p.stock})</option>`;
         });
         firstProductSelect.innerHTML = productOptions;
       }
@@ -3324,9 +3721,17 @@
       document.getElementById('invoiceDate').value = today;
       document.getElementById('invoiceDueDate').value = dueDate;
       
-      new bootstrap.Modal(document.getElementById('addInvoiceModal')).show();
+      // Réinitialiser les champs
+      document.getElementById('invoicePhone').value = '';
+      document.getElementById('invoiceEmail').value = '';
+      document.getElementById('invoicePaymentStatus').value = 'unpaid';
+      document.getElementById('invoicePaymentMethod').value = 'especes';
+      
+      // Afficher le modal
+      const modal = new bootstrap.Modal(document.getElementById('addInvoiceModal'));
+      modal.show();
     }
-    
+
     function updateClientInfo() {
       const clientSelect = document.getElementById('invoiceClient');
       const selectedClient = clients.find(c => c.phone === clientSelect.value);
@@ -3337,6 +3742,144 @@
       } else {
         document.getElementById('invoicePhone').value = '';
         document.getElementById('invoiceEmail').value = '';
+      }
+    }
+
+    function updateInvoiceStats() {
+      const totalInvoices = invoices.length;
+      const paidInvoices = invoices.filter(i => i.status === 'paid').length;
+      const unpaidInvoices = invoices.filter(i => i.status === 'unpaid' || i.status === 'partial').length;
+      const totalAmount = invoices.reduce((sum, i) => sum + i.totalTTC, 0);
+      
+      document.getElementById('statTotalInvoices').innerText = totalInvoices;
+      document.getElementById('statPaidInvoices').innerText = paidInvoices;
+      document.getElementById('statUnpaidInvoices').innerText = unpaidInvoices;
+      document.getElementById('statTotalAmount').innerText = Math.round(totalAmount).toLocaleString('fr-FR') + ' FCFA';
+      document.getElementById('invoicesCountAll').innerText = totalInvoices;
+      document.getElementById('invoicesCountPaid').innerText = paidInvoices;
+      document.getElementById('invoicesCountUnpaid').innerText = unpaidInvoices;
+      document.getElementById('statFactures').innerText = totalInvoices;
+    }
+
+    function updateInvoicesTable() {
+      const tbody = document.getElementById('invoicesList');
+      if (!tbody) return;
+      
+      const sortedInvoices = [...invoices].sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      tbody.innerHTML = '';
+      sortedInvoices.forEach(invoice => {
+        const statusClass = invoice.status === 'paid' ? 'badge-paid' : invoice.status === 'partial' ? 'badge-pending' : 'badge-unpaid';
+        const statusLabel = invoice.status === 'paid' ? 'Payée' : invoice.status === 'partial' ? 'Partielle' : 'Impayée';
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${invoice.id}</strong></td>
+          <td>${invoice.client}</td>
+          <td>${invoice.phone}</td>
+          <td>${invoice.email || '-'}</td>
+          <td>${Math.round(invoice.totalHT).toLocaleString('fr-FR')} FCFA</td>
+          <td>${Math.round(invoice.tva).toLocaleString('fr-FR')} FCFA</td>
+          <td><strong>${Math.round(invoice.totalTTC).toLocaleString('fr-FR')} FCFA</strong></td>
+          <td>${formatDate(invoice.date)}</td>
+          <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewInvoiceDetails('${invoice.id}')" title="Voir"><i class="fas fa-eye"></i></button>
+            <button class="action-btn pdf" onclick="generateInvoiceForOrder('${invoice.id}')" title="PDF"><i class="fas fa-download"></i></button>
+            <button class="action-btn delete" onclick="deleteInvoice('${invoice.id}')" title="Supprimer"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#invoicesTable')) {
+        $('#invoicesTable').DataTable().destroy();
+      }
+      
+      $('#invoicesTable').DataTable({
+        pageLength: 10,
+        order: [[7, 'desc']],
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+      
+      updateInvoiceStats();
+    }
+
+    function updateRecentInvoices() {
+      const tbody = document.getElementById('recentInvoicesList');
+      if (!tbody) return;
+      
+      const recentInvoices = [...invoices].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+      
+      tbody.innerHTML = '';
+      recentInvoices.forEach(invoice => {
+        const statusClass = invoice.status === 'paid' ? 'badge-paid' : invoice.status === 'partial' ? 'badge-pending' : 'badge-unpaid';
+        const statusLabel = invoice.status === 'paid' ? 'Payée' : invoice.status === 'partial' ? 'Partielle' : 'Impayée';
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${invoice.id}</strong></td>
+          <td>${invoice.client}</td>
+          <td>${Math.round(invoice.totalTTC).toLocaleString('fr-FR')} FCFA</td>
+          <td>${formatDate(invoice.date)}</td>
+          <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewInvoiceDetails('${invoice.id}')"><i class="fas fa-eye"></i></button>
+            <button class="action-btn pdf" onclick="generateInvoiceForOrder('${invoice.id}')"><i class="fas fa-download"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#recentInvoicesTable')) {
+        $('#recentInvoicesTable').DataTable().destroy();
+      }
+      
+      $('#recentInvoicesTable').DataTable({
+        pageLength: 5,
+        order: [[3, 'desc']],
+        searching: false,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+
+    function generateInvoiceReport() {
+      const paidInvoices = invoices.filter(i => i.status === 'paid').length;
+      const unpaidInvoices = invoices.filter(i => i.status === 'unpaid' || i.status === 'partial').length;
+      const totalHT = invoices.reduce((sum, i) => sum + i.totalHT, 0);
+      const totalTVA = invoices.reduce((sum, i) => sum + i.tva, 0);
+      const totalTTC = invoices.reduce((sum, i) => sum + i.totalTTC, 0);
+      
+      alert(`
+        RAPPORT DES FACTURES
+        ====================
+        
+        Date: ${new Date().toLocaleDateString('fr-FR')}
+        
+        Total factures: ${invoices.length}
+        Factures payées: ${paidInvoices}
+        Factures impayées: ${unpaidInvoices}
+        
+        Montants:
+        - Total HT: ${Math.round(totalHT).toLocaleString('fr-FR')} FCFA
+        - TVA 18%: ${Math.round(totalTVA).toLocaleString('fr-FR')} FCFA
+        - Total TTC: ${Math.round(totalTTC).toLocaleString('fr-FR')} FCFA
+      `);
+    }
+
+    function createDemoInvoices() {
+      if (invoices.length === 0) {
+        const today = new Date();
+        const lastMonth = new Date(today);
+        lastMonth.setMonth(lastMonth.getMonth() - 1);
+        
+        
+        invoices.push(...demoInvoices);
+        localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
       }
     }
     
@@ -3360,7 +3903,7 @@
       sortedDevis.forEach(d => {
         const statusClass = getDevisStatusClass(d.status);
         const statusLabel = getDevisStatusLabel(d.status);
-        const budget = d.customerInfo.budget ? parseInt(d.customerInfo.budget).toLocaleString() + ' FCFA' : 'Non spécifié';
+        const budget = d.customerInfo.budget ? parseInt(d.customerInfo.budget).toLocaleString('fr-FR') + ' FCFA' : 'Non spécifié';
         
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -3495,28 +4038,25 @@
       document.getElementById('modalDevisDate').innerText = formatDate(devisItem.date);
       document.getElementById('modalDevisQuantity').innerText = devisItem.customerInfo.quantity;
       document.getElementById('modalDevisEventDate').innerText = devisItem.customerInfo.eventDate ? formatDate(devisItem.customerInfo.eventDate) : 'Non spécifiée';
-      document.getElementById('modalDevisBudget').innerText = devisItem.customerInfo.budget ? parseInt(devisItem.customerInfo.budget).toLocaleString() + ' FCFA' : 'Non spécifié';
+      document.getElementById('modalDevisBudget').innerText = devisItem.customerInfo.budget ? parseInt(devisItem.customerInfo.budget).toLocaleString('fr-FR') + ' FCFA' : 'Non spécifié';
       document.getElementById('modalDevisMessage').innerText = devisItem.customerInfo.message || 'Aucun message';
       document.getElementById('modalDevisStatusSelect').value = devisItem.status || 'pending';
       document.getElementById('modalDevisNotes').value = devisItem.notes || '';
       
       const productDiv = document.getElementById('modalDevisProduct');
+      const product = products.find(p => p.id === devisItem.product.id);
       productDiv.innerHTML = `
         <div class="d-flex align-items-center gap-3">
-          <img src="${getProductImage(devisItem.product.id)}" style="width: 60px; height: 60px; border-radius: 10px; object-fit: cover;">
+          <img src="${product ? product.image : 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200'}" style="width: 60px; height: 60px; border-radius: 10px; object-fit: cover;">
           <div>
             <h6 class="mb-1">${devisItem.product.name}</h6>
-            <p class="small mb-0">Catégorie: ${getCategoryLabel(devisItem.product.category)}</p>
+            <p class="small mb-0">Catégorie: ${getCategoryLabel(devisItem.product.category)} | Stock: ${product ? product.stock : 'N/A'}</p>
+            <p class="small mb-0">Prix HT: ${product ? product.priceHT.toLocaleString('fr-FR') : 'N/A'} FCFA | TTC: ${product ? Math.round(product.priceTTC).toLocaleString('fr-FR') : 'N/A'} FCFA</p>
           </div>
         </div>
       `;
       
       new bootstrap.Modal(document.getElementById('devisDetailsModal')).show();
-    }
-    
-    function getProductImage(productId) {
-      const product = products.find(p => p.id === productId);
-      return product ? product.image : 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200';
     }
     
     function updateDevisStatus(status) {
@@ -3556,7 +4096,7 @@
       filteredDevis.forEach(d => {
         const statusClass = getDevisStatusClass(d.status);
         const statusLabel = getDevisStatusLabel(d.status);
-        const budget = d.customerInfo.budget ? parseInt(d.customerInfo.budget).toLocaleString() + ' FCFA' : 'Non spécifié';
+        const budget = d.customerInfo.budget ? parseInt(d.customerInfo.budget).toLocaleString('fr-FR') + ' FCFA' : 'Non spécifié';
         
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -3622,19 +4162,23 @@
       devisItem.notes = document.getElementById('modalDevisNotes').value;
       saveDevis();
       
+      const product = products.find(p => p.id === devisItem.product.id);
       const phone = devisItem.customerInfo.phone.replace(/\s/g, '');
-      const product = devisItem.product.name;
-      const quantity = devisItem.customerInfo.quantity;
+      
+      const totalHT = product.priceHT * devisItem.customerInfo.quantity;
+      const tva = calculateTVA(totalHT);
+      const totalTTC = calculateTTC(totalHT);
       
       let message = `*NJEEYGU - DEVIS PERSONNALISÉ*\n\n`;
       message += `Bonjour ${devisItem.customerInfo.name},\n\n`;
       message += `Suite à votre demande, nous avons le plaisir de vous faire parvenir notre devis pour :\n`;
-      message += `- Produit : ${product}\n`;
-      message += `- Quantité : ${quantity}\n\n`;
-      message += `*Prix unitaire* : [À COMPLÉTER] FCFA HT\n`;
-      message += `*TVA 18%* : [À COMPLÉTER] FCFA\n`;
-      message += `*Total TTC* : [À COMPLÉTER] FCFA\n\n`;
-      message += `*Délai de livraison* : [À COMPLÉTER]\n`;
+      message += `- Produit : ${product.name}\n`;
+      message += `- Quantité : ${devisItem.customerInfo.quantity}\n\n`;
+      message += `*Prix unitaire* : ${product.priceHT.toLocaleString('fr-FR')} FCFA HT\n`;
+      message += `*Total HT* : ${totalHT.toLocaleString('fr-FR')} FCFA\n`;
+      message += `*TVA 18%* : ${Math.round(tva).toLocaleString('fr-FR')} FCFA\n`;
+      message += `*Total TTC* : ${Math.round(totalTTC).toLocaleString('fr-FR')} FCFA\n\n`;
+      message += `*Délai de livraison* : À déterminer\n`;
       message += `*Validité du devis* : 30 jours\n\n`;
       message += `N'hésitez pas à nous contacter pour toute question ou pour confirmer votre commande.\n\n`;
       message += `Cordialement,\nL'équipe NJEEYGU`;
@@ -3702,8 +4246,17 @@
       invoices.push(newInvoice);
       saveInvoices();
       
+      // Mettre à jour le stock
+      addStockMovement(
+        product.id,
+        'sortie',
+        quantity,
+        'facture',
+        `Facture ${invoiceId}`
+      );
+      
       devisItem.status = 'converted';
-      devisItem.notes = (devisItem.notes || '') + `\nConvertie en facture ${invoiceId} le ${new Date().toLocaleDateString()}`;
+      devisItem.notes = (devisItem.notes || '') + `\nConvertie en facture ${invoiceId} le ${new Date().toLocaleDateString('fr-FR')}`;
       saveDevis();
       
       showNotification('Facture créée', `La facture ${invoiceId} a été créée avec succès`);
@@ -3756,7 +4309,7 @@
         RAPPORT DES DEMANDES DE DEVIS
         =============================
         
-        Date: ${new Date().toLocaleDateString()}
+        Date: ${new Date().toLocaleDateString('fr-FR')}
         
         RÉCAPITULATIF:
         - Total demandes: ${totalDevis}
@@ -3796,17 +4349,20 @@ ${topProducts || 'Aucune donnée'}
         .join('\n');
     }
     
-    // ==================== FONCTIONS POUR LE STOCK (NOUVEAU) ====================
+    // ==================== FONCTIONS POUR LE STOCK ====================
     
     function showAddStockModal() {
       // Réinitialiser le formulaire
       document.getElementById('stockModalProductName').innerText = 'Nouveau produit';
       document.getElementById('stockModalProductId').value = '';
       document.getElementById('stockModalCurrentStock').value = '0';
-      document.getElementById('stockModalMinStock').value = '5';
+      document.getElementById('stockModalMinStock').value = settings.defaultStockAlert.toString();
       document.getElementById('stockModalQuantity').value = '1';
       document.getElementById('stockModalNewValue').value = '0';
       document.getElementById('stockModalComment').value = '';
+      document.getElementById('stockModalOperation').value = 'add';
+      
+      toggleStockOperationFields();
       
       // Modifier le titre du modal
       document.querySelector('#stockManagementModal .modal-title').innerHTML = 'Ajouter un nouveau stock';
@@ -3816,19 +4372,23 @@ ${topProducts || 'Aucune donnée'}
     }
     
     function addNewStock() {
-      const productName = prompt('Nom du nouveau produit :');
+      const productName = document.getElementById('stockModalProductName').innerText === 'Nouveau produit' ? prompt('Nom du nouveau produit :') : null;
       if (!productName) return;
       
       const category = prompt('Catégorie (table/lumiere/mariage/ballon/deco) :', 'deco');
-      if (!category) return;
+      if (!category || !['table', 'lumiere', 'mariage', 'ballon', 'deco'].includes(category)) {
+        alert('Catégorie invalide');
+        return;
+      }
       
       const priceHT = parseInt(prompt('Prix HT (FCFA) :', '10000'));
       if (isNaN(priceHT) || priceHT <= 0) return;
       
-      const stock = parseInt(prompt('Quantité initiale en stock :', '10'));
-      if (isNaN(stock) || stock < 0) return;
+      const stock = parseInt(document.getElementById('stockModalQuantity').value) || 10;
       
-      const minStock = parseInt(prompt('Stock minimum d\'alerte :', '5')) || 5;
+      const minStock = parseInt(document.getElementById('stockModalMinStock').value) || settings.defaultStockAlert;
+      
+      const location = prompt('Emplacement (ex: A1-R2) :', 'Nouveau') || 'Nouveau';
       
       const defaultImage = 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=200';
       
@@ -3842,7 +4402,7 @@ ${topProducts || 'Aucune donnée'}
         minStock: minStock,
         status: 'active',
         image: defaultImage,
-        location: prompt('Emplacement (ex: A1-R2) :', 'Nouveau') || 'Nouveau'
+        location: location
       };
       
       products.push(newProduct);
@@ -3856,9 +4416,236 @@ ${topProducts || 'Aucune donnée'}
         'Nouveau produit ajouté'
       );
       
+      bootstrap.Modal.getInstance(document.getElementById('stockManagementModal')).hide();
       updateProductsTable();
       updateStockTable();
       showNotification('Produit ajouté', `${newProduct.name} a été ajouté au stock avec succès`);
+    }
+    
+    function toggleStockOperationFields() {
+      const operation = document.getElementById('stockModalOperation').value;
+      const quantityGroup = document.getElementById('stockModalQuantityGroup');
+      const newValueGroup = document.getElementById('stockModalNewValueGroup');
+      
+      if (operation === 'set') {
+        quantityGroup.style.display = 'none';
+        newValueGroup.style.display = 'block';
+      } else {
+        quantityGroup.style.display = 'block';
+        newValueGroup.style.display = 'none';
+      }
+    }
+    
+    function openStockModal(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      currentStockProductId = productId;
+      document.getElementById('stockModalProductName').innerText = product.name;
+      document.getElementById('stockModalProductId').value = productId;
+      document.getElementById('stockModalCurrentStock').value = product.stock;
+      document.getElementById('stockModalMinStock').value = product.minStock || settings.defaultStockAlert;
+      document.getElementById('stockModalQuantity').value = 1;
+      document.getElementById('stockModalNewValue').value = product.stock;
+      document.getElementById('stockModalComment').value = '';
+      document.getElementById('stockModalOperation').value = 'add';
+      
+      toggleStockOperationFields();
+      
+      document.querySelector('#stockManagementModal .modal-title').innerHTML = 'Gérer le stock - ' + product.name;
+      
+      new bootstrap.Modal(document.getElementById('stockManagementModal')).show();
+    }
+    
+    function updateStock() {
+      const productId = document.getElementById('stockModalProductId').value;
+      const operation = document.getElementById('stockModalOperation').value;
+      const reason = document.getElementById('stockModalReason').value;
+      const comment = document.getElementById('stockModalComment').value;
+      
+      // Si c'est un nouveau produit (pas d'ID)
+      if (!productId) {
+        addNewStock();
+        return;
+      }
+      
+      const product = products.find(p => p.id == productId);
+      if (!product) return;
+      
+      const oldStock = product.stock;
+      let newStock = oldStock;
+      let quantity = 0;
+      let type = 'ajustement';
+      
+      if (operation === 'add') {
+        quantity = parseInt(document.getElementById('stockModalQuantity').value) || 0;
+        newStock = oldStock + quantity;
+        type = 'entree';
+      } else if (operation === 'remove') {
+        quantity = parseInt(document.getElementById('stockModalQuantity').value) || 0;
+        newStock = Math.max(0, oldStock - quantity);
+        type = 'sortie';
+      } else if (operation === 'set') {
+        newStock = parseInt(document.getElementById('stockModalNewValue').value) || 0;
+        quantity = Math.abs(newStock - oldStock);
+        type = newStock > oldStock ? 'entree' : 'sortie';
+      }
+      
+      const minStock = parseInt(document.getElementById('stockModalMinStock').value) || settings.defaultStockAlert;
+      product.minStock = minStock;
+      
+      addStockMovement(product.id, type, quantity, reason, comment);
+      
+      bootstrap.Modal.getInstance(document.getElementById('stockManagementModal')).hide();
+      
+      showNotification(
+        'Stock mis à jour',
+        `${product.name}: ${oldStock} → ${newStock} unités`
+      );
+      
+      updateProductsTable();
+      updateStockTable();
+      updateStockAlerts();
+    }
+    
+    function deleteProduct(productId) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+        const product = products.find(p => p.id === productId);
+        products = products.filter(p => p.id !== productId);
+        localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+        updateProductsTable();
+        updateStockTable();
+        showNotification('Produit supprimé', `${product.name} a été supprimé avec succès`);
+      }
+    }
+    
+    function quickAddStock(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const quantity = prompt(`Ajouter au stock pour ${product.name}:`, "1");
+      if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
+        addStockMovement(
+          productId,
+          'entree',
+          parseInt(quantity),
+          'ajustement',
+          'Ajout rapide'
+        );
+        
+        showNotification(
+          'Stock ajouté',
+          `+${quantity} ${product.name}`
+        );
+        
+        updateProductsTable();
+        updateStockTable();
+      }
+    }
+    
+    function quickOrderStock(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const quantity = product.minStock * 2 - product.stock;
+      if (quantity > 0) {
+        if (confirm(`Commander ${quantity} unités de ${product.name} ?`)) {
+          addStockMovement(
+            productId,
+            'entree',
+            quantity,
+            'reception',
+            'Commande fournisseur'
+          );
+          
+          showNotification(
+            'Commande passée',
+            `${quantity} ${product.name} ajoutés au stock`
+          );
+          
+          updateProductsTable();
+          updateStockTable();
+        }
+      } else {
+        alert('Le stock est suffisant pour ce produit.');
+      }
+    }
+    
+    function showProductMovements(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const productMovements = stockMovements.filter(m => m.productId === productId);
+      
+      let message = `Mouvements pour ${product.name}:\n\n`;
+      productMovements.slice(0, 10).forEach(m => {
+        message += `${formatDate(m.date)} - ${m.type === 'entree' ? '+' : '-'}${m.quantity} (${m.reason}) - Stock: ${m.stockAfter}\n`;
+      });
+      
+      if (productMovements.length === 0) {
+        message += "Aucun mouvement enregistré.";
+      }
+      
+      alert(message);
+    }
+    
+    function showStockMovementModal() {
+      const select = document.getElementById('movementProductId');
+      select.innerHTML = '<option value="">Sélectionnez un produit</option>';
+      products.forEach(product => {
+        select.innerHTML += `<option value="${product.id}">${product.name} (Stock: ${product.stock})</option>`;
+      });
+      
+      new bootstrap.Modal(document.getElementById('stockMovementModal')).show();
+    }
+    
+    function addStockMovementFromModal() {
+      const productId = parseInt(document.getElementById('movementProductId').value);
+      const type = document.getElementById('movementType').value;
+      const quantity = parseInt(document.getElementById('movementQuantity').value);
+      const reason = document.getElementById('movementReason').value;
+      const comment = document.getElementById('movementComment').value;
+      
+      if (!productId || quantity <= 0) {
+        alert('Veuillez remplir tous les champs correctement.');
+        return;
+      }
+      
+      const movement = addStockMovement(productId, type, quantity, reason, comment);
+      
+      if (movement) {
+        bootstrap.Modal.getInstance(document.getElementById('stockMovementModal')).hide();
+        showNotification('Mouvement enregistré', `${quantity} unités ${type === 'entree' ? 'ajoutées' : 'retirées'}`);
+        updateStockTable();
+        updateStockMovementsTable();
+      }
+    }
+    
+    function showBulkStockModal() {
+      alert('Fonctionnalité de mise à jour groupée à implémenter');
+    }
+    
+    function exportStockReport() {
+      const data = products.map(p => ({
+        'Produit': p.name,
+        'Catégorie': getCategoryLabel(p.category),
+        'Prix HT': p.priceHT,
+        'TVA 18%': calculateTVA(p.priceHT),
+        'Prix TTC': p.priceTTC,
+        'Stock actuel': p.stock,
+        'Stock minimum': p.minStock,
+        'Valeur stock TTC': p.stock * p.priceTTC,
+        'Emplacement': p.location || 'Non défini'
+      }));
+      
+      const csv = convertToCSV(data);
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `stock_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      showNotification('Export réussi', 'Le rapport de stock a été généré');
     }
     
     // ==================== MISES À JOUR UI ====================
@@ -3874,14 +4661,23 @@ ${topProducts || 'Aucune donnée'}
     function updateStockStats() {
       const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
       const criticalStock = products.filter(p => p.stock <= p.minStock * 0.5).length;
+      const lowStock = products.filter(p => p.stock > p.minStock * 0.5 && p.stock <= p.minStock).length;
+      const mediumStock = products.filter(p => p.stock > p.minStock && p.stock <= p.minStock * 2).length;
+      const highStock = products.filter(p => p.stock > p.minStock * 2).length;
       const totalValue = products.reduce((sum, p) => sum + (p.stock * p.priceTTC), 0);
       
       document.getElementById('statTotalStock').innerText = totalStock;
       document.getElementById('statCriticalStock').innerText = criticalStock;
-      document.getElementById('statStockValue').innerText = totalValue.toLocaleString() + ' FCFA';
+      document.getElementById('statStockValue').innerText = totalValue.toLocaleString('fr-FR') + ' FCFA';
       document.getElementById('statMouvements').innerText = stockMovements.filter(m => 
         new Date(m.date) > new Date(Date.now() - 30 * 86400000)
       ).length;
+      
+      document.getElementById('stockCountAll').innerText = products.length;
+      document.getElementById('stockCountCritical').innerText = criticalStock;
+      document.getElementById('stockCountLow').innerText = lowStock;
+      document.getElementById('stockCountMedium').innerText = mediumStock;
+      document.getElementById('stockCountHigh').innerText = highStock;
     }
     
     function updateBadges() {
@@ -3891,6 +4687,13 @@ ${topProducts || 'Aucune donnée'}
       const lowStock = products.filter(p => p.stock <= p.minStock).length;
       document.getElementById('lowStockBadge').innerText = lowStock;
       document.getElementById('stockAlertBadge').innerText = lowStock;
+      
+      if (lowStock > 0) {
+        document.getElementById('lowStockAlert').style.display = 'block';
+        document.getElementById('lowStockCount').innerText = lowStock;
+      } else {
+        document.getElementById('lowStockAlert').style.display = 'none';
+      }
       
       const now = new Date();
       const pendingPayments = employees.filter(emp => {
@@ -3950,9 +4753,9 @@ ${topProducts || 'Aucune donnée'}
           <td><img src="${product.image}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;"></td>
           <td><strong>${product.name}</strong></td>
           <td>${getCategoryLabel(product.category)}</td>
-          <td>${product.priceHT.toLocaleString()} FCFA</td>
-          <td>${calculateTVA(product.priceHT).toLocaleString()} FCFA</td>
-          <td><strong>${Math.round(product.priceTTC).toLocaleString()} FCFA</strong></td>
+          <td>${product.priceHT.toLocaleString('fr-FR')} FCFA</td>
+          <td>${Math.round(calculateTVA(product.priceHT)).toLocaleString('fr-FR')} FCFA</td>
+          <td><strong>${Math.round(product.priceTTC).toLocaleString('fr-FR')} FCFA</strong></td>
           <td>
             <div>
               <span class="${product.stock <= product.minStock ? 'text-danger fw-bold' : ''}">${product.stock}</span>
@@ -3982,8 +4785,6 @@ ${topProducts || 'Aucune donnée'}
           url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
         }
       });
-      
-      updateLowStockTable();
     }
     
     function updateStockTable(filter = 'all') {
@@ -4013,11 +4814,11 @@ ${topProducts || 'Aucune donnée'}
           <td><img src="${product.image}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;"></td>
           <td><strong>${product.name}</strong></td>
           <td>${getCategoryLabel(product.category)}</td>
-          <td>${product.priceHT.toLocaleString()} FCFA</td>
-          <td><strong>${Math.round(product.priceTTC).toLocaleString()} FCFA</strong></td>
+          <td>${product.priceHT.toLocaleString('fr-FR')} FCFA</td>
+          <td><strong>${Math.round(product.priceTTC).toLocaleString('fr-FR')} FCFA</strong></td>
           <td>
             <div>
-              <span class="fw-bold">${product.stock}</span>
+              <span class="fw-bold ${product.stock <= product.minStock ? 'text-danger' : ''}">${product.stock}</span>
               <div class="stock-progress">
                 <div class="stock-progress-bar ${progressClass}" style="width: ${stockPercentage}%"></div>
               </div>
@@ -4030,6 +4831,7 @@ ${topProducts || 'Aucune donnée'}
             <button class="action-btn" onclick="openStockModal(${product.id})"><i class="fas fa-edit"></i></button>
             <button class="action-btn add-stock" onclick="quickAddStock(${product.id})"><i class="fas fa-plus"></i></button>
             <button class="action-btn" onclick="showProductMovements(${product.id})"><i class="fas fa-history"></i></button>
+            <button class="action-btn delete" onclick="deleteProduct(${product.id})"><i class="fas fa-trash"></i></button>
           </td>
         `;
         tbody.appendChild(row);
@@ -4087,47 +4889,6 @@ ${topProducts || 'Aucune donnée'}
       });
     }
     
-    function updateLowStockTable() {
-      const tbody = document.getElementById('lowStockList');
-      if (!tbody) return;
-      
-      const lowStock = products.filter(p => p.stock <= p.minStock);
-      
-      tbody.innerHTML = '';
-      lowStock.slice(0, 5).forEach(product => {
-        const stockStatus = getStockStatus(product.stock, product.minStock);
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><img src="${product.image}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;"></td>
-          <td><strong>${product.name}</strong></td>
-          <td>${getCategoryLabel(product.category)}</td>
-          <td>
-            <span class="${stockStatus.class} fw-bold">${product.stock}</span>
-            <small class="text-muted">/ min ${product.minStock}</small>
-          </td>
-          <td>${product.minStock}</td>
-          <td>
-            <button class="action-btn" onclick="openStockModal(${product.id})"><i class="fas fa-edit"></i></button>
-            <button class="action-btn whatsapp" onclick="quickOrderStock(${product.id})"><i class="fas fa-truck"></i></button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-      
-      if ($.fn.DataTable.isDataTable('#lowStockTable')) {
-        $('#lowStockTable').DataTable().destroy();
-      }
-      
-      $('#lowStockTable').DataTable({
-        pageLength: 5,
-        searching: false,
-        language: {
-          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
-        }
-      });
-    }
-    
     function updateClientsTable() {
       const tbody = document.getElementById('clientsList');
       if (!tbody) return;
@@ -4137,7 +4898,7 @@ ${topProducts || 'Aucune donnée'}
       document.getElementById('statTotalClients').innerText = clients.length;
       document.getElementById('statClientsWithDevis').innerText = clients.filter(c => c.devisCount > 0).length;
       document.getElementById('statClientsWithInvoices').innerText = clients.filter(c => c.invoicesCount > 0).length;
-      document.getElementById('statTotalSpent').innerText = totalSpent.toLocaleString() + ' FCFA';
+      document.getElementById('statTotalSpent').innerText = totalSpent.toLocaleString('fr-FR') + ' FCFA';
       
       tbody.innerHTML = '';
       clients.forEach(client => {
@@ -4148,7 +4909,7 @@ ${topProducts || 'Aucune donnée'}
           <td>${client.email || 'Non renseigné'}</td>
           <td>${client.devisCount || 0}</td>
           <td>${client.invoicesCount || 0}</td>
-          <td>${client.totalSpent ? client.totalSpent.toLocaleString() : 0} FCFA</td>
+          <td>${client.totalSpent ? client.totalSpent.toLocaleString('fr-FR') : 0} FCFA</td>
           <td>${formatDate(client.lastActivity)}</td>
           <td>
             <button class="action-btn" onclick="contactClient('${client.phone}')"><i class="fab fa-whatsapp"></i></button>
@@ -4191,7 +4952,7 @@ ${topProducts || 'Aucune donnée'}
         row.innerHTML = `
           <td><strong>${cat.name}</strong></td>
           <td>${cat.products.length}</td>
-          <td>${stockValue.toLocaleString()} FCFA</td>
+          <td>${stockValue.toLocaleString('fr-FR')} FCFA</td>
           <td>
             <button class="action-btn"><i class="fas fa-edit"></i></button>
             <button class="action-btn delete"><i class="fas fa-trash"></i></button>
@@ -4207,6 +4968,39 @@ ${topProducts || 'Aucune donnée'}
       $('#categoriesTable').DataTable({
         pageLength: 10,
         searching: false,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
+        }
+      });
+    }
+    
+    function updateServicesTable() {
+      const tbody = document.getElementById('servicesList');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      services.forEach(service => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${service.name}</strong></td>
+          <td>${service.description || ''}</td>
+          <td>${service.priceHT.toLocaleString('fr-FR')} FCFA</td>
+          <td>${Math.round(calculateTVA(service.priceHT)).toLocaleString('fr-FR')} FCFA</td>
+          <td><strong>${Math.round(service.priceTTC).toLocaleString('fr-FR')} FCFA</strong></td>
+          <td>
+            <button class="action-btn" onclick="editService(${service.id})"><i class="fas fa-edit"></i></button>
+            <button class="action-btn delete" onclick="deleteService(${service.id})"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if ($.fn.DataTable.isDataTable('#servicesTable')) {
+        $('#servicesTable').DataTable().destroy();
+      }
+      
+      $('#servicesTable').DataTable({
+        pageLength: 10,
         language: {
           url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json'
         }
@@ -4308,6 +5102,64 @@ ${topProducts || 'Aucune donnée'}
       showNotification('Export réussi', 'La liste des clients a été exportée');
     }
     
+    // ==================== FONCTIONS POUR LES SERVICES ====================
+    
+    function addService(event) {
+      event.preventDefault();
+      
+      const priceHT = parseInt(document.getElementById('servicePriceHT').value);
+      const priceTTC = calculateTTC(priceHT);
+      
+      const newService = {
+        id: services.length + 1,
+        name: document.getElementById('serviceName').value,
+        description: document.getElementById('serviceDescription').value,
+        priceHT: priceHT,
+        priceTTC: priceTTC
+      };
+      
+      services.push(newService);
+      localStorage.setItem(SERVICES_KEY, JSON.stringify(services));
+      
+      showServicesTab('list', event);
+      showNotification('Service ajouté', `${newService.name} a été ajouté avec succès`);
+      
+      document.getElementById('addServiceForm').reset();
+      updateServicesTable();
+    }
+    
+    function editService(serviceId) {
+      alert(`Édition du service ${serviceId} - Fonctionnalité à implémenter`);
+    }
+    
+    function deleteService(serviceId) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
+        services = services.filter(s => s.id !== serviceId);
+        localStorage.setItem(SERVICES_KEY, JSON.stringify(services));
+        updateServicesTable();
+        showNotification('Service supprimé', 'Le service a été supprimé avec succès');
+      }
+    }
+    
+    function showServicesTab(tab, event) {
+      document.querySelectorAll('#section-services .services-tab-content').forEach(el => {
+        el.style.display = 'none';
+      });
+      
+      if (tab === 'list') {
+        document.getElementById('services-list').style.display = 'block';
+        updateServicesTable();
+      } else if (tab === 'add') {
+        document.getElementById('services-add').style.display = 'block';
+        document.getElementById('servicePriceTTC').value = '';
+      }
+      
+      document.querySelectorAll('#section-services .admin-tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      event.target.classList.add('active');
+    }
+    
     // ==================== FONCTIONS POUR L'ÉQUIPE ====================
     
     function initTeamUI() {
@@ -4331,9 +5183,23 @@ ${topProducts || 'Aucune donnée'}
       });
     }
     
-    function showAddTeamMemberModal() {
-      document.getElementById('addTeamMemberForm').reset();
-      new bootstrap.Modal(document.getElementById('addTeamMemberModal')).show();
+    function showTeamTab(tab, event) {
+      document.querySelectorAll('#section-equipe .team-tab-content').forEach(el => {
+        el.style.display = 'none';
+      });
+      
+      if (tab === 'list') {
+        document.getElementById('team-list').style.display = 'block';
+        initTeamUI();
+      } else if (tab === 'add') {
+        document.getElementById('team-add').style.display = 'block';
+        document.getElementById('addTeamMemberForm').reset();
+      }
+      
+      document.querySelectorAll('#section-equipe .admin-tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      event.target.classList.add('active');
     }
     
     function addTeamMember(event) {
@@ -4355,8 +5221,7 @@ ${topProducts || 'Aucune donnée'}
       team.push(newMember);
       localStorage.setItem(TEAM_KEY, JSON.stringify(team));
       
-      bootstrap.Modal.getInstance(document.getElementById('addTeamMemberModal')).hide();
-      initTeamUI();
+      showTeamTab('list', event);
       showNotification('Membre ajouté', `${name} a été ajouté à l'équipe`);
     }
     
@@ -4401,7 +5266,7 @@ ${topProducts || 'Aucune donnée'}
       const daysUntilPayday = Math.ceil((nextPayday - now) / (1000 * 60 * 60 * 24));
       
       document.getElementById('statEmployes').innerText = totalEmployes;
-      document.getElementById('statMasseSalariale').innerText = masseSalariale.toLocaleString() + ' FCFA';
+      document.getElementById('statMasseSalariale').innerText = masseSalariale.toLocaleString('fr-FR') + ' FCFA';
       document.getElementById('statPaiementsMois').innerText = paiementsCeMois;
       document.getElementById('statProchainPaiement').innerText = daysUntilPayday;
     }
@@ -4421,9 +5286,9 @@ ${topProducts || 'Aucune donnée'}
           <td><img src="${emp.image || 'https://randomuser.me/api/portraits/lego/1.jpg'}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></td>
           <td><strong>${emp.name}</strong></td>
           <td>${emp.position}</td>
-          <td>${emp.baseSalary.toLocaleString()} FCFA</td>
-          <td>${(emp.defaultBonus || 0).toLocaleString()} FCFA</td>
-          <td><strong style="color: var(--rouge-profond);">${totalSalary.toLocaleString()} FCFA</strong></td>
+          <td>${emp.baseSalary.toLocaleString('fr-FR')} FCFA</td>
+          <td>${(emp.defaultBonus || 0).toLocaleString('fr-FR')} FCFA</td>
+          <td><strong style="color: var(--rouge-profond);">${totalSalary.toLocaleString('fr-FR')} FCFA</strong></td>
           <td>${new Date(emp.hireDate).toLocaleDateString('fr-FR')}</td>
           <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
           <td>
@@ -4460,13 +5325,13 @@ ${topProducts || 'Aucune donnée'}
           <td><strong>${payment.employeeName}</strong></td>
           <td>${payment.position}</td>
           <td>${payment.period}</td>
-          <td>${payment.baseSalary.toLocaleString()} FCFA</td>
-          <td>${(payment.bonus || 0).toLocaleString()} FCFA</td>
-          <td><strong style="color: var(--rouge-profond);">${payment.total.toLocaleString()} FCFA</strong></td>
+          <td>${payment.baseSalary.toLocaleString('fr-FR')} FCFA</td>
+          <td>${(payment.bonus || 0).toLocaleString('fr-FR')} FCFA</td>
+          <td><strong style="color: var(--rouge-profond);">${payment.total.toLocaleString('fr-FR')} FCFA</strong></td>
           <td><span class="badge-status badge-paid">Payé</span></td>
           <td>
             <button class="action-btn" onclick="viewPayment(${payment.id})"><i class="fas fa-eye"></i></button>
-            <button class="action-btn pdf" onclick="downloadPaymentReceipt(${payment.id})"><i class="fas fa-download"></i></button>
+            <button class="action-btn pdf" onclick="generatePayslipForPayment(${payment.id})"><i class="fas fa-download"></i></button>
           </td>
         `;
         tbody.appendChild(row);
@@ -4497,11 +5362,11 @@ ${topProducts || 'Aucune donnée'}
         row.innerHTML = `
           <td>${payment.period}</td>
           <td><strong>${payment.employeeName}</strong></td>
-          <td>${payment.total.toLocaleString()} FCFA</td>
+          <td>${payment.total.toLocaleString('fr-FR')} FCFA</td>
           <td>${new Date(payment.paymentDate).toLocaleDateString('fr-FR')}</td>
           <td>
             <button class="action-btn" onclick="viewPayslip(${payment.id})"><i class="fas fa-eye"></i></button>
-            <button class="action-btn pdf" onclick="downloadPayslip(${payment.id})"><i class="fas fa-download"></i></button>
+            <button class="action-btn pdf" onclick="generatePayslipForPayment(${payment.id})"><i class="fas fa-download"></i></button>
           </td>
         `;
         tbody.appendChild(row);
@@ -4666,7 +5531,7 @@ ${topProducts || 'Aucune donnée'}
       
       const now = new Date();
       const alreadyPaid = payments.some(p => 
-        p.employeeId === employeeId && 
+        p.employeeId === employee.id && 
         new Date(p.paymentDate).getMonth() === now.getMonth() &&
         new Date(p.paymentDate).getFullYear() === now.getFullYear()
       );
@@ -4697,7 +5562,7 @@ ${topProducts || 'Aucune donnée'}
       localStorage.setItem(PAYMENTS_KEY, JSON.stringify(payments));
       
       updateSalariesUI();
-      showNotification('Paiement effectué', `${payment.total.toLocaleString()} FCFA versés à ${employee.name}`);
+      showNotification('Paiement effectué', `${payment.total.toLocaleString('fr-FR')} FCFA versés à ${employee.name}`);
     }
     
     function deleteEmployee(employeeId) {
@@ -4750,6 +5615,8 @@ ${topProducts || 'Aucune donnée'}
       showNotification('Paie générée', `${count} employé(s) ont été payés`);
     }
     
+    // ==================== FONCTION DE GÉNÉRATION DE BULLETIN DE SALAIRE (même style que la facture) ====================
+    
     function generatePayslip(employeeId) {
       const employee = employees.find(e => e.id === employeeId);
       if (!employee) return;
@@ -4766,85 +5633,376 @@ ${topProducts || 'Aucune donnée'}
         return;
       }
       
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+      generatePayslipForPayment(payment.id);
+    }
+    
+    function generatePayslipForPayment(paymentId) {
+      const payment = payments.find(p => p.id === paymentId);
+      if (!payment) return;
       
-      const rougeProfond = [139, 0, 0];
-      const orEclatant = [212, 175, 55];
+      const employee = employees.find(e => e.id === payment.employeeId);
+      if (!employee) return;
       
-      doc.setFillColor(...rougeProfond);
-      doc.rect(0, 0, 210, 30, 'F');
+      currentPayslipData = payment;
       
-      doc.setFontSize(20);
-      doc.setTextColor(255, 255, 255);
-      doc.setFont('helvetica', 'bold');
-      doc.text('NJEEYGU', 105, 15, { align: 'center' });
+      const payslipNumber = `BULL-${payment.period.replace(/\s/g, '-')}-${String(employee.id).padStart(3, '0')}`;
       
-      doc.setFontSize(10);
-      doc.setTextColor(...orEclatant);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Le Grand Jour', 105, 22, { align: 'center' });
+      // Construire le contenu HTML du bulletin de salaire
+      const payslipHTML = `
+        <div class="invoice-pdf-mobile">
+          <div class="invoice-header-mobile">
+            <div class="company-info-mobile">
+              <div class="company-logo-mobile">
+                <i class="fas fa-users"></i> ${settings.companyName}
+              </div>
+              <div class="company-contact-mobile">
+                <strong>Décoration d'événements</strong><br>
+                ${settings.companyAddress}<br>
+                <strong>Téléphone:</strong> ${settings.companyPhone}<br>
+                <strong>Email:</strong> ${settings.companyEmail}<br>
+                <strong>RCCM:</strong> SN-DKR-2020-B-12345
+              </div>
+            </div>
+            <div class="invoice-title-mobile">
+              <h1>BULLETIN DE SALAIRE</h1>
+              <div class="invoice-number-mobile">
+                <strong>N°:</strong> ${payslipNumber}
+              </div>
+              <div style="font-size: 11px;">
+                <strong>Période:</strong> ${payment.period}<br>
+                <strong>Date d'émission:</strong> ${new Date(payment.paymentDate).toLocaleDateString('fr-FR')}
+              </div>
+            </div>
+          </div>
+          
+          <div class="invoice-details-mobile">
+            <div class="client-info-mobile">
+              <div class="section-title-mobile">INFORMATIONS EMPLOYÉ</div>
+              <div style="font-size: 11px; line-height: 1.4;">
+                <strong>${employee.name}</strong><br>
+                Poste: ${employee.position}<br>
+                Date d'embauche: ${new Date(employee.hireDate).toLocaleDateString('fr-FR')}<br>
+                ${employee.phone ? `Tél: ${employee.phone}<br>` : ''}
+                ${employee.email ? `Email: ${employee.email}<br>` : ''}
+              </div>
+            </div>
+            
+            <div class="order-info-mobile">
+              <div class="section-title-mobile">DÉTAILS DU PAIEMENT</div>
+              <div style="font-size: 11px; line-height: 1.4;">
+                <strong>Méthode de paiement:</strong> ${payment.paymentMethod === 'virement' ? 'Virement bancaire' : payment.paymentMethod}<br>
+                <strong>Compte:</strong> ${employee.bankAccount || 'Non spécifié'}<br>
+                <strong>Statut:</strong> <span style="color: #28a745;">Payé</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="section-title-mobile">COMPOSITION DU SALAIRE</div>
+          <table class="invoice-table-mobile">
+            <thead>
+              <tr>
+                <th>N°</th>
+                <th>LIBELLÉ</th>
+                <th class="text-right">MONTANT (FCFA)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Salaire de base</td>
+                <td class="text-right">${employee.baseSalary.toLocaleString('fr-FR')}</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Prime</td>
+                <td class="text-right">${(payment.bonus || 0).toLocaleString('fr-FR')}</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div class="totals-section-mobile">
+            <div class="total-row-mobile">
+              <span><strong>Salaire brut:</strong></span>
+              <span>${(employee.baseSalary + (payment.bonus || 0)).toLocaleString('fr-FR')} FCFA</span>
+            </div>
+            <div class="total-row-mobile">
+              <span><strong>Cotisations sociales:</strong></span>
+              <span>0 FCFA</span>
+            </div>
+            <div class="total-row-mobile">
+              <span><strong>IRPP:</strong></span>
+              <span>0 FCFA</span>
+            </div>
+            <div class="total-row-mobile grand-total-mobile">
+              <span><strong>NET À PAYER:</strong></span>
+              <span><strong>${payment.total.toLocaleString('fr-FR')} FCFA</strong></span>
+            </div>
+          </div>
+          
+          <div class="conditions-mobile">
+            <strong>Détails du versement:</strong><br>
+            • Période concernée: ${payment.period}<br>
+            • Date de versement: ${new Date(payment.paymentDate).toLocaleDateString('fr-FR')}<br>
+            • Mode de règlement: ${payment.paymentMethod === 'virement' ? 'Virement bancaire' : payment.paymentMethod}<br>
+            • Bulletin généré automatiquement
+          </div>
+          
+          <div class="stamp-mobile">
+            <div style="font-size: 12px; font-weight: bold; color: var(--vert-emeraude);">
+              <i class="fas fa-check-circle"></i> PAYÉ
+            </div>
+            <div style="font-size: 10px; margin-top: 3px;">
+              ${new Date().toLocaleDateString('fr-FR')}
+            </div>
+            <div style="font-size: 9px; margin-top: 5px; color: #666;">
+              Cachet de l'entreprise
+            </div>
+          </div>
+          
+          <div class="footer-mobile">
+            <p style="margin: 0 0 5px 0; font-size: 10px; font-weight: bold;">
+              Document officiel - Bulletin de salaire
+            </p>
+            <p style="margin: 0;">
+              NJEEYGU - Le Grand Jour<br>
+              Tél: ${settings.companyPhone} | Email: ${settings.companyEmail}
+            </p>
+            <p style="margin: 5px 0 0 0; color: #999;">
+              Bulletin généré automatiquement • N° ${payslipNumber}
+            </p>
+          </div>
+        </div>
+      `;
       
-      doc.setFontSize(16);
-      doc.setTextColor(...rougeProfond);
-      doc.setFont('helvetica', 'bold');
-      doc.text('BULLETIN DE SALAIRE', 20, 45);
+      // Injecter le HTML dans le modal
+      document.getElementById('payslipContent').innerHTML = payslipHTML;
+      document.getElementById('payslipModalNumber').textContent = payslipNumber;
       
-      doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      doc.setFont('helvetica', 'normal');
-      doc.text(`Période: ${payment.period}`, 20, 52);
+      // Afficher le modal
+      const modal = new bootstrap.Modal(document.getElementById('payslipModal'));
+      modal.show();
+    }
+    
+    function downloadPayslipPDF() {
+      if (!currentPayslipData) {
+        showNotification('Erreur', 'Aucun bulletin à télécharger', 'error');
+        return;
+      }
       
-      doc.setFontSize(11);
-      doc.setTextColor(0, 0, 0);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Employé:', 20, 70);
-      doc.text('Poste:', 20, 78);
-      doc.text('Date d\'embauche:', 20, 86);
+      showNotification('Génération du PDF en cours...', 'info');
       
-      doc.setFont('helvetica', 'normal');
-      doc.text(employee.name, 60, 70);
-      doc.text(employee.position, 60, 78);
-      doc.text(new Date(employee.hireDate).toLocaleDateString('fr-FR'), 60, 86);
+      const payslipElement = document.getElementById('payslipContent');
       
-      const startY = 105;
+      // Sauvegarder les styles originaux
+      const originalStyles = {
+        width: payslipElement.style.width,
+        maxWidth: payslipElement.style.maxWidth,
+        margin: payslipElement.style.margin,
+        padding: payslipElement.style.padding,
+        fontSize: payslipElement.style.fontSize,
+        lineHeight: payslipElement.style.lineHeight
+      };
       
-      doc.setFillColor(...orEclatant);
-      doc.rect(20, startY - 5, 170, 8, 'F');
+      // Appliquer des styles optimisés pour le PDF mobile
+      payslipElement.style.width = '800px';
+      payslipElement.style.maxWidth = '800px';
+      payslipElement.style.margin = '0 auto';
+      payslipElement.style.padding = '20px';
+      payslipElement.style.fontSize = '12px';
+      payslipElement.style.lineHeight = '1.4';
+      payslipElement.style.backgroundColor = '#ffffff';
       
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(0, 0, 0);
-      doc.text('Libellé', 25, startY);
-      doc.text('Montant', 150, startY);
+      // Options optimisées pour mobile
+      html2canvas(payslipElement, {
+        scale: 3,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        letterRendering: true,
+        allowTaint: true,
+        width: 800,
+        windowWidth: 800,
+        onclone: function(clonedDoc) {
+          const clonedElement = clonedDoc.getElementById('payslipContent');
+          if (clonedElement) {
+            clonedElement.style.width = '800px';
+            clonedElement.style.maxWidth = '800px';
+            clonedElement.style.boxSizing = 'border-box';
+            clonedElement.style.fontSize = '12px';
+            clonedElement.style.lineHeight = '1.4';
+            clonedElement.style.fontFamily = 'Montserrat, sans-serif';
+          }
+        }
+      }).then(canvas => {
+        // Restaurer les styles originaux
+        payslipElement.style.width = originalStyles.width;
+        payslipElement.style.maxWidth = originalStyles.maxWidth;
+        payslipElement.style.margin = originalStyles.margin;
+        payslipElement.style.padding = originalStyles.padding;
+        payslipElement.style.fontSize = originalStyles.fontSize;
+        payslipElement.style.lineHeight = originalStyles.lineHeight;
+        
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jspdf.jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
+        
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        
+        const imgWidth = 190;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+        
+        pdf.save(`Bulletin-${currentPayslipData.employeeName}-${currentPayslipData.period}.pdf`);
+        
+        showNotification('PDF téléchargé avec succès!', 'success');
+      }).catch(error => {
+        console.error('Erreur lors de la génération du PDF:', error);
+        showNotification('Erreur lors de la génération du PDF', 'error');
+        
+        payslipElement.style.width = originalStyles.width;
+        payslipElement.style.maxWidth = originalStyles.maxWidth;
+        payslipElement.style.margin = originalStyles.margin;
+        payslipElement.style.padding = originalStyles.padding;
+        payslipElement.style.fontSize = originalStyles.fontSize;
+        payslipElement.style.lineHeight = originalStyles.lineHeight;
+      });
+    }
+    
+    function printPayslip() {
+      if (!currentPayslipData) {
+        showNotification('Erreur', 'Aucun bulletin à imprimer', 'error');
+        return;
+      }
       
-      let y = startY + 8;
+      const printWindow = window.open('', '_blank');
+      const payslipContent = document.getElementById('payslipContent').innerHTML;
       
-      doc.setFont('helvetica', 'normal');
-      doc.text('Salaire de base', 25, y);
-      doc.text(`${employee.baseSalary.toLocaleString()} FCFA`, 150, y);
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Bulletin ${currentPayslipData.employeeName} - ${currentPayslipData.period}</title>
+          <style>
+            body {
+              font-family: 'Montserrat', Arial, sans-serif;
+              margin: 0;
+              padding: 20px;
+              color: #000;
+              font-size: 12px;
+              line-height: 1.4;
+            }
+            
+            .invoice-pdf-mobile {
+              width: 100%;
+              max-width: 800px;
+              margin: 0 auto;
+              padding: 20px;
+              background: white;
+            }
+            
+            .invoice-header-mobile {
+              display: flex;
+              flex-direction: column;
+              gap: 15px;
+              margin-bottom: 20px;
+              padding-bottom: 15px;
+              border-bottom: 2px solid #D4AF37;
+            }
+            
+            .company-logo-mobile {
+              font-size: 18px;
+              font-weight: bold;
+              color: #8B0000;
+              margin-bottom: 8px;
+            }
+            
+            .invoice-title-mobile h1 {
+              font-size: 22px;
+              font-weight: bold;
+              color: #8B0000;
+              margin: 0 0 10px 0;
+            }
+            
+            .invoice-table-mobile {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 15px 0;
+              font-size: 10px;
+            }
+            
+            .invoice-table-mobile th {
+              background: #8B0000;
+              color: white;
+              padding: 8px 6px;
+              text-align: left;
+              font-weight: bold;
+            }
+            
+            .invoice-table-mobile td {
+              padding: 6px;
+              border-bottom: 1px solid #ddd;
+            }
+            
+            .text-right {
+              text-align: right;
+            }
+            
+            .text-center {
+              text-align: center;
+            }
+            
+            .stamp-mobile {
+              text-align: center;
+              margin: 20px auto;
+              padding: 15px 25px;
+              border: 2px solid #006B54;
+              border-radius: 3px;
+              display: inline-block;
+              transform: rotate(-5deg);
+              background: rgba(0, 107, 84, 0.05);
+            }
+            
+            @media print {
+              body {
+                padding: 0;
+              }
+              .invoice-pdf-mobile {
+                padding: 10mm !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+              }
+              .stamp-mobile {
+                transform: rotate(-5deg) !important;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          ${payslipContent}
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() {
+                window.close();
+              }, 1000);
+            };
+          <\/script>
+        </body>
+        </html>
+      `);
       
-      y += 6;
-      doc.text('Prime', 25, y);
-      doc.text(`${(payment.bonus || 0).toLocaleString()} FCFA`, 150, y);
-      
-      y += 6;
-      doc.setDrawColor(...orEclatant);
-      doc.line(20, y + 2, 190, y + 2);
-      
-      y += 8;
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(...rougeProfond);
-      doc.text('TOTAL', 25, y);
-      doc.text(`${payment.total.toLocaleString()} FCFA`, 150, y);
-      
-      y += 15;
-      doc.setFontSize(9);
-      doc.setTextColor(100, 100, 100);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Bulletin généré automatiquement', 105, y, { align: 'center' });
-      
-      doc.save(`bulletin-${employee.name}-${payment.period}.pdf`);
-      showNotification('Bulletin généré', `Bulletin de ${employee.name} téléchargé`);
+      printWindow.document.close();
+    }
+    
+    function viewPayslip(paymentId) {
+      generatePayslipForPayment(paymentId);
     }
     
     function generateAllPayslips() {
@@ -4900,26 +6058,16 @@ ${topProducts || 'Aucune donnée'}
     function viewPayment(paymentId) {
       const payment = payments.find(p => p.id === paymentId);
       if (payment) {
-        alert(`Paiement de ${payment.employeeName}\nMontant: ${payment.total.toLocaleString()} FCFA\nDate: ${new Date(payment.paymentDate).toLocaleDateString('fr-FR')}`);
+        alert(`Paiement de ${payment.employeeName}\nMontant: ${payment.total.toLocaleString('fr-FR')} FCFA\nDate: ${new Date(payment.paymentDate).toLocaleDateString('fr-FR')}`);
       }
     }
     
     function downloadPaymentReceipt(paymentId) {
-      const payment = payments.find(p => p.id === paymentId);
-      if (payment) {
-        generatePayslip(payment.employeeId);
-      }
-    }
-    
-    function viewPayslip(paymentId) {
-      viewPayment(paymentId);
+      generatePayslipForPayment(paymentId);
     }
     
     function downloadPayslip(paymentId) {
-      const payment = payments.find(p => p.id === paymentId);
-      if (payment) {
-        generatePayslip(payment.employeeId);
-      }
+      generatePayslipForPayment(paymentId);
     }
     
     function showSalariesTab(tab, event) {
@@ -4939,225 +6087,9 @@ ${topProducts || 'Aucune donnée'}
         initSalariesCharts();
       } else if (tab === 'paiements') {
         updatePaymentsTable();
+      } else if (tab === 'bulletins') {
+        updatePayslipsTable();
       }
-    }
-    
-    // ==================== ACTIONS SUR LE STOCK ====================
-    
-    function openStockModal(productId) {
-      const product = products.find(p => p.id === productId);
-      if (!product) return;
-      
-      currentStockProductId = productId;
-      document.getElementById('stockModalProductName').innerText = product.name;
-      document.getElementById('stockModalProductId').value = productId;
-      document.getElementById('stockModalCurrentStock').value = product.stock;
-      document.getElementById('stockModalMinStock').value = product.minStock || 5;
-      document.getElementById('stockModalQuantity').value = 1;
-      document.getElementById('stockModalNewValue').value = product.stock;
-      document.getElementById('stockModalComment').value = '';
-      
-      // Modifier le titre du modal
-      document.querySelector('#stockManagementModal .modal-title').innerHTML = 'Gérer le stock - <span id="stockModalProductName">' + product.name + '</span>';
-      
-      toggleStockOperationFields();
-      
-      new bootstrap.Modal(document.getElementById('stockManagementModal')).show();
-    }
-    
-    function toggleStockOperationFields() {
-      const operation = document.getElementById('stockModalOperation').value;
-      const quantityGroup = document.getElementById('stockModalQuantityGroup');
-      const newValueGroup = document.getElementById('stockModalNewValueGroup');
-      
-      if (operation === 'set') {
-        quantityGroup.style.display = 'none';
-        newValueGroup.style.display = 'block';
-      } else {
-        quantityGroup.style.display = 'block';
-        newValueGroup.style.display = 'none';
-      }
-    }
-    
-    function updateStock() {
-      const productId = document.getElementById('stockModalProductId').value;
-      const operation = document.getElementById('stockModalOperation').value;
-      const reason = document.getElementById('stockModalReason').value;
-      const comment = document.getElementById('stockModalComment').value;
-      
-      // Si c'est un nouveau produit (pas d'ID)
-      if (!productId) {
-        addNewStock();
-        bootstrap.Modal.getInstance(document.getElementById('stockManagementModal')).hide();
-        return;
-      }
-      
-      const product = products.find(p => p.id == productId);
-      if (!product) return;
-      
-      const oldStock = product.stock;
-      let newStock = oldStock;
-      let quantity = 0;
-      let type = 'ajustement';
-      
-      if (operation === 'add') {
-        quantity = parseInt(document.getElementById('stockModalQuantity').value) || 0;
-        newStock = oldStock + quantity;
-        type = 'entree';
-      } else if (operation === 'remove') {
-        quantity = parseInt(document.getElementById('stockModalQuantity').value) || 0;
-        newStock = Math.max(0, oldStock - quantity);
-        type = 'sortie';
-      } else if (operation === 'set') {
-        newStock = parseInt(document.getElementById('stockModalNewValue').value) || 0;
-        quantity = Math.abs(newStock - oldStock);
-        type = newStock > oldStock ? 'entree' : 'sortie';
-      }
-      
-      const minStock = parseInt(document.getElementById('stockModalMinStock').value) || 5;
-      product.minStock = minStock;
-      
-      addStockMovement(product.id, type, quantity, reason, comment);
-      
-      bootstrap.Modal.getInstance(document.getElementById('stockManagementModal')).hide();
-      
-      showNotification(
-        'Stock mis à jour',
-        `${product.name}: ${oldStock} → ${newStock} unités`
-      );
-      
-      updateProductsTable();
-      updateStockTable();
-      updateStockAlerts();
-    }
-    
-    function quickAddStock(productId) {
-      const product = products.find(p => p.id === productId);
-      if (!product) return;
-      
-      const quantity = prompt(`Ajouter au stock pour ${product.name}:`, "1");
-      if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
-        addStockMovement(
-          productId,
-          'entree',
-          parseInt(quantity),
-          'ajustement',
-          'Ajout rapide'
-        );
-        
-        showNotification(
-          'Stock ajouté',
-          `+${quantity} ${product.name}`
-        );
-        
-        updateProductsTable();
-        updateStockTable();
-      }
-    }
-    
-    function quickOrderStock(productId) {
-      const product = products.find(p => p.id === productId);
-      if (!product) return;
-      
-      const quantity = product.minStock * 2 - product.stock;
-      if (quantity > 0) {
-        if (confirm(`Commander ${quantity} unités de ${product.name} ?`)) {
-          addStockMovement(
-            productId,
-            'entree',
-            quantity,
-            'reception',
-            'Commande fournisseur'
-          );
-          
-          showNotification(
-            'Commande passée',
-            `${quantity} ${product.name} ajoutés au stock`
-          );
-          
-          updateProductsTable();
-          updateStockTable();
-        }
-      } else {
-        alert('Le stock est suffisant pour ce produit.');
-      }
-    }
-    
-    function showProductMovements(productId) {
-      const product = products.find(p => p.id === productId);
-      if (!product) return;
-      
-      const productMovements = stockMovements.filter(m => m.productId === productId);
-      
-      let message = `Mouvements pour ${product.name}:\n\n`;
-      productMovements.slice(0, 10).forEach(m => {
-        message += `${formatDate(m.date)} - ${m.type === 'entree' ? '+' : '-'}${m.quantity} (${m.reason})\n`;
-      });
-      
-      if (productMovements.length === 0) {
-        message += "Aucun mouvement enregistré.";
-      }
-      
-      alert(message);
-    }
-    
-    function showStockMovementModal() {
-      const select = document.getElementById('movementProductId');
-      select.innerHTML = '<option value="">Sélectionnez un produit</option>';
-      products.forEach(product => {
-        select.innerHTML += `<option value="${product.id}">${product.name} (Stock: ${product.stock})</option>`;
-      });
-      
-      new bootstrap.Modal(document.getElementById('stockMovementModal')).show();
-    }
-    
-    function addStockMovementFromModal() {
-      const productId = parseInt(document.getElementById('movementProductId').value);
-      const type = document.getElementById('movementType').value;
-      const quantity = parseInt(document.getElementById('movementQuantity').value);
-      const reason = document.getElementById('movementReason').value;
-      const comment = document.getElementById('movementComment').value;
-      
-      if (!productId || quantity <= 0) {
-        alert('Veuillez remplir tous les champs correctement.');
-        return;
-      }
-      
-      const movement = addStockMovement(productId, type, quantity, reason, comment);
-      
-      if (movement) {
-        bootstrap.Modal.getInstance(document.getElementById('stockMovementModal')).hide();
-        showNotification('Mouvement enregistré', `${quantity} unités ${type === 'entree' ? 'ajoutées' : 'retirées'}`);
-        updateStockTable();
-        updateStockMovementsTable();
-      }
-    }
-    
-    function showBulkStockModal() {
-      alert('Fonctionnalité de mise à jour groupée à implémenter');
-    }
-    
-    function exportStockReport() {
-      const data = products.map(p => ({
-        'Produit': p.name,
-        'Catégorie': getCategoryLabel(p.category),
-        'Prix HT': p.priceHT,
-        'TVA 18%': calculateTVA(p.priceHT),
-        'Prix TTC': p.priceTTC,
-        'Stock actuel': p.stock,
-        'Stock minimum': p.minStock,
-        'Valeur stock TTC': p.stock * p.priceTTC,
-        'Emplacement': p.location || 'Non défini'
-      }));
-      
-      const csv = convertToCSV(data);
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `stock_${new Date().toISOString().split('T')[0]}.csv`;
-      a.click();
-      showNotification('Export réussi', 'Le rapport de stock a été généré');
     }
     
     // ==================== ACTIONS SUR LES PRODUITS ====================
@@ -5176,7 +6108,7 @@ ${topProducts || 'Aucune donnée'}
         priceHT: priceHT,
         priceTTC: priceTTC,
         stock: parseInt(document.getElementById('productStock').value),
-        minStock: parseInt(document.getElementById('productMinStock').value) || 5,
+        minStock: parseInt(document.getElementById('productMinStock').value) || settings.defaultStockAlert,
         status: document.getElementById('productStatus').value,
         image: defaultImage,
         location: document.getElementById('productLocation').value || 'Non défini'
@@ -5194,6 +6126,7 @@ ${topProducts || 'Aucune donnée'}
       );
       
       updateProductsTable();
+      updateStockTable();
       showProductsTab('list', event);
       showNotification('Produit ajouté', `${newProduct.name} a été ajouté avec succès (TVA 18% incluse)`);
       
@@ -5201,15 +6134,17 @@ ${topProducts || 'Aucune donnée'}
     }
     
     function editProduct(productId) {
-      alert(`Édition du produit ${productId} - Fonctionnalité à implémenter`);
-    }
-    
-    function deleteProduct(productId) {
-      if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
-        products = products.filter(p => p.id !== productId);
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const newPrice = prompt(`Nouveau prix HT pour ${product.name} (FCFA):`, product.priceHT);
+      if (newPrice && !isNaN(newPrice) && parseInt(newPrice) > 0) {
+        product.priceHT = parseInt(newPrice);
+        product.priceTTC = calculateTTC(product.priceHT);
         localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
         updateProductsTable();
-        showNotification('Produit supprimé', 'Le produit a été supprimé avec succès');
+        updateStockTable();
+        showNotification('Prix modifié', `Le prix de ${product.name} a été mis à jour`);
       }
     }
     
@@ -5223,6 +6158,8 @@ ${topProducts || 'Aucune donnée'}
         updateProductsTable();
       } else if (tab === 'add') {
         document.getElementById('products-add').style.display = 'block';
+        document.getElementById('addProductForm').reset();
+        document.getElementById('productPriceTTC').value = '';
       } else if (tab === 'categories') {
         document.getElementById('products-categories').style.display = 'block';
         updateCategoriesTable();
@@ -5252,315 +6189,56 @@ ${topProducts || 'Aucune donnée'}
       updateStockTable(filter);
     }
     
-    // ==================== FACTURE PDF ====================
+    // ==================== FONCTIONS POUR LES PARAMÈTRES ====================
     
-    function viewInvoiceDetails(invoiceId) {
-      const invoice = invoices.find(i => i.id === invoiceId);
-      if (!invoice) return;
+    function saveSettings(event) {
+      event.preventDefault();
       
-      currentInvoiceId = invoiceId;
-      document.getElementById('invoiceModalId').innerText = invoice.id;
+      settings = {
+        companyName: document.getElementById('companyName').value,
+        companyEmail: document.getElementById('companyEmail').value,
+        companyPhone: document.getElementById('companyPhone').value,
+        companyAddress: document.getElementById('companyAddress').value,
+        companyWhatsapp: document.getElementById('companyWhatsapp').value,
+        currency: document.getElementById('companyCurrency').value,
+        tvaRate: 18,
+        defaultStockAlert: parseInt(document.getElementById('defaultStockAlert').value)
+      };
       
-      // Calculer les totaux par article
-      let itemsHTML = '';
-      invoice.items.forEach(item => {
-        const totalHT = item.quantity * item.priceHT;
-        const tvaUnitaire = item.priceHT * TVA_RATE;
-        const totalTTC = totalHT * (1 + TVA_RATE);
-        
-        itemsHTML += `
-          <tr>
-            <td>${item.name}</td>
-            <td class="text-center">${item.quantity}</td>
-            <td class="text-end">${item.priceHT.toLocaleString()} FCFA</td>
-            <td class="text-end">${tvaUnitaire.toLocaleString()} FCFA</td>
-            <td class="text-end">${totalHT.toLocaleString()} FCFA</td>
-            <td class="text-end"><strong>${Math.round(totalTTC).toLocaleString()} FCFA</strong></td>
-          </tr>
-        `;
-      });
-      
-      // Ajouter la TVA récapitulative
-      const tvaTotale = invoice.tva || calculateTVA(invoice.totalHT);
-      const totalTTC = invoice.totalTTC || calculateTTC(invoice.totalHT);
-      
-      const invoiceHTML = `
-        <div class="invoice-box" id="invoice-content-${invoice.id}">
-          <div class="invoice-header">
-            <div class="invoice-logo">
-              <img src="images/log1.png" alt="NJEEYGU Logo" onerror="this.src='https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&w=200&h=200&fit=crop';">
-              <div>
-                <h2 class="invoice-title">NJEEYGU</h2>
-                <p style="color: var(--or-eclatant);">Le Grand Jour</p>
-              </div>
-            </div>
-            <div style="text-align: right;">
-              <h3 style="color: var(--rouge-profond); margin-bottom: 5px;">FACTURE</h3>
-              <p style="font-size: 1.2rem; font-weight: bold; margin: 0;">N° ${invoice.id}</p>
-            </div>
-          </div>
-          
-          <div class="row invoice-details" style="margin-bottom: 30px;">
-            <div class="col-6">
-              <div style="background: #f8f1e0; padding: 15px; border-radius: 10px;">
-                <strong style="color: var(--rouge-profond); display: block; margin-bottom: 10px;">FACTURÉ À</strong>
-                <p style="margin: 2px 0;"><strong>${invoice.client}</strong></p>
-                <p style="margin: 2px 0;">Tél: ${invoice.phone}</p>
-                <p style="margin: 2px 0;">Email: ${invoice.email || 'Non spécifié'}</p>
-              </div>
-            </div>
-            <div class="col-6 text-end">
-              <div style="background: #f8f1e0; padding: 15px; border-radius: 10px;">
-                <strong style="color: var(--rouge-profond); display: block; margin-bottom: 10px;">DÉTAILS</strong>
-                <p style="margin: 2px 0;"><strong>Date d'émission:</strong> ${formatDate(invoice.date)}</p>
-                <p style="margin: 2px 0;"><strong>Date d'échéance:</strong> ${formatDate(invoice.dueDate || invoice.date)}</p>
-                <p style="margin: 2px 0;"><strong>Mode de paiement:</strong> ${invoice.paymentMethod || 'Non spécifié'}</p>
-              </div>
-            </div>
-          </div>
-          
-          <table class="invoice-table" style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-            <thead>
-              <tr style="background: var(--rouge-profond); color: white;">
-                <th style="padding: 12px; text-align: left;">Produit</th>
-                <th style="padding: 12px; text-align: center;">Qté</th>
-                <th style="padding: 12px; text-align: right;">Prix unitaire HT</th>
-                <th style="padding: 12px; text-align: right;">TVA 18%</th>
-                <th style="padding: 12px; text-align: right;">Total HT</th>
-                <th style="padding: 12px; text-align: right;">Total TTC</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${itemsHTML}
-            </tbody>
-            <tfoot>
-              <tr style="border-top: 2px solid var(--or-eclatant);">
-                <td colspan="4" class="text-end" style="padding: 12px;"><strong>SOUS-TOTAL HT</strong></td>
-                <td class="text-end" style="padding: 12px;"><strong>${invoice.totalHT.toLocaleString()} FCFA</strong></td>
-                <td class="text-end" style="padding: 12px;"></td>
-              </tr>
-              <tr>
-                <td colspan="4" class="text-end" style="padding: 12px;"><strong>TVA (18%)</strong></td>
-                <td class="text-end" style="padding: 12px;"><strong>${tvaTotale.toLocaleString()} FCFA</strong></td>
-                <td class="text-end" style="padding: 12px;"></td>
-              </tr>
-              <tr style="background: rgba(212, 175, 55, 0.1);">
-                <td colspan="4" class="text-end" style="padding: 15px;"><strong style="color: var(--rouge-profond); font-size: 1.1rem;">TOTAL TTC</strong></td>
-                <td class="text-end" style="padding: 15px;"></td>
-                <td class="text-end" style="padding: 15px;"><strong style="color: var(--rouge-profond); font-size: 1.2rem;">${totalTTC.toLocaleString()} FCFA</strong></td>
-              </tr>
-            </tfoot>
-          </table>
-          
-          <div class="row mt-4">
-            <div class="col-12">
-              <div style="background: #f8f1e0; padding: 15px; border-radius: 10px; text-align: center;">
-                <p style="margin: 5px 0;"><strong>Statut de paiement :</strong> 
-                  <span class="badge-status ${invoice.status === 'paid' ? 'badge-paid' : invoice.status === 'partial' ? 'badge-pending' : 'badge-unpaid'}">
-                    ${invoice.status === 'paid' ? 'Payée' : invoice.status === 'partial' ? 'Paiement partiel' : 'Impayée'}
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <div class="invoice-footer" style="margin-top: 40px; text-align: center; color: #666; font-size: 0.9rem;">
-            <p>Merci de votre confiance ! TVA 18% incluse.</p>
-            <p style="font-size: 0.8rem;">Pour toute question, contactez-nous au +221 77 544 97 95</p>
-            <p style="font-size: 0.8rem; margin-top: 20px;">NJEEYGU - Le Grand Jour - 123 Rue Principale, Saint-Louis</p>
-          </div>
-        </div>
-      `;
-      
-      document.getElementById('invoiceContent').innerHTML = invoiceHTML;
-      new bootstrap.Modal(document.getElementById('invoiceModal')).show();
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      showNotification('Paramètres enregistrés', 'Les paramètres ont été mis à jour avec succès');
     }
     
-    function downloadInvoicePDF(invoiceId) {
-      const invoice = invoices.find(i => i.id === invoiceId) || invoices.find(i => i.id === currentInvoiceId);
-      if (!invoice) return;
-      
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      
-      const rougeProfond = [139, 0, 0];
-      const orEclatant = [212, 175, 55];
-      const grisClair = [245, 245, 245];
-      
-      // En-tête avec logo
-      doc.setFillColor(...rougeProfond);
-      doc.rect(0, 0, 210, 35, 'F');
-      
-      doc.setFontSize(22);
-      doc.setTextColor(255, 255, 255);
-      doc.setFont('helvetica', 'bold');
-      doc.text('NJEEYGU', 105, 18, { align: 'center' });
-      
-      doc.setFontSize(11);
-      doc.setTextColor(...orEclatant);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Le Grand Jour', 105, 27, { align: 'center' });
-      
-      // Titre FACTURE
-      doc.setFontSize(20);
-      doc.setTextColor(...rougeProfond);
-      doc.setFont('helvetica', 'bold');
-      doc.text('FACTURE', 20, 48);
-      
-      doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      doc.setFont('helvetica', 'normal');
-      doc.text(`N° ${invoice.id}`, 20, 55);
-      
-      // Informations client
-      doc.setFontSize(11);
-      doc.setTextColor(0, 0, 0);
-      doc.setFont('helvetica', 'bold');
-      doc.text('FACTURÉ À :', 20, 70);
-      
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      doc.text(invoice.client, 20, 78);
-      doc.text(`Tél: ${invoice.phone}`, 20, 85);
-      doc.text(`Email: ${invoice.email || 'Non spécifié'}`, 20, 92);
-      
-      // Détails de la facture
-      doc.setFont('helvetica', 'bold');
-      doc.text('DÉTAILS :', 120, 70);
-      
-      doc.setFont('helvetica', 'normal');
-      doc.text(`Date d'émission: ${formatDate(invoice.date)}`, 120, 78);
-      doc.text(`Date d'échéance: ${formatDate(invoice.dueDate || invoice.date)}`, 120, 85);
-      doc.text(`Mode de paiement: ${invoice.paymentMethod || 'Non spécifié'}`, 120, 92);
-      
-      // Tableau des articles
-      const startY = 110;
-      const rowHeight = 8;
-      
-      // En-tête du tableau
-      doc.setFillColor(...rougeProfond);
-      doc.rect(20, startY - 5, 170, 8, 'F');
-      
-      doc.setTextColor(255, 255, 255);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.text('Produit', 22, startY);
-      doc.text('Qté', 75, startY);
-      doc.text('Prix HT', 95, startY);
-      doc.text('TVA', 120, startY);
-      doc.text('Total HT', 140, startY);
-      doc.text('Total TTC', 165, startY);
-      
-      // Corps du tableau
-      doc.setTextColor(0, 0, 0);
-      doc.setFont('helvetica', 'normal');
-      let y = startY + rowHeight;
-      let rowCount = 0;
-      
-      invoice.items.forEach((item) => {
-        const totalHT = item.quantity * item.priceHT;
-        const tva = item.priceHT * TVA_RATE;
-        const totalTTC = totalHT * (1 + TVA_RATE);
-        
-        // Ligne alternée
-        if (rowCount % 2 === 0) {
-          doc.setFillColor(...grisClair);
-          doc.rect(20, y - 4, 170, 8, 'F');
-        }
-        
-        doc.text(item.name.substring(0, 15), 22, y);
-        doc.text(item.quantity.toString(), 80, y, { align: 'center' });
-        doc.text(`${item.priceHT.toLocaleString()}`, 100, y, { align: 'right' });
-        doc.text(`${tva.toLocaleString()}`, 125, y, { align: 'right' });
-        doc.text(`${totalHT.toLocaleString()}`, 145, y, { align: 'right' });
-        doc.text(`${Math.round(totalTTC).toLocaleString()}`, 170, y, { align: 'right' });
-        
-        y += rowHeight;
-        rowCount++;
+    function showSettingsTab(tab, event) {
+      document.querySelectorAll('#section-parametres .settings-tab-content').forEach(el => {
+        el.style.display = 'none';
       });
       
-      // Ligne de séparation
-      doc.setDrawColor(...orEclatant);
-      doc.line(20, y, 190, y);
-      y += 6;
+      document.getElementById(`settings-${tab}`).style.display = 'block';
       
-      // Totaux
-      const tvaTotale = invoice.tva || calculateTVA(invoice.totalHT);
-      const totalTTC = invoice.totalTTC || calculateTTC(invoice.totalHT);
-      
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      
-      doc.text('Sous-total HT', 120, y);
-      doc.text(`${invoice.totalHT.toLocaleString()} FCFA`, 180, y, { align: 'right' });
-      y += 6;
-      
-      doc.text('TVA 18%', 120, y);
-      doc.text(`${tvaTotale.toLocaleString()} FCFA`, 180, y, { align: 'right' });
-      y += 8;
-      
-      doc.setFontSize(11);
-      doc.setTextColor(...rougeProfond);
-      doc.text('TOTAL TTC', 120, y);
-      doc.text(`${totalTTC.toLocaleString()} FCFA`, 180, y, { align: 'right' });
-      
-      // Statut de paiement
-      y += 12;
-      doc.setFontSize(9);
-      doc.setTextColor(100, 100, 100);
-      doc.setFont('helvetica', 'bold');
-      const statutTexte = invoice.status === 'paid' ? 'Payée' : invoice.status === 'partial' ? 'Paiement partiel' : 'Impayée';
-      doc.text(`Statut de paiement: ${statutTexte}`, 20, y);
-      
-      // Pied de page
-      y += 15;
-      doc.setFontSize(9);
-      doc.setTextColor(100, 100, 100);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Merci de votre confiance ! TVA 18% incluse.', 105, y, { align: 'center' });
-      
-      y += 5;
-      doc.setFontSize(8);
-      doc.text('Pour toute question, contactez-nous au +221 77 544 97 95', 105, y, { align: 'center' });
-      
-      y += 5;
-      doc.text('NJEEYGU - Le Grand Jour - 123 Rue Principale, Saint-Louis', 105, y, { align: 'center' });
-      
-      // Sauvegarder le PDF
-      doc.save(`facture-${invoice.id}.pdf`);
-      showNotification('PDF généré', `La facture ${invoice.id} a été téléchargée`);
-    }
-    
-    function generateInvoiceReport() {
-      const paidInvoices = invoices.filter(i => i.status === 'paid').length;
-      const unpaidInvoices = invoices.filter(i => i.status === 'unpaid' || i.status === 'partial').length;
-      const totalHT = invoices.reduce((sum, i) => sum + i.totalHT, 0);
-      const totalTVA = invoices.reduce((sum, i) => sum + i.tva, 0);
-      const totalTTC = invoices.reduce((sum, i) => sum + i.totalTTC, 0);
-      
-      alert(`
-        RAPPORT DES FACTURES
-        ====================
-        
-        Date: ${new Date().toLocaleDateString()}
-        
-        Total factures: ${invoices.length}
-        Factures payées: ${paidInvoices}
-        Factures impayées: ${unpaidInvoices}
-        
-        Montants:
-        - Total HT: ${totalHT.toLocaleString()} FCFA
-        - TVA 18%: ${totalTVA.toLocaleString()} FCFA
-        - Total TTC: ${totalTTC.toLocaleString()} FCFA
-      `);
+      document.querySelectorAll('#section-parametres .admin-tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      event.target.classList.add('active');
     }
     
     // ==================== NOTIFICATIONS ====================
     
-    function showNotification(title, message) {
+    function showNotification(title, message, type = 'success') {
       document.getElementById('notificationTitle').innerText = title;
       document.getElementById('notificationMessage').innerText = message;
-      document.getElementById('notificationToast').style.display = 'block';
+      
+      // Changer la couleur selon le type
+      const toast = document.getElementById('notificationToast');
+      if (type === 'error') {
+        toast.style.borderLeftColor = '#dc3545';
+        toast.querySelector('i').style.color = '#dc3545';
+      } else {
+        toast.style.borderLeftColor = 'var(--or-eclatant)';
+        toast.querySelector('i').style.color = 'var(--or-eclatant)';
+      }
+      
+      toast.style.display = 'block';
       
       setTimeout(() => {
         closeNotification();
@@ -5641,12 +6319,23 @@ ${topProducts || 'Aucune donnée'}
       }
       if (section === 'factures') updateInvoicesTable();
       if (section === 'clients') updateClientsTable();
+      if (section === 'services') updateServicesTable();
       if (section === 'equipe') initTeamUI();
       if (section === 'salaires') {
         updateSalariesUI();
       }
       if (section === 'dashboard') {
         updateStats();
+      }
+      if (section === 'parametres') {
+        document.getElementById('companyName').value = settings.companyName;
+        document.getElementById('companyEmail').value = settings.companyEmail;
+        document.getElementById('companyPhone').value = settings.companyPhone;
+        document.getElementById('companyAddress').value = settings.companyAddress;
+        document.getElementById('companyWhatsapp').value = settings.companyWhatsapp;
+        document.getElementById('companyCurrency').value = settings.currency;
+        document.getElementById('tvaRate').value = settings.tvaRate;
+        document.getElementById('defaultStockAlert').value = settings.defaultStockAlert;
       }
     }
     
@@ -5662,14 +6351,17 @@ ${topProducts || 'Aucune donnée'}
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('adminInterface').style.display = 'block';
         
+        initSettings();
         initDevis();
         initProducts();
         initInvoices();
         initClients();
+        initServices();
         initEmployees();
         initPayments();
         initTeam();
         initStockMovements();
+        createDemoInvoices();
         
         updateStats();
         updateDevisTables();
@@ -5680,6 +6372,7 @@ ${topProducts || 'Aucune donnée'}
         updateInvoicesTable();
         updateRecentInvoices();
         updateClientsTable();
+        updateServicesTable();
         initTeamUI();
         updateSalariesUI();
         updateBadges();
